@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: datagateway
+spec:
+  generators:
+  - git:
+      repoURL: 'git@github.com:qlik-trial/argocd-config-apps.git'
+      revision: "vc/branch-structure"
+      directories:
+      - path: data-gateway/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'git@github.com:qlik-trial/argocd-config-apps.git'
+        targetRevision: "vc/branch-structure"
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
