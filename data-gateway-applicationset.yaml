@@ -6,7 +6,7 @@ spec:
   generators:
   - git:
       repoURL: 'git@github.com:qlik-download/argocd-config-apps.git'
-      revision: "vc/branch-structure"
+      revision: "main"
       directories:
       - path: data-gateway/*
   template:
@@ -16,7 +16,7 @@ spec:
       project: default
       source:
         repoURL: 'git@github.com:qlik-download/argocd-config-apps.git'
-        targetRevision: "vc/branch-structure"
+        targetRevision: "main"
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
