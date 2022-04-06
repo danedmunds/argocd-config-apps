@@ -1,0 +1,28 @@
+---
+extends: default
+
+ignore: |
+  /vendor/
+  templates/
+
+rules:
+  document-start: disable
+  empty-lines:
+    max: 2
+    max-start: 1
+    max-end: 1
+  indentation:
+    spaces: consistent
+    indent-sequences: whatever      # - list indentation will handle both indentation and without
+    check-multi-line-strings: false
+  line-length: disable              # Lines can be any length
+  new-lines:
+    type: unix
+  truthy:
+    level: warning
+    check-keys: false
+  comments-indentation: disable     # Throwing unnecessary warnings
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1
