@@ -39699,7 +39699,7 @@ spec:
           volumeMounts:
             - name: proc
               mountPath: /host/proc
-              readOnly:  true
+              readOnly: true
             - name: sys
               mountPath: /host/sys
               readOnly: true
@@ -39755,7 +39755,6 @@ spec:
         checksum/sc-dashboard-provider-config: cd10fb0c6d6e935a3ceb412958d1799b4a8bbc87c37df86123871e5614d250cd
         checksum/secret: 12f4bd2975b0ec92f1e73297c4e32aa5407cbdde8379cbb355d047b41386e3ee
     spec:
-      
       serviceAccountName: release-name-grafana
       automountServiceAccountToken: true
       securityContext:
@@ -39827,7 +39826,6 @@ spec:
               mountPath: "/var/lib/grafana"
             - name: sc-dashboard-volume
               mountPath: "/tmp/dashboards"
-      
             - name: sc-dashboard-provider
               mountPath: "/etc/grafana/provisioning/dashboards/sc-dashboardproviders.yaml"
               subPath: provider.yaml
@@ -39892,7 +39890,7 @@ kind: Deployment
 metadata:
   name: release-name-kube-state-metrics
   namespace: default
-  labels:    
+  labels:
     helm.sh/chart: kube-state-metrics-4.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
@@ -39903,13 +39901,13 @@ metadata:
     release: release-name
 spec:
   selector:
-    matchLabels:      
+    matchLabels:
       app.kubernetes.io/name: kube-state-metrics
       app.kubernetes.io/instance: release-name
   replicas: 1
   template:
     metadata:
-      labels:        
+      labels:
         helm.sh/chart: kube-state-metrics-4.7.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: metrics
@@ -39957,7 +39955,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-operator
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39975,7 +39972,6 @@ spec:
     metadata:
       labels:
         app: kube-prometheus-stack-operator
-        
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/version: "33.2.0"
@@ -40034,7 +40030,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-alertmanager
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40051,7 +40046,7 @@ spec:
   externalUrl: http://release-name-kube-promethe-alertmanager.default:9093
   paused: false
   logFormat: "logfmt"
-  logLevel:  "info"
+  logLevel: "info"
   retention: "120h"
   alertmanagerConfigSelector: {}
   alertmanagerConfigNamespaceSelector: {}
@@ -40067,9 +40062,9 @@ spec:
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40106,7 +40101,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-prometheus
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40128,8 +40122,8 @@ spec:
   paused: false
   replicas: 1
   shards: 1
-  logLevel:  info
-  logFormat:  logfmt
+  logLevel: info
+  logFormat: logfmt
   listenLocal: false
   enableAdminAPI: false
   retention: "10d"
@@ -40170,7 +40164,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40313,7 +40306,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40345,7 +40337,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40479,7 +40470,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40547,7 +40537,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40714,7 +40703,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40844,7 +40832,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -40921,7 +40908,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41273,7 +41259,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41298,7 +41283,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41331,7 +41315,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41388,7 +41371,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41457,7 +41439,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41490,7 +41471,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41736,7 +41716,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41859,7 +41838,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -41931,7 +41909,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42003,7 +41980,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42033,7 +42009,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42063,7 +42038,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42204,7 +42178,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42234,7 +42207,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42277,7 +42249,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42360,7 +42331,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42608,7 +42578,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42638,7 +42607,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42683,7 +42651,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -42767,7 +42734,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43025,8 +42991,8 @@ spec:
   jobLabel: "release-name"
   selector:
     matchLabels:
-        app.kubernetes.io/name: grafana
-        app.kubernetes.io/instance: release-name
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/instance: release-name
   namespaceSelector:
     matchNames:
       - default
@@ -43037,7 +43003,7 @@ kind: ServiceMonitor
 metadata:
   name: release-name-kube-state-metrics
   namespace: default
-  labels:    
+  labels:
     helm.sh/chart: kube-state-metrics-4.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
@@ -43049,7 +43015,7 @@ metadata:
 spec:
   jobLabel: app.kubernetes.io/name
   selector:
-    matchLabels:      
+    matchLabels:
       app.kubernetes.io/name: kube-state-metrics
       app.kubernetes.io/instance: release-name
   endpoints:
@@ -43062,7 +43028,7 @@ kind: ServiceMonitor
 metadata:
   name: release-name-prometheus-node-exporter
   namespace: default
-  labels:     
+  labels:
     app: prometheus-node-exporter
     heritage: Helm
     release: release-name
@@ -43086,7 +43052,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-alertmanager
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43115,7 +43080,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-coredns
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43144,7 +43108,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-apiserver
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43178,7 +43141,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-kube-controller-manager
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43211,7 +43173,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-kube-etcd
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43240,7 +43201,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-kube-proxy
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43269,7 +43229,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-kube-scheduler
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43301,7 +43260,7 @@ metadata:
   name: release-name-kube-promethe-kubelet
   namespace: default
   labels:
-    app: kube-prometheus-stack-kubelet    
+    app: kube-prometheus-stack-kubelet
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43363,7 +43322,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-operator
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43399,7 +43357,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-prometheus
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43424,9 +43381,9 @@ spec:
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43459,13 +43416,13 @@ webhooks:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   namespace: default
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43478,12 +43435,12 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43505,12 +43462,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43531,13 +43488,13 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   namespace: default
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43558,13 +43515,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name:  release-name-kube-promethe-admission
+  name: release-name-kube-promethe-admission
   namespace: default
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission    
+    app: kube-prometheus-stack-admission
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43616,13 +43573,13 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name:  release-name-kube-promethe-admission-create
+  name: release-name-kube-promethe-admission-create
   namespace: default
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission-create    
+    app: kube-prometheus-stack-admission-create
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43633,9 +43590,9 @@ metadata:
 spec:
   template:
     metadata:
-      name:  release-name-kube-promethe-admission-create
+      name: release-name-kube-promethe-admission-create
       labels:
-        app: kube-prometheus-stack-admission-create        
+        app: kube-prometheus-stack-admission-create
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/version: "33.2.0"
@@ -43666,13 +43623,13 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name:  release-name-kube-promethe-admission-patch
+  name: release-name-kube-promethe-admission-patch
   namespace: default
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    app: kube-prometheus-stack-admission-patch    
+    app: kube-prometheus-stack-admission-patch
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -43683,9 +43640,9 @@ metadata:
 spec:
   template:
     metadata:
-      name:  release-name-kube-promethe-admission-patch
+      name: release-name-kube-promethe-admission-patch
       labels:
-        app: kube-prometheus-stack-admission-patch        
+        app: kube-prometheus-stack-admission-patch
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: release-name
         app.kubernetes.io/version: "33.2.0"
