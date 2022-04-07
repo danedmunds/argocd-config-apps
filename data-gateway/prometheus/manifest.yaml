@@ -38950,7 +38950,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:    
+  labels:
     helm.sh/chart: kube-state-metrics-4.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
@@ -39104,7 +39104,6 @@ metadata:
   name: release-name-kube-promethe-operator
   labels:
     app: kube-prometheus-stack-operator
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39191,7 +39190,6 @@ metadata:
   name: release-name-kube-promethe-prometheus
   labels:
     app: kube-prometheus-stack-prometheus
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39242,7 +39240,7 @@ roleRef:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  labels:    
+  labels:
     helm.sh/chart: kube-state-metrics-4.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
@@ -39268,7 +39266,6 @@ metadata:
   name: release-name-kube-promethe-operator
   labels:
     app: kube-prometheus-stack-operator
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39292,7 +39289,6 @@ metadata:
   name: release-name-kube-promethe-prometheus
   labels:
     app: kube-prometheus-stack-prometheus
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39374,7 +39370,7 @@ kind: Service
 metadata:
   name: release-name-kube-state-metrics
   namespace: default
-  labels:    
+  labels:
     helm.sh/chart: kube-state-metrics-4.7.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: metrics
@@ -39392,8 +39388,7 @@ spec:
     protocol: TCP
     port: 8080
     targetPort: 8080
-  
-  selector:    
+  selector:
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/instance: release-name
 ---
@@ -39405,7 +39400,7 @@ metadata:
   namespace: default
   annotations:
     prometheus.io/scrape: "true"
-  labels:     
+  labels:
     app: prometheus-node-exporter
     heritage: Helm
     release: release-name
@@ -39431,7 +39426,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-alertmanager
     self-monitor: "true"
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39458,7 +39452,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-coredns
     jobLabel: coredns
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39485,7 +39478,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-kube-controller-manager
     jobLabel: kube-controller-manager
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39513,7 +39505,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-kube-etcd
     jobLabel: kube-etcd
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39541,7 +39532,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-kube-proxy
     jobLabel: kube-proxy
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39569,7 +39559,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-kube-scheduler
     jobLabel: kube-scheduler
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39597,7 +39586,6 @@ metadata:
   namespace: default
   labels:
     app: kube-prometheus-stack-operator
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39624,7 +39612,6 @@ metadata:
   labels:
     app: kube-prometheus-stack-prometheus
     self-monitor: "true"
-    
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: release-name
     app.kubernetes.io/version: "33.2.0"
@@ -39649,7 +39636,7 @@ kind: DaemonSet
 metadata:
   name: release-name-prometheus-node-exporter
   namespace: default
-  labels:     
+  labels:
     app: prometheus-node-exporter
     heritage: Helm
     release: release-name
@@ -39666,7 +39653,7 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      labels:         
+      labels:
         app: prometheus-node-exporter
         heritage: Helm
         release: release-name
@@ -39708,8 +39695,7 @@ spec:
             httpGet:
               path: /
               port: 9100
-          resources:
-            {}
+          resources: {}
           volumeMounts:
             - name: proc
               mountPath: /host/proc
