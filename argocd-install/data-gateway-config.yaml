@@ -21,7 +21,7 @@ metadata:
   name: ca-certificates
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   capacity:
     storage: 500Mi
   claimRef:
@@ -32,9 +32,9 @@ spec:
   nodeAffinity:
     required:
       nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: Exists
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: Exists
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   volumeMode: Filesystem
@@ -54,7 +54,7 @@ metadata:
   namespace: default
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi

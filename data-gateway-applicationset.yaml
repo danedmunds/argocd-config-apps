@@ -4,11 +4,11 @@ metadata:
   name: datagateway
 spec:
   generators:
-  - git:
+    - git:
       repoURL: 'git@github.com:qlik-download/argocd-config-apps.git'
       revision: "main"
       directories:
-      - path: data-gateway/*
+        - path: data-gateway/*
   template:
     metadata:
       name: '{{path.basename}}'
