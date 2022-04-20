@@ -4,6 +4,7 @@ extends: default
 ignore: |
   /vendor/
   templates/
+  data-gateway/
 
 rules:
   document-start: disable
