@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
 type: Opaque
 data:
-  redis-password: "Q1V2dnBNY3BEdA=="
+  redis-password: "bFBDM2plZEVlRQ=="
 ---
 # Source: redis/templates/configmap.yaml
 apiVersion: v1
@@ -300,7 +300,7 @@ spec:
         checksum/configmap: ddf7ec007fa6853a599c76a3e791f2820a432b54f8577eda7c79a149d470e8a6
         checksum/health: b03a90b2e6cd79260a2ac5bdfe21b3d982e7cdd985341739f87a4d40504dfdd9
         checksum/scripts: 04353543f4e398a5bdae2e85acb3d9437015d64ce52946850b0edaea69938669
-        checksum/secret: 0ab0abb29746d348b0a975a1c63ab792b0ddb82553b78f7297ca98437dd28390
+        checksum/secret: 3985dd255cda07a9220cd053e5d9d9bdddc197421d0677dcecaba05231f5e16d
     spec:
       
       securityContext:
@@ -459,7 +459,7 @@ spec:
         checksum/configmap: ddf7ec007fa6853a599c76a3e791f2820a432b54f8577eda7c79a149d470e8a6
         checksum/health: b03a90b2e6cd79260a2ac5bdfe21b3d982e7cdd985341739f87a4d40504dfdd9
         checksum/scripts: 04353543f4e398a5bdae2e85acb3d9437015d64ce52946850b0edaea69938669
-        checksum/secret: 5ed0aa5104380691920613286f1de45d927327c3c7cb64eaac5c578b7b1e69f0
+        checksum/secret: f624d06649527c04a71695b323de6c2639969147ba5cfe199fc4b96119a7d258
     spec:
       
       securityContext:
