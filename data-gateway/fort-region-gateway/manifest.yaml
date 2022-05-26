@@ -25,8 +25,8 @@ metadata:
     app.kubernetes.io/component: fort-region-gateway
     app.kubernetes.io/instance: fort-region-gateway
     app.kubernetes.io/name: fort-region-gateway
-    app.kubernetes.io/version: 0.2.2-1.g01c6cc4
-    chart: fort-region-gateway-0.2.2-1.g01c6cc4
+    app.kubernetes.io/version: 0.2.1
+    chart: fort-region-gateway-0.2.1
     heritage: Helm
     release: fort-region-gateway
   name: fort-region-gateway-secrets
@@ -216,8 +216,8 @@ metadata:
     app.kubernetes.io/component: fort-region-gateway
     app.kubernetes.io/instance: fort-region-gateway
     app.kubernetes.io/name: fort-region-gateway
-    app.kubernetes.io/version: 0.2.2-1.g01c6cc4
-    chart: fort-region-gateway-0.2.2-1.g01c6cc4
+    app.kubernetes.io/version: 0.2.1
+    chart: fort-region-gateway-0.2.1
     heritage: Helm
     release: fort-region-gateway
   name: fort-region-gateway-configs
@@ -803,8 +803,8 @@ metadata:
     app.kubernetes.io/component: fort-region-gateway
     app.kubernetes.io/instance: fort-region-gateway
     app.kubernetes.io/name: fort-region-gateway
-    app.kubernetes.io/version: 0.2.2-1.g01c6cc4
-    chart: fort-region-gateway-0.2.2-1.g01c6cc4
+    app.kubernetes.io/version: 0.2.1
+    chart: fort-region-gateway-0.2.1
     heritage: Helm
     release: fort-region-gateway
   name: fort-region-gateway
@@ -829,8 +829,8 @@ metadata:
     app.kubernetes.io/component: fort-region-gateway
     app.kubernetes.io/instance: fort-region-gateway
     app.kubernetes.io/name: fort-region-gateway
-    app.kubernetes.io/version: 0.2.2-1.g01c6cc4
-    chart: fort-region-gateway-0.2.2-1.g01c6cc4
+    app.kubernetes.io/version: 0.2.1
+    chart: fort-region-gateway-0.2.1
     heritage: Helm
     release: fort-region-gateway
   name: fort-region-gateway
@@ -844,8 +844,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configs: 3e3717d101b5b9cc42a55d594cc4887be116efab084749bdfd6ea21d44d2feff
-        checksum/secrets: 510a4ff8b2ad020581b9f8663916dd3e1aa0b6011dc6ca330e606ecbb743df9d
+        checksum/configs: 4e715119137f4f9d0a00ca197b60859d85811b6ab132de5f5b881417789caba3
+        checksum/secrets: 2d0c5bf064cf474e1a9eeb69a00f0e83e87b832178e1da97850776b3174d8624
       labels:
         app: fort-region-gateway
         release: fort-region-gateway
@@ -932,7 +932,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-download/fort-region-gateway:0.2.2-1.g01c6cc4
+        image: ghcr.io/qlik-download/fort-region-gateway:0.2.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -1144,8 +1144,8 @@ metadata:
     app.kubernetes.io/component: fort-region-gateway
     app.kubernetes.io/instance: fort-region-gateway
     app.kubernetes.io/name: fort-region-gateway
-    app.kubernetes.io/version: 0.2.2-1.g01c6cc4
-    chart: fort-region-gateway-0.2.2-1.g01c6cc4
+    app.kubernetes.io/version: 0.2.1
+    chart: fort-region-gateway-0.2.1
     heritage: Helm
     release: fort-region-gateway
   name: fort-region-gateway
