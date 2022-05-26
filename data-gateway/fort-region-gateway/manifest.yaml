@@ -932,7 +932,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-trial/fort-region-gateway:0.2.2-1.g01c6cc4
+        image: ghcr.io/qlik-download/fort-region-gateway:0.2.2-1.g01c6cc4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

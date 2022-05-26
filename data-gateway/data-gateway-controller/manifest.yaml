@@ -166,7 +166,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-trial/data-gateway-controller:0.0.1-27.g6427243
+        image: ghcr.io/qlik-download/data-gateway-controller:0.0.1-27.g6427243
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
