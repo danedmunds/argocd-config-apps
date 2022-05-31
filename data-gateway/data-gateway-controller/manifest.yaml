@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/component: data-gateway-controller
     app.kubernetes.io/instance: data-gateway-controller
     app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.1-27.g6427243
-    chart: data-gateway-controller-0.0.1-27.g6427243
+    app.kubernetes.io/version: 0.0.3
+    chart: data-gateway-controller-0.0.3
     heritage: Helm
     release: data-gateway-controller
   name: data-gateway-controller
@@ -25,8 +25,8 @@ metadata:
     app.kubernetes.io/component: data-gateway-controller
     app.kubernetes.io/instance: data-gateway-controller
     app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.1-27.g6427243
-    chart: data-gateway-controller-0.0.1-27.g6427243
+    app.kubernetes.io/version: 0.0.3
+    chart: data-gateway-controller-0.0.3
     heritage: Helm
     release: data-gateway-controller
   name: data-gateway-controller-secrets
@@ -49,8 +49,8 @@ metadata:
     app.kubernetes.io/component: data-gateway-controller
     app.kubernetes.io/instance: data-gateway-controller
     app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.1-27.g6427243
-    chart: data-gateway-controller-0.0.1-27.g6427243
+    app.kubernetes.io/version: 0.0.3
+    chart: data-gateway-controller-0.0.3
     heritage: Helm
     release: data-gateway-controller
   name: data-gateway-controller-configs
@@ -83,8 +83,8 @@ metadata:
     app.kubernetes.io/component: data-gateway-controller
     app.kubernetes.io/instance: data-gateway-controller
     app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.1-27.g6427243
-    chart: data-gateway-controller-0.0.1-27.g6427243
+    app.kubernetes.io/version: 0.0.3
+    chart: data-gateway-controller-0.0.3
     heritage: Helm
     release: data-gateway-controller
   name: data-gateway-controller
@@ -109,8 +109,8 @@ metadata:
     app.kubernetes.io/component: data-gateway-controller
     app.kubernetes.io/instance: data-gateway-controller
     app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.1-27.g6427243
-    chart: data-gateway-controller-0.0.1-27.g6427243
+    app.kubernetes.io/version: 0.0.3
+    chart: data-gateway-controller-0.0.3
     heritage: Helm
     release: data-gateway-controller
   name: data-gateway-controller
@@ -124,8 +124,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configs: 7e192397f65d0fbe3fe52ef3eca8f08be79e20e044a67a242f87d4f96278c57c
-        checksum/secrets: 06403505ba73f9fb9d7e48613d8e7ff96c8b7ed8b7f46f2ffc690a290a4473ac
+        checksum/configs: 151026309df465c5cf513e93316431c0db8a69e05ec5b1f3d26b2e2c036ebbf5
+        checksum/secrets: d756b0778ae8bcb029832f4fc8cc22a667d5035d3f570d330ff1628fb2cb1bf4
       labels:
         app: data-gateway-controller
         release: data-gateway-controller
@@ -166,7 +166,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-download/data-gateway-controller:0.0.1-27.g6427243
+        image: ghcr.io/qlik-download/data-gateway-controller:0.0.3
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -192,6 +192,10 @@ spec:
       - name: data-gateway-controller-secrets
         secret:
           secretName: data-gateway-controller-secrets
+---
+# Source: data-gateway-controller/templates/manifest.yaml
+# empty top level secret required by qlikcommon charts, if you don't set the release name to data-gateway-controller qlikcommon
+# tries to mount a secret named data-gateway-controller-secrets without creating it first
 ---
 # Source: data-gateway-controller/templates/manifest.yaml
 ---
