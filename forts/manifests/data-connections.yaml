@@ -1,0 +1,374 @@
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvZGNzP3NzbD1mYWxzZQ==
+  redisEncryptionKey: TkdrVXAwVkRKdGMzeGl5Qw==
+  redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
+  tokenAuthPrivateKey: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1JR2tBZ0VCQkREamFrU0o0Umh1dkpRYkFqRkRnTjhBVlhWamQxRWR3S2oxY3puekFzVEtNK1pJZzVhUFMyclYKZVdzRHJuaW44NWlnQndZRks0RUVBQ0toWkFOaUFBUjhJS2xQL0t0TmYrdXJYdmtrbTlHVi9FWjNGS0xPQ0QxUQpyc0paeVpFN21NR2U2MHM1OHhXYnJ6S050YWt5bm16VVVyaGdESldIbVk0V240V0Rld29LRzhDaURmY1UyMGpRCkJwVXR0YWhKa1pGMzcwU0xuVE1oTmFlZk5NNFMvNEE9Ci0tLS0tRU5EIEVDIFBSSVZBVEUgS0VZLS0tLS0K
+  tokenAuthPrivateKeyId: SW1qdzY3a2RTY0xOZlBQcmFnR3dsVFNaZjRFX1h2b05DUjNJSzZCRVRHaw==
+kind: Secret
+metadata:
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: data-connections
+    app.kubernetes.io/version: 5.2.0
+    chart: data-connections-5.2.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connections
+  name: data-connections-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  accessControlsList: any
+  accessControlsURI: http://data-connections-access-controls:5080
+  accessControlsUri: http://access-controls:5080
+  dataConnectorNfsUri: data-connector-nfs:50051
+  datafilesUri: http://qix-datafiles:8080
+  dcaasUri: http://dcaas:9026
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080/v1/keys/qlik.api.internal
+  logLevel: info
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://messaging-nats-client:4222
+  policyDecisionsUri: http://policy-decisions:5080
+  qriVersion: V3
+  redisUri: redis-master:6379
+  redisUriOld: redis-master:6379
+  reservedConnections: QlikAutoMLConnector,DataFiles,MyDataFiles,DataPrepAppCache,6f93cda1-15c4-4321-94e7-ac3cdcab5e4c,ee6a390c-5d33-11e8-9c2d-fa7ae01bbebc,91030040-c91a-4c59-913f-2d8e89e3df88
+  spacesUri: http://spaces:6080
+kind: ConfigMap
+metadata:
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: data-connections
+    app.kubernetes.io/version: 5.2.0
+    chart: data-connections-5.2.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connections
+  name: data-connections-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "9011"
+    prometheus.io/scrape: "true"
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: data-connections
+    app.kubernetes.io/version: 5.2.0
+    chart: data-connections-5.2.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connections
+  name: data-connections
+  namespace: default
+spec:
+  ports:
+    - name: data-connections
+      port: 9011
+      protocol: TCP
+      targetPort: 9011
+  selector:
+    app: data-connections
+    release: data-connections
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: data-connections
+    app.kubernetes.io/version: 5.2.0
+    chart: data-connections-5.2.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connections
+  name: data-connections
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-connections
+      release: data-connections
+  template:
+    metadata:
+      annotations:
+        checksum/configs: dfde63b745dc14550af8f4ed172905cd97748d002c45bdb253cf738520219f5b
+        checksum/secrets: f425c270b852af9f2efdcede8aa5c274338c0916c8fdbc222bb78ec0766b6e62
+      labels:
+        app: data-connections
+        domain: data-connectors
+        messaging-nats-client: "true"
+        release: data-connections
+    spec:
+      containers:
+        - env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: REDIS_ENCRYPTION_KEY_FILE
+              value: /run/secrets/qlik.com/data-connections/redisEncryptionKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+              value: /run/secrets/qlik.com/data-connections/tokenAuthPrivateKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+              value: /run/secrets/qlik.com/data-connections/tokenAuthPrivateKeyId
+            - name: ACCESS_CONTROLS_LIST
+              valueFrom:
+                configMapKeyRef:
+                  key: accessControlsList
+                  name: data-connections-configs
+            - name: ACCESS_CONTROLS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: accessControlsURI
+                  name: data-connections-configs
+            - name: ACCESS_CONTROLS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: accessControlsUri
+                  name: data-connections-configs
+            - name: DATA_CONNECTOR_NFS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: dataConnectorNfsUri
+                  name: data-connections-configs
+            - name: DATAFILES_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: datafilesUri
+                  name: data-connections-configs
+            - name: DCAAS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: dcaasUri
+                  name: data-connections-configs
+            - name: EDGE_AUTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: edgeAuthUri
+                  name: data-connections-configs
+            - name: ENCRYPTION_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: encryptionUri
+                  name: data-connections-configs
+            - name: FEATURE_FLAGS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFlagsUri
+                  name: data-connections-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: data-connections-configs
+            - name: KEYS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: keysUri
+                  name: data-connections-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: data-connections-configs
+            - name: NATS_STREAMING_CLUSTER_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: natsStreamingClusterId
+                  name: data-connections-configs
+            - name: NATS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: natsUri
+                  name: data-connections-configs
+            - name: POLICY_DECISIONS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: policyDecisionsUri
+                  name: data-connections-configs
+            - name: QRI_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: qriVersion
+                  name: data-connections-configs
+            - name: REDIS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: redisUri
+                  name: data-connections-configs
+            - name: REDIS_URI_OLD
+              valueFrom:
+                configMapKeyRef:
+                  key: redisUriOld
+                  name: data-connections-configs
+            - name: RESERVED_CONNECTIONS
+              valueFrom:
+                configMapKeyRef:
+                  key: reservedConnections
+                  name: data-connections-configs
+            - name: SPACES_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spacesUri
+                  name: data-connections-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: ENABLE_CACHE
+              value: featureflags:true,credentials:true,qix-datafiles:true
+            - name: ENABLE_CRYPTO
+              value: "true"
+            - name: ENABLE_INDEX_BUILD
+              value: dataconnections:false,datacredentials:true,credmapping:true
+            - name: ENABLE_JWT_AUTH
+              value: "true"
+            - name: ENABLE_NATS
+              value: "true"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/data-connections:5.2.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: data-connections
+          ports:
+            - containerPort: 9011
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - mountPath: /run/secrets/qlik.com/data-connections
+              name: data-connections-secrets
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: data-connections-secrets
+          secret:
+            secretName: data-connections-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(v[0-9])/dc-(.*) /$1/$2 break;
+      rewrite (?i)/api/(v[0-9])/(data-.*) /$1/$2 break;
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: data-connections
+    app.kubernetes.io/version: 5.2.0
+    chart: data-connections-5.2.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connections
+  name: data-connections
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: data-connections
+                port:
+                  number: 9011
+            path: /api/v1/dc-dataconnections
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: data-connections
+                port:
+                  number: 9011
+            path: /api/v1/dc-datacredentials
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: data-connections
+                port:
+                  number: 9011
+            path: /api/v1/data-connections
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: data-connections
+                port:
+                  number: 9011
+            path: /api/v1/data-credentials
+            pathType: ImplementationSpecific

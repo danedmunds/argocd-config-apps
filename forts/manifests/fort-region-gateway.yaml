@@ -1,0 +1,1109 @@
+apiVersion: v1
+data:
+  fortPrivateKey: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlKS1FJQkFBS0NBZ0VBNkhKUmkzVkZiSzZrb2xqdDlZM2FTVFM1RmVBL2llZEJoOHd1SjV5anVXcTFPZ2JkCnkwYWVDdnVkR2dINUszcXloaUpIRXBaS1VCZ2RoTUZHcDhwS3c0eEx4ZzM5VVB2L0RrNHpKZy9zRHYxYnRFS3gKQkdvdlFKbitESW94TlIvSkQrMVpuL2xMNVFFZ0JCczJlQ1l0RFMzblBiTWlRamswTkJHU1c1ZEV3VnI0c1FIdgpEU2RCcTJFWXN4NkVDZHNpZzM5TVE0a05jT0IrQ2pJRVlseFZGUXhwWUlIeHBycURpaUxKUXdZcUxoYy9lbHhpCnV5emRWQzhENjVDVkpHSEp0bUhtVm5NNk1uV1dldk5yNWoyWWM5TS9ONTRzMXlSdTZRdTAwMmltS3VwYUxWdUIKdGxXUGRaNGNJMm1BdEFtaXRQcUpqcDhKV1AyQmNBK3E5Qlo1eGlvSDNTTWpXbUQ4dkRZeis0eklUQTZLd1pMegowUHF0dEhlWXRjSndseUp1Rk52WVVNMlFtSGxkbVFRVHI1R2puSnAwK3NLYy94N1ZGamFNTUppTHhNV3hHbUduCkdNaVAwVnFFM29aWDhHVXJmSGRjMXRlRWFJSm5pUEFIeWt0SFpWdkJHZkpUWVhJcHd1SFNxbGh1S1NUNjNvUEQKTEJaNnNkTmMxSUdwMExzN1VvNTJtaUp2MWppNHM4aXc4QmZrbndlWmQ1K3NTTld1WHhFTW1yUTlEOEcvV2JYUgpHZHpyS1ZrMGVQUjlDK3p6Y0lLQ3UvbVVMdFhPMUdWcC9HblFXZVZMQWFHVTFzK3RCN3MwUUdkLzVNeHQwZUNaCmptU1RGVGFxcTI2VXNSd0JaTlhiWXNxOFFWeGV3ODJZY0xKMWxPUFF2MWZnN245Z2RDZ1V0a21FeDZFQ0F3RUEKQVFLQ0FnQkQ0TzVUTFVIQ3hSVXFtNUdSdllUYkQ5eGt1UUdWQWNVdkpMN3RybDVaVFFIekdnSTIxRDVlc3E5ago0dU9pZ01nVlIzazl3a21kTGcyZ3NOZ3pNMjIxd1FoM282b3Z0Z2I3WkhhblRNc0FiWmdVQWMyem5sYUNKUFg5CkwzWERMNjhGU2FoOGdNNWE1NE16NzhadU82ZTRTNGxWaVRRZDVwcUtBZitkWTRVZWViUlo3Rmlrbkt3ZW9kSVcKckhpZWNER1orTmlLZUVGR2p5Zi9UaS9ka1Z6L01vcXJOZ2NkU3lZU2Rxb1RPbitpeWdNdGRrRVdxN2xPVmhScworK0d4cUNUQmI4RlZ5WHhiTTk5bnRDSDBNRlNPcmtldHRERWYrbkd3K0V3cjJFbCtDc1dlclRRcHpMNkIrRlA3Ck8xbnNPVXdjVVhWT0FyODJENEYyK2Z4UUh5Z2IyWm4vSlArWkE5dGhRaFZhbTdCS05vZXVKYTZBSDQzWjFjdFAKWm5ONFZlUWVIcm9iQW4vNWFramllbEdLODFQbFI4bUZjaVRncmhWZEFpVTVzYlJDZ0hrUURJSFYxdk1kY2VoZgprNVNxWlBhckFodVJMaWtPTDh0b2dFcG5RTTRGdEhQUVBkUzdHdldnNVJiYmNkUnRRd1BnL29ZNTVadzlvV2JVCk9ZKzVwUW9kaWsrSDZEcHhvNVpSbDZKc3NNSzVXSzNlRzBuQ0tuUmwzNEFpbDFTQ0ZvNVorbjNjNGxKZjdHY0MKamZHeWJzanlIbk1TY29SY2tCcVNzOHF1SW1TTDhTcUZIZi9QRVNVWWtiaFpXOHZuM29ETDdYblNycldWZUNhKwpFbnJ1MmRzUVNCcGk0Zkt3Y3JCM0hIc0Mxd2lyYktQaFhkb1RFZDhubFJ6azBScW5pUUtDQVFFQS92T2R5ZUwzCk9TcmU2T2tnL1g3azZVZDAwcFBxQXJQVmFrZFhuT2lQWmJDOGNZTFEzK2xIOElWSXlncG5XcEZSSGFONWxGYnQKSUxHVit5M2lBWmV3MEZjT0ZER2lENGNMS1lIOGFMS2NoSmEvV0ZFcGJpUTdsaldyRlpIWEhNeks5azNPTi9FNApwUHNEK2paQ1Z0L1RXL2w0aHRXWXloejF2OW9hbHBuN3hLbmVIVWpDUE1sdVVqeTBVV0VRVlFmWmFaUmlRVFBoCjFtOFl6ODVFeFVvQW9yaUJHd3VRUnBxV3dsdG9zeEIwM0k3ZHVKZFNibTJ1cEg3WmgwbHQ2ME11UkNKWnd5bEIKR055bDdGSDBTd3hOK2ZQZWwvbWlXZGd2cWZPRVRnMXFLSXMzQmRnTkgzbkxUUXRWWTV5ZUtpZTJBRHZ1V1BsUwpoNVlvcmQzK2pRVWY3d0tDQVFFQTZXY0M3VXNDRTNTV29LV1FhYjE4V1lvdnRNZ3BWNTViZFY4MXVkYXpVQ3R2CkhnN1pNZmU4UkFGZWZ5cDNOV2JGM0R4ZDJDMlVpT2Y4elB0dUNmQk5reDdQVDdVb2ZJR1BGOTJtWUhqQjVBdHgKUkJkRlgyVEZ1WWVvNHVjUlpYZFZHWHBuSU1FZXhmTVB4UVhIaURTeW9ERVpWY2tOUklhUjZ3M0xLekNJNU54aAo1WU9IelRoRDZzUHlwdWZNNG1sOTJNZXpralpvNjZFdnJUZitkVU1JSDltbkxpN2ZZYnBuaUg3cmJqdHdqMWdzCnRRbElrQUkxaTUyVWJPUEdVRWxMSHlqVzF4cXlNWUJYT3RIOWdqcmdqRklwcTBROHVOWGNncnZVNWdobGR6aTUKc0UwOWV0RElPaENvaVNZOExmNFBac21nZUNGYlZWRGV1UDh0NTVRQmJ3S0NBUUVBaUxDU200Z2Raa0FPN1M3NApxaENicUZyUVRvcFJQNHV0VTJMV25XQ3VhU1g5a3BwQlpKdE5INjVHSFZUQW52VWtXVkNwUVpmdFlNYjFrNHJCCkRudUdwOXpVeG96cHg0dHV0NTFpZDd1ellQNzFyZU10NUVoMnpnME9JZTFrT0tPdithZ3pkUmpXZHRYQ0J5ZUsKSDh1M0pTdTJyQXZlOUJYY3lEU21ackkrSXUyMEVWMU9Eb3NzbzlpNkVKdUt4eHdETzdEN2tOdkJMRmU2Sk1nQgpaUWxORi9EMS8wc08ybHZOa255eHdMZUZBQzkwdnFBYTZPdlRZNHhERWw2VEdUeVdsSjhhSXlGK0xsYzJlbUppCktNNTdEQlRzOWV3NFdCVXBVT1FudmpWQkFtWEpaVSsxa1hlYVFUOWZVNTNIeXZBcGl5eVdtSXRyN1JmYnpZUWwKRXZSNWJ3S0NBUUVBdVR3VHlwZDQ4ay9aSzIyNml2RGpPM3k4RjlHelhlSkQyNGJRY01qQVRxUHA4QVVBd3ZORgo2d0xiS0RsZm1uWVNHWk9mTnU0VnNBSE5WREZIUjRQN1RRTnFyR3V0MGdKUXVqUWkwdldEaTZTNUk3MEVSWTBJCmp4SG5LdzBQZFdPYm1qaldsOXdzdkJVSE11by9UUTNscGRUUnNvOTVoQ1Q0c1graytvWHVYeE80YmhwUk1NR3kKeFNMMTlSaUtOalphdGl6bml1YTdwaVdxWE9MUGcrakxEZHdESGxmODJPYkRQRVRlUEFIWWR5c1hjQ1lKL0tDRQpObVc5WWgzelNjeWhYZjFmWkIrL3hDR0RHUitHL2xBVDNjbG5ZSkVyVDlZS3g0YWlsRjJkaVZ6dm9jZnJQd2xyCm53bVJlQ2RzSTJRNmZPMFArY2NmWVRwcFNKRGNzYWw0NlFLQ0FRQWV3NktlcXdwVzdlYktQSzI5QUdEcEpCUkUKOHpzcW01ODdUVFRkNG1aTFBDRHlPeGZsZUNlSUxycXQ5Rk05MFVhOVZvVnRWckdLYm1JOXExZWFBNS9jNXhiMQpTNFc0QzZQR2UvZVoxT3hYMHNsOWdOMEZzWGMyRGY1UDVSSWJOT0V3RVRnUjQweWxPcDhKUCtJUDRiMWhhQytkCkwxY1lXUVNNNmhVMTdsdUhreFNzYXlSVE1jbUVmUW9keE02QkdZaUp6Qlk0U0RjR251b3l6OU9sYWgzMU53SDQKTU1ZNjh3Qjl0Vmw2TEhmOEN2OThlWk9nZy9yVGVwbzVKcXhKSlphaHBLL1hDTTcxY1oxWHpCWTNOM1Y5UVBrMwo3eVlHUitBUE1yQTJqL0hVVysyRkl5STNReTVGQ2tpK1JaYlFuTWFkdUE5U0JUWFZ5NGtUR2JGc01UeGIKLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
+  interactiveIdpClientId: Zm9v
+  interactiveIdpClientSecret: YmFy
+kind: Secret
+metadata:
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/component: fort-region-gateway
+    app.kubernetes.io/instance: fort-region-gateway
+    app.kubernetes.io/name: fort-region-gateway
+    app.kubernetes.io/version: 0.1.1-27.g3797dbe
+    chart: fort-region-gateway-0.1.1-27.g3797dbe
+    heritage: Helm
+    release: fort-region-gateway
+  name: fort-region-gateway-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  disableJwtAuth: "true"
+  enableAccessTokens: "true"
+  enableRedisTokens: "true"
+  environment: fort
+  featureFortOauthP1: "true"
+  featuresOverlay: |
+    {
+
+      "qixSessionsUseOapeRouting":false,
+      "ENGINE_MOVE_DATA_QVF_TO_MONGO_AND_S3": false,
+      "qixSessionsDisableDynamicEngines": true,
+      "TEMPORARY_CONTENTS_S3_BACKEND": false,
+      "PERSIST_FIELDLEVEL_LINEAGE": false,
+      "ENGINE_PERSIST_LINEAGE_S3": false
+    }
+  fortName: fort
+  fortOriginUrl: https://127.0.0.1
+  fortTenantUrl: https://tenant.region.qlikcloud.com
+  fortWebIntegrationId: abc123
+  keysUri: http://keys:8080
+  logLevel: debug
+  redisUri: redis-master:6379
+  tenantId: def456
+kind: ConfigMap
+metadata:
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/component: fort-region-gateway
+    app.kubernetes.io/instance: fort-region-gateway
+    app.kubernetes.io/name: fort-region-gateway
+    app.kubernetes.io/version: 0.1.1-27.g3797dbe
+    chart: fort-region-gateway-0.1.1-27.g3797dbe
+    heritage: Helm
+    release: fort-region-gateway
+  name: fort-region-gateway-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: access-controls
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 5080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: api-keys
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: collections
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: condition-manager
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: feature-flags
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: groups
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: identities
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: identity-providers-ext
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: identity-providers
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: licenses
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 9200
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: locale
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: policy-administrations
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 7070
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: policy-decisions
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 5080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: reload-tasks
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: resource-library
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 21068
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: spaces
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 6080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: subscriptions
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: tenants
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/name: fort-region-gateway
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  name: users
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    app.kubernetes.io/part-of: qliksense
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/component: fort-region-gateway
+    app.kubernetes.io/instance: fort-region-gateway
+    app.kubernetes.io/name: fort-region-gateway
+    app.kubernetes.io/version: 0.1.1-27.g3797dbe
+    chart: fort-region-gateway-0.1.1-27.g3797dbe
+    heritage: Helm
+    release: fort-region-gateway
+  name: fort-region-gateway
+  namespace: default
+spec:
+  ports:
+    - name: fort-region-gateway
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fort-region-gateway
+    release: fort-region-gateway
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/component: fort-region-gateway
+    app.kubernetes.io/instance: fort-region-gateway
+    app.kubernetes.io/name: fort-region-gateway
+    app.kubernetes.io/version: 0.1.1-27.g3797dbe
+    chart: fort-region-gateway-0.1.1-27.g3797dbe
+    heritage: Helm
+    release: fort-region-gateway
+  name: fort-region-gateway
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fort-region-gateway
+      release: fort-region-gateway
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 390fe65b65c67095bcc947209712b6d3a8bf408fb5b2393a6dc4421d88e81a31
+        checksum/secrets: 889563c555f8e19d05e84a714b04bd656ae4101beff3af03ad134cea307afbea
+      labels:
+        app: fort-region-gateway
+        release: fort-region-gateway
+    spec:
+      containers:
+        - env:
+            - name: FORT_PRIVATE_KEY_FILE
+              value: /run/secrets/qlik.com/fort-region-gateway/fortPrivateKey
+            - name: INTERACTIVE_IDP_CLIENT_ID_FILE
+              value: /run/secrets/qlik.com/fort-region-gateway/interactiveIdpClientId
+            - name: INTERACTIVE_IDP_CLIENT_SECRET_FILE
+              value: /run/secrets/qlik.com/fort-region-gateway/interactiveIdpClientSecret
+            - name: DISABLE_JWT_AUTH
+              valueFrom:
+                configMapKeyRef:
+                  key: disableJwtAuth
+                  name: fort-region-gateway-configs
+            - name: ENABLE_ACCESS_TOKENS
+              valueFrom:
+                configMapKeyRef:
+                  key: enableAccessTokens
+                  name: fort-region-gateway-configs
+            - name: ENABLE_REDIS_TOKENS
+              valueFrom:
+                configMapKeyRef:
+                  key: enableRedisTokens
+                  name: fort-region-gateway-configs
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  key: environment
+                  name: fort-region-gateway-configs
+            - name: FEATURE_FORT_OAUTH_P1
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFortOauthP1
+                  name: fort-region-gateway-configs
+            - name: FEATURES_OVERLAY
+              valueFrom:
+                configMapKeyRef:
+                  key: featuresOverlay
+                  name: fort-region-gateway-configs
+            - name: FORT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: fortName
+                  name: fort-region-gateway-configs
+            - name: FORT_ORIGIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: fortOriginUrl
+                  name: fort-region-gateway-configs
+            - name: FORT_TENANT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: fortTenantUrl
+                  name: fort-region-gateway-configs
+            - name: FORT_WEB_INTEGRATION_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: fortWebIntegrationId
+                  name: fort-region-gateway-configs
+            - name: KEYS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: keysUri
+                  name: fort-region-gateway-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: fort-region-gateway-configs
+            - name: REDIS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: redisUri
+                  name: fort-region-gateway-configs
+            - name: TENANT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: tenantId
+                  name: fort-region-gateway-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/fort-region-gateway:0.1.1-27.g3797dbe
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: fort-region-gateway
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          volumeMounts:
+            - mountPath: /run/secrets/qlik.com/fort-region-gateway
+              name: fort-region-gateway-secrets
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      dnsConfig:
+        options:
+          - name: timeout
+            value: "1"
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: fort-region-gateway-secrets
+          secret:
+            secretName: fort-region-gateway-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/v1/(.*) /v1/$1 break;
+  labels:
+    app: fort-region-gateway
+    app.kubernetes.io/component: fort-region-gateway
+    app.kubernetes.io/instance: fort-region-gateway
+    app.kubernetes.io/name: fort-region-gateway
+    app.kubernetes.io/version: 0.1.1-27.g3797dbe
+    chart: fort-region-gateway-0.1.1-27.g3797dbe
+    heritage: Helm
+    release: fort-region-gateway
+  name: fort-region-gateway
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/data-alerts
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/sharing
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/spaces
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/features
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/licenses
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/rules
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/rulesets
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/policies
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/policies/raw
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/groups/me
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/groups/user-claims
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/qlik-groups
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/idp-groups
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/users
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/tenants
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/web-integrations
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/api-keys
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/identity-providers
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/collections
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/items
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/reload-tasks
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/subscriptions
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/conditions
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/condition-manager
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/locale
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /extensions
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/extensions
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/themes
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/transport
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/hub-dashboards
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/hub-widgets
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/user-locale
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/user-settings
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/web-notifications
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/notes
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/notes-settings
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /settings
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/accesscontrol
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /api/v1/accesscontrol/raw
+            pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fort-idp
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /fort-idp
+            pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/fort/(.*) /$1 break;
+  name: fort-region-gateway-status
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: fort-region-gateway
+                port:
+                  number: 8080
+            path: /fort
+            pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/permanent-redirect: https://tenant.region.qlikcloud.com$request_uri
+  name: fort-region-gateway-redirect-to-region
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: will-not-use
+                port:
+                  number: 1234
+            path: /(console|qdi|hub)/?$
+            pathType: Prefix

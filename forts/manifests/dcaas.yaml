@@ -1,0 +1,327 @@
+apiVersion: v1
+data:
+  redisEncryptionKey: TkdrVXAwVkRKdGMzeGl5Qw==
+  tokenAuthPrivateKey: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1JR2tBZ0VCQkRCeldmRzAyNG4rUHk5U0JJV0xRQytiQ1hEZHNucFBZWTcyZzNyRENJZmpka0xVSzdFU2Yvd0YKNmNDQVoyNkZTR1dnQndZRks0RUVBQ0toWkFOaUFBU0dVcDRtNVpLYVh2RTdwN3FvTmFWMnVKRlFpYUtyNWN3ZApkcWlDdzd5SkZ6d1ltWWVLTHRlR1hyT2FDZyttaDQzUUFCenE5RjVteEh0NitIY2ZISGhnSDdwcXNES1RDSjdwCkVjV1pwOVJCMDNmampmaFVEdFRuYllyYXJGaGl2QTA9Ci0tLS0tRU5EIEVDIFBSSVZBVEUgS0VZLS0tLS0K
+  tokenAuthPrivateKeyId: eGNPbWE1SlVMdzVnNzgwYW95YWNEWWtFVVZKZFdMSGdDZzJlbnotQWhaQQ==
+kind: Secret
+metadata:
+  labels:
+    app: dcaas
+    app.kubernetes.io/component: dcaas
+    app.kubernetes.io/instance: dcaas
+    app.kubernetes.io/name: dcaas
+    app.kubernetes.io/version: 5.0.1
+    chart: dcaas-5.0.1
+    domain: data-connectors
+    heritage: Helm
+    release: dcaas
+  name: dcaas-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  connectorService: data-connector-common:50095 data-connector-rest-rld:data-connector-rest-cmd:50060 data-connector-qwc-rld:data-connector-qwc-cmd:50060 data-connector-odbc-rld:data-connector-odbc-cmd:50060 data-connector-sap-sql-rld:data-connector-sap-sql-cmd:50060 data-connector-sap-bw-rld:data-connector-sap-bw-cmd:50060 qix-datafiles:50051 data-connector-sfdc-rld:data-connector-sfdc-cmd:50060 data-connector-nfs:50051
+  connectorsConfig: '{"connectors":[]}'
+  dataConnectionsUri: http://data-connections:9011
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: info
+  natsStreamingClusterId: dcaas-nats-streaming-cluster
+  natsUri: nats://dcaas-nats-client:4222
+  qixDataConnectionUri: http://dcaas-qix-data-connection:9011
+  redisUri: redis-master:6379
+  spacesUri: http://spaces:6080
+kind: ConfigMap
+metadata:
+  labels:
+    app: dcaas
+    app.kubernetes.io/component: dcaas
+    app.kubernetes.io/instance: dcaas
+    app.kubernetes.io/name: dcaas
+    app.kubernetes.io/version: 5.0.1
+    chart: dcaas-5.0.1
+    domain: data-connectors
+    heritage: Helm
+    release: dcaas
+  name: dcaas-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "9026"
+    prometheus.io/scrape: "true"
+  labels:
+    app: dcaas
+    app.kubernetes.io/component: dcaas
+    app.kubernetes.io/instance: dcaas
+    app.kubernetes.io/name: dcaas
+    app.kubernetes.io/version: 5.0.1
+    chart: dcaas-5.0.1
+    domain: data-connectors
+    heritage: Helm
+    release: dcaas
+  name: dcaas
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 9026
+      protocol: TCP
+      targetPort: 9026
+  selector:
+    app: dcaas
+    release: dcaas
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dcaas
+    app.kubernetes.io/component: dcaas
+    app.kubernetes.io/instance: dcaas
+    app.kubernetes.io/name: dcaas
+    app.kubernetes.io/version: 5.0.1
+    chart: dcaas-5.0.1
+    domain: data-connectors
+    heritage: Helm
+    release: dcaas
+  name: dcaas
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dcaas
+      release: dcaas
+  template:
+    metadata:
+      annotations:
+        checksum/configs: c2aa2088aab81f98cc99e8177134af651485d850f5ab32db97a7f2fedb13d9a7
+        checksum/secrets: 6101718800cc2b6e62dacd97cf0254a2854b07babd82fb09f423a23427f57e1b
+      labels:
+        app: dcaas
+        dcaas-nats-client: "true"
+        domain: data-connectors
+        release: dcaas
+    spec:
+      containers:
+        - env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: REDIS_ENCRYPTION_KEY_FILE
+              value: /run/secrets/qlik.com/dcaas/redisEncryptionKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+              value: /run/secrets/qlik.com/dcaas/tokenAuthPrivateKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+              value: /run/secrets/qlik.com/dcaas/tokenAuthPrivateKeyId
+            - name: CONNECTOR_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  key: connectorService
+                  name: dcaas-configs
+            - name: CONNECTORS_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  key: connectorsConfig
+                  name: dcaas-configs
+            - name: DATA_CONNECTIONS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: dataConnectionsUri
+                  name: dcaas-configs
+            - name: FEATURE_FLAGS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFlagsUri
+                  name: dcaas-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: dcaas-configs
+            - name: KEYS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: keysUri
+                  name: dcaas-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: dcaas-configs
+            - name: NATS_STREAMING_CLUSTER_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: natsStreamingClusterId
+                  name: dcaas-configs
+            - name: NATS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: natsUri
+                  name: dcaas-configs
+            - name: QIX_DATA_CONNECTION_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: qixDataConnectionUri
+                  name: dcaas-configs
+            - name: REDIS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: redisUri
+                  name: dcaas-configs
+            - name: SPACES_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spacesUri
+                  name: dcaas-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: CONNECTIONS_CACHE_TTL
+              value: "600"
+            - name: EMULATE_STORAGE_PROVIDER
+              value: "true"
+            - name: ENABLE_CONNECTIONS_CACHE
+              value: "false"
+            - name: ENABLE_FEATUREFLAG_FILTERING
+              value: "true"
+            - name: ENABLE_JWT_AUTH
+              value: "true"
+            - name: ENABLE_NATS
+              value: "false"
+            - name: ENABLE_POD_LOAD_BALANCING
+              value: "false"
+            - name: ENABLE_SPACES_CACHE
+              value: "false"
+            - name: ENABLE_TRACING
+              value: "true"
+            - name: NODE_ENV
+              value: enterprise
+            - name: SPACES_CACHE_TTL
+              value: "1200"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/dcaas:5.0.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: dcaas
+          ports:
+            - containerPort: 9026
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - mountPath: /run/secrets/qlik.com/dcaas
+              name: dcaas-secrets
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      dnsConfig:
+        options:
+          - name: timeout
+            value: "1"
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: dcaas-secrets
+          secret:
+            secretName: dcaas-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/dcaas/(.*) /$1 break;
+      rewrite (?i)/dcaas/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+  labels:
+    app: dcaas
+    app.kubernetes.io/component: dcaas
+    app.kubernetes.io/instance: dcaas
+    app.kubernetes.io/name: dcaas
+    app.kubernetes.io/version: 5.0.1
+    chart: dcaas-5.0.1
+    domain: data-connectors
+    heritage: Helm
+    release: dcaas
+  name: dcaas
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: dcaas
+                port:
+                  number: 9026
+            path: /api/dcaas/datasources
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: dcaas
+                port:
+                  number: 9026
+            path: /api/dcaas/command
+            pathType: ImplementationSpecific

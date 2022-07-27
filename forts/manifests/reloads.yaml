@@ -1,0 +1,390 @@
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvcmVsb2Fkcz9zc2w9ZmFsc2U=
+  tokenAuthPrivateKey: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1JR2tBZ0VCQkRBY3VGcFRMRk82TWJ2aUdUSnVCam1GR1Vka3JOdkxTV3RTY3BvV1QwdnYvcG5tejUvQ2w3TGUKNEN3b3JDNWpTalNnQndZRks0RUVBQ0toWkFOaUFBUzF4NXdaaHVTMHJOalpRQUlVZkl6ZFh5SnEwK3pFeVR0TgpUNi9LK3lvRkNwYlhmSHhCZkV6bWhZZWhSUFo5OENlK3VzUnl3eHVHcFVhM01lQis3bFFBc3VTNnNtdUIyR2NSClVCdUozeWVLK0VMU1E0eU9Oc3djY0gwNnhxOUFtd0U9Ci0tLS0tRU5EIEVDIFBSSVZBVEUgS0VZLS0tLS0K
+  tokenAuthPrivateKeyId: UXRpRnR4LTVNQ2NzbkhiLXhtV0dnandvSnVFWllZa1lIYmxOMklfQmlibw==
+kind: Secret
+metadata:
+  labels:
+    app: reloads
+    app.kubernetes.io/component: reloads
+    app.kubernetes.io/instance: reloads
+    app.kubernetes.io/name: reloads
+    app.kubernetes.io/version: 3.9.2
+    chart: reloads-3.9.2
+    domain: data-reload
+    heritage: Helm
+    release: reloads
+  name: reloads-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  dependentServicesReadinessCheckEnabled: "false"
+  edgeAuthUri: http://edge-auth:8080
+  engineConnectionTimeoutSeconds: "1200"
+  engineUri: http://engine:9076
+  featureFlagsUri: http://feature-flags:8080
+  httpServerIdleTimeoutSeconds: "30"
+  httpServerReadTimeoutSeconds: "30"
+  httpServerWriteTimeoutSeconds: "60"
+  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: debug
+  maxRequeuesWithErrors: "5"
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://messaging-nats-client:4222
+  pollProgressIntervalSecs: "60"
+  qixSessionsUri: http://qix-sessions:8080
+  reloadHistoryTTLSeconds: "7776000"
+  reloadTasksUri: http://reload-tasks:8080
+  requeueDelayLevel: "3"
+  requeueDelaySeconds: "30"
+  requeueDelayStrategy: random_with_fixed_delay
+  sessionRequeueTimeoutSeconds: "30"
+  tokenAuthUri: http://edge-auth:8080
+  tracingEnabled: "true"
+  usersUri: http://identities:8080
+kind: ConfigMap
+metadata:
+  labels:
+    app: reloads
+    app.kubernetes.io/component: reloads
+    app.kubernetes.io/instance: reloads
+    app.kubernetes.io/name: reloads
+    app.kubernetes.io/version: 3.9.2
+    chart: reloads-3.9.2
+    domain: data-reload
+    heritage: Helm
+    release: reloads
+  name: reloads-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: reloads
+    app.kubernetes.io/component: reloads
+    app.kubernetes.io/instance: reloads
+    app.kubernetes.io/name: reloads
+    app.kubernetes.io/version: 3.9.2
+    chart: reloads-3.9.2
+    domain: data-reload
+    heritage: Helm
+    release: reloads
+  name: reloads
+  namespace: default
+spec:
+  ports:
+    - name: reloads
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: reloads
+    release: reloads
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reloads
+    app.kubernetes.io/component: reloads
+    app.kubernetes.io/instance: reloads
+    app.kubernetes.io/name: reloads
+    app.kubernetes.io/version: 3.9.2
+    chart: reloads-3.9.2
+    domain: data-reload
+    heritage: Helm
+    release: reloads
+  name: reloads
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reloads
+      release: reloads
+  template:
+    metadata:
+      annotations:
+        checksum/configs: cdf8b288cc803e741c4a2a5eb6a75eac58e8c60255c4098823d249cfd924ad71
+        checksum/secrets: df1ec5bb2f0e7ac498faad9c0d1ff1512d6365bf9de728189b53252cc77c52a1
+      labels:
+        app: reloads
+        domain: data-reload
+        messaging-nats-client: "true"
+        release: reloads
+    spec:
+      containers:
+        - env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+              value: /run/secrets/qlik.com/reloads/tokenAuthPrivateKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+              value: /run/secrets/qlik.com/reloads/tokenAuthPrivateKeyId
+            - name: DEPENDENT_SERVICES_READINESS_CHECK_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: dependentServicesReadinessCheckEnabled
+                  name: reloads-configs
+            - name: EDGE_AUTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: edgeAuthUri
+                  name: reloads-configs
+            - name: ENGINE_CONNECTION_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: engineConnectionTimeoutSeconds
+                  name: reloads-configs
+            - name: ENGINE_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: engineUri
+                  name: reloads-configs
+            - name: FEATURE_FLAGS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFlagsUri
+                  name: reloads-configs
+            - name: HTTP_SERVER_IDLE_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: httpServerIdleTimeoutSeconds
+                  name: reloads-configs
+            - name: HTTP_SERVER_READ_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: httpServerReadTimeoutSeconds
+                  name: reloads-configs
+            - name: HTTP_SERVER_WRITE_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: httpServerWriteTimeoutSeconds
+                  name: reloads-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: reloads-configs
+            - name: KEYS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: keysUri
+                  name: reloads-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: reloads-configs
+            - name: MAX_REQUEUES_WITH_ERRORS
+              valueFrom:
+                configMapKeyRef:
+                  key: maxRequeuesWithErrors
+                  name: reloads-configs
+            - name: NATS_STREAMING_CLUSTER_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: natsStreamingClusterId
+                  name: reloads-configs
+            - name: NATS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: natsUri
+                  name: reloads-configs
+            - name: POLL_PROGRESS_INTERVAL_SECS
+              valueFrom:
+                configMapKeyRef:
+                  key: pollProgressIntervalSecs
+                  name: reloads-configs
+            - name: QIX_SESSIONS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: qixSessionsUri
+                  name: reloads-configs
+            - name: RELOAD_HISTORY_TTL_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: reloadHistoryTTLSeconds
+                  name: reloads-configs
+            - name: RELOAD_TASKS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: reloadTasksUri
+                  name: reloads-configs
+            - name: REQUEUE_DELAY_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: requeueDelayLevel
+                  name: reloads-configs
+            - name: REQUEUE_DELAY_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: requeueDelaySeconds
+                  name: reloads-configs
+            - name: REQUEUE_DELAY_STRATEGY
+              valueFrom:
+                configMapKeyRef:
+                  key: requeueDelayStrategy
+                  name: reloads-configs
+            - name: SESSION_REQUEUE_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: sessionRequeueTimeoutSeconds
+                  name: reloads-configs
+            - name: TOKEN_AUTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: tokenAuthUri
+                  name: reloads-configs
+            - name: TRACING_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: tracingEnabled
+                  name: reloads-configs
+            - name: USERS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: usersUri
+                  name: reloads-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: AUTH_ENABLED
+              value: "true"
+            - name: ENGINE_SESSIONS_QUEUE_ENABLED
+              value: ""
+            - name: MAX_SIMULTANEOUS_RELOADS
+              value: "100"
+            - name: PARALLEL_CHECKING_ENABLED
+              value: "true"
+            - name: PROMETHEUS_PORT
+              value: "8080"
+            - name: SESSION_RETRIES_MAX
+              value: "3"
+            - name: SESSION_RETRY_WAIT_MAX_SECONDS
+              value: "60"
+            - name: SESSION_RETRY_WAIT_MIN_SECONDS
+              value: "30"
+            - name: SHUTDOWN_RELOAD_DRAIN_GRACE_PERIOD_MINUTES
+              value: "1"
+            - name: TERMINATION_GRACE_PERIOD_SECONDS
+              value: "90"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/qix-data-reload:3.9.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: reloads
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          volumeMounts:
+            - mountPath: /run/secrets/qlik.com/reloads
+              name: reloads-secrets
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 90
+      volumes:
+        - name: reloads-secrets
+          secret:
+            secretName: reloads-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: reloads
+    app.kubernetes.io/component: reloads
+    app.kubernetes.io/instance: reloads
+    app.kubernetes.io/name: reloads
+    app.kubernetes.io/version: 3.9.2
+    chart: reloads-3.9.2
+    domain: data-reload
+    heritage: Helm
+    release: reloads
+  name: reloads
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: reloads
+                port:
+                  number: 8080
+            path: /api/v1/reloads
+            pathType: ImplementationSpecific
