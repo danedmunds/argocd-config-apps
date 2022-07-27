@@ -1,0 +1,177 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app: data-rest-source
+    app.kubernetes.io/component: data-rest-source
+    app.kubernetes.io/instance: data-rest-source
+    app.kubernetes.io/name: data-rest-source
+    app.kubernetes.io/version: 2.0.8
+    chart: data-rest-source-2.0.8
+    domain: data-connectors
+    heritage: Helm
+    release: data-rest-source
+  name: data-rest-source-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  logLevel: debug
+kind: ConfigMap
+metadata:
+  labels:
+    app: data-rest-source
+    app.kubernetes.io/component: data-rest-source
+    app.kubernetes.io/instance: data-rest-source
+    app.kubernetes.io/name: data-rest-source
+    app.kubernetes.io/version: 2.0.8
+    chart: data-rest-source-2.0.8
+    domain: data-connectors
+    heritage: Helm
+    release: data-rest-source
+  name: data-rest-source-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: data-rest-source
+    app.kubernetes.io/component: data-rest-source
+    app.kubernetes.io/instance: data-rest-source
+    app.kubernetes.io/name: data-rest-source
+    app.kubernetes.io/version: 2.0.8
+    chart: data-rest-source-2.0.8
+    domain: data-connectors
+    heritage: Helm
+    release: data-rest-source
+  name: data-rest-source
+  namespace: default
+spec:
+  ports:
+    - name: data-rest-source
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: data-rest-source
+    release: data-rest-source
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: data-rest-source
+    app.kubernetes.io/component: data-rest-source
+    app.kubernetes.io/instance: data-rest-source
+    app.kubernetes.io/name: data-rest-source
+    app.kubernetes.io/version: 2.0.8
+    chart: data-rest-source-2.0.8
+    domain: data-connectors
+    heritage: Helm
+    release: data-rest-source
+  name: data-rest-source
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-rest-source
+      release: data-rest-source
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 5b61192bd66f160d201580a545239b6de04899311852c344d2678981e463447f
+        checksum/secrets: e4175e51201cdf34519e383e8bf69ceb4d005a64c04be82b0a6c01c724166902
+      labels:
+        app: data-rest-source
+        release: data-rest-source
+    spec:
+      containers:
+        - env:
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: data-rest-source-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: HOST_PORT
+              value: "8080"
+            - name: PROMETHEUS_PORT
+              value: "8080"
+            - name: TERMINATION_GRACE_PERIOD_SECONDS
+              value: "30"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/data-rest-source:2.0.8
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: data-rest-source
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data-rest-source-secrets
+          secret:
+            secretName: data-rest-source-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets

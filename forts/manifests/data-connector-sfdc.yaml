@@ -1,0 +1,421 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  dataHost: 0.0.0.0
+  dataPortRangeEnd: "50060"
+  dataPortRangeStart: "50060"
+  logLevel: INFO
+kind: ConfigMap
+metadata:
+  labels:
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "3005"
+    prometheus.io/scrape: "true"
+  labels:
+    action: command
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-cmd
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 3005
+      protocol: TCP
+      targetPort: 3005
+    - name: http-web
+      port: 6384
+      protocol: TCP
+      targetPort: 6384
+    - name: grpc
+      port: 50060
+      protocol: TCP
+      targetPort: 50060
+  selector:
+    action: command
+    app: data-connector-sfdc
+    release: data-connector-sfdc
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "3005"
+    prometheus.io/scrape: "true"
+  labels:
+    action: reload
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-rld
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 3005
+      protocol: TCP
+      targetPort: 3005
+    - name: grpc
+      port: 50060
+      protocol: TCP
+      targetPort: 50060
+  selector:
+    action: reload
+    app: data-connector-sfdc
+    release: data-connector-sfdc
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    action: command
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-cmd
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      action: command
+      app: data-connector-sfdc
+      release: data-connector-sfdc
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 667a13f4e3b8b73ecdf35b906706084865dd107ff51df0336a8c48b23d839e0d
+        checksum/secrets: 7dfc49b6319aeee02d9659c1cf3774f79aeaeec2d1aa3ffa7a87f93c560ad3e0
+      labels:
+        action: command
+        app: data-connector-sfdc
+        domain: data-connectors
+        release: data-connector-sfdc
+    spec:
+      containers:
+        - env:
+            - name: DATA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: dataHost
+                  name: data-connector-sfdc-configs
+            - name: DATA_PORT_RANGE_END
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeEnd
+                  name: data-connector-sfdc-configs
+            - name: DATA_PORT_RANGE_START
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeStart
+                  name: data-connector-sfdc-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: data-connector-sfdc-configs
+            - name: CONFIG
+              value: /opt/runner/Sfdc_dotnetcore.json
+            - name: QS_ENVIRONMENT
+              value: QSEOK
+            - name: SERVICE_MODE
+              value: "true"
+            - name: STANDALONE
+              value: "false"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/data-connector-sfdc:15.139.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: data-connector-sfdc
+          ports:
+            - containerPort: 3005
+              name: http
+              protocol: TCP
+            - containerPort: 50060
+              name: grpc
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: data-connector-sfdc-secrets
+          secret:
+            secretName: data-connector-sfdc-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    action: reload
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc-rld
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      action: reload
+      app: data-connector-sfdc
+      release: data-connector-sfdc
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 667a13f4e3b8b73ecdf35b906706084865dd107ff51df0336a8c48b23d839e0d
+        checksum/secrets: 7dfc49b6319aeee02d9659c1cf3774f79aeaeec2d1aa3ffa7a87f93c560ad3e0
+      labels:
+        action: reload
+        app: data-connector-sfdc
+        domain: data-connectors
+        release: data-connector-sfdc
+    spec:
+      containers:
+        - env:
+            - name: DATA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: dataHost
+                  name: data-connector-sfdc-configs
+            - name: DATA_PORT_RANGE_END
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeEnd
+                  name: data-connector-sfdc-configs
+            - name: DATA_PORT_RANGE_START
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeStart
+                  name: data-connector-sfdc-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: data-connector-sfdc-configs
+            - name: CONFIG
+              value: /opt/runner/Sfdc_dotnetcore.json
+            - name: ENABLE_SHUTDOWN_DRAIN
+              value: "false"
+            - name: MAX_ACTIVE_RELOADS
+              value: "3"
+            - name: QS_ENVIRONMENT
+              value: QSEOK
+            - name: SERVICE_MODE
+              value: "true"
+            - name: SHUTDOWN_TIMEOUT
+              value: "30"
+            - name: STANDALONE
+              value: "false"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/data-connector-sfdc:15.139.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: data-connector-sfdc
+          ports:
+            - containerPort: 3005
+              name: http
+              protocol: TCP
+            - containerPort: 50060
+              name: grpc
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data-connector-sfdc-secrets
+          secret:
+            secretName: data-connector-sfdc-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
+  labels:
+    app: data-connector-sfdc
+    app.kubernetes.io/component: data-connector-sfdc
+    app.kubernetes.io/instance: data-connector-sfdc
+    app.kubernetes.io/name: data-connector-sfdc
+    app.kubernetes.io/version: 15.139.0
+    chart: data-connector-sfdc-15.139.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-sfdc
+  name: data-connector-sfdc
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: data-connector-sfdc-cmd
+                port:
+                  number: 6384
+            path: /customdata/64/(QvSalesforceConnector)/(.+)
+            pathType: ImplementationSpecific

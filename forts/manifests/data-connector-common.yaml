@@ -1,0 +1,238 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app: data-connector-common
+    app.kubernetes.io/component: data-connector-common
+    app.kubernetes.io/instance: data-connector-common
+    app.kubernetes.io/name: data-connector-common
+    app.kubernetes.io/version: 1.114.0
+    chart: data-connector-common-1.114.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-common
+  name: data-connector-common-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  dataPortRangeEnd: "50095"
+  dataPortRangeStart: "50095"
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+kind: ConfigMap
+metadata:
+  labels:
+    app: data-connector-common
+    app.kubernetes.io/component: data-connector-common
+    app.kubernetes.io/instance: data-connector-common
+    app.kubernetes.io/name: data-connector-common
+    app.kubernetes.io/version: 1.114.0
+    chart: data-connector-common-1.114.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-common
+  name: data-connector-common-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "3005"
+    prometheus.io/scrape: "true"
+  labels:
+    app: data-connector-common
+    app.kubernetes.io/component: data-connector-common
+    app.kubernetes.io/instance: data-connector-common
+    app.kubernetes.io/name: data-connector-common
+    app.kubernetes.io/version: 1.114.0
+    chart: data-connector-common-1.114.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-common
+  name: data-connector-common
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 3005
+      protocol: TCP
+      targetPort: 3005
+    - name: http-web
+      port: 6386
+      protocol: TCP
+      targetPort: 6386
+    - name: grpc
+      port: 50095
+      protocol: TCP
+      targetPort: 50095
+  selector:
+    app: data-connector-common
+    release: data-connector-common
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: data-connector-common
+    app.kubernetes.io/component: data-connector-common
+    app.kubernetes.io/instance: data-connector-common
+    app.kubernetes.io/name: data-connector-common
+    app.kubernetes.io/version: 1.114.0
+    chart: data-connector-common-1.114.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-common
+  name: data-connector-common
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-connector-common
+      release: data-connector-common
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 496bd69df76567c3bf02b7428b3674fe311ec9f96f0fffbb732cfd504b2a7589
+        checksum/secrets: 6b011ff7b5e056e9287fc3627cc49589305faf60d1e0dc281ec60b6cd31833d6
+      labels:
+        app: data-connector-common
+        domain: data-connectors
+        release: data-connector-common
+    spec:
+      containers:
+        - env:
+            - name: DATA_PORT_RANGE_END
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeEnd
+                  name: data-connector-common-configs
+            - name: DATA_PORT_RANGE_START
+              valueFrom:
+                configMapKeyRef:
+                  key: dataPortRangeStart
+                  name: data-connector-common-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: data-connector-common-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: CONNECTORS
+              value: ml-endpoints:50055 data-connector-jdbc-rld:data-connector-jdbc-cmd:50060
+            - name: DATA_HOST
+              value: 0.0.0.0
+            - name: SERVICE_MODE
+              value: "true"
+            - name: STANDALONE
+              value: "false"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/data-connector-common:1.114.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          name: data-connector-common
+          ports:
+            - containerPort: 3005
+              name: http
+              protocol: TCP
+            - containerPort: 50095
+              name: grpc
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: data-connector-common-secrets
+          secret:
+            secretName: data-connector-common-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
+  labels:
+    app: data-connector-common
+    app.kubernetes.io/component: data-connector-common
+    app.kubernetes.io/instance: data-connector-common
+    app.kubernetes.io/name: data-connector-common
+    app.kubernetes.io/version: 1.114.0
+    chart: data-connector-common-1.114.0
+    domain: data-connectors
+    heritage: Helm
+    release: data-connector-common
+  name: data-connector-common
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: data-connector-common
+                port:
+                  number: 6386
+            path: /customdata/64/(QlikConnectorsCommonService)/(.+)
+            pathType: ImplementationSpecific

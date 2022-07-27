@@ -1,0 +1,259 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: engine-proxy
+    app.kubernetes.io/version: 0.10.0
+    chart: engine-proxy-0.10.0
+    domain: analytics
+    heritage: Helm
+    release: engine-proxy
+  name: engine-proxy-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  dependentServicesReadinessCheckEnabled: "true"
+  engineSessionTtlSeconds: "10"
+  engineSessionsUri: http://qix-sessions:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  logLevel: debug
+kind: ConfigMap
+metadata:
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: engine-proxy
+    app.kubernetes.io/version: 0.10.0
+    chart: engine-proxy-0.10.0
+    domain: analytics
+    heritage: Helm
+    release: engine-proxy
+  name: engine-proxy-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: engine-proxy
+    app.kubernetes.io/version: 0.10.0
+    chart: engine-proxy-0.10.0
+    domain: analytics
+    heritage: Helm
+    release: engine-proxy
+  name: engine-proxy
+  namespace: default
+spec:
+  ports:
+    - name: engine-proxy
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: engine-proxy
+    release: engine-proxy
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: engine-proxy
+    app.kubernetes.io/version: 0.10.0
+    chart: engine-proxy-0.10.0
+    domain: analytics
+    heritage: Helm
+    release: engine-proxy
+  name: engine-proxy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine-proxy
+      release: engine-proxy
+  template:
+    metadata:
+      annotations:
+        checksum/configs: bb0dcd2207aa85907640e4587593a5847bc9948a6522c0b7403eda12508be24a
+        checksum/secrets: 1d21a5040421bf9f3749a9a3326fd498f35bd8be2f74330884814cb5f968ced6
+      labels:
+        app: engine-proxy
+        domain: analytics
+        release: engine-proxy
+    spec:
+      containers:
+        - env:
+            - name: DEPENDENT_SERVICES_READINESS_CHECK_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: dependentServicesReadinessCheckEnabled
+                  name: engine-proxy-configs
+            - name: ENGINE_SESSION_TTL_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: engineSessionTtlSeconds
+                  name: engine-proxy-configs
+            - name: ENGINE_SESSIONS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: engineSessionsUri
+                  name: engine-proxy-configs
+            - name: FEATURE_FLAGS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFlagsUri
+                  name: engine-proxy-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: engine-proxy-configs
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: logLevel
+                  name: engine-proxy-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/engine-proxy:0.10.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: http
+          name: engine-proxy
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: engine-proxy-secrets
+          secret:
+            secretName: engine-proxy-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-snippet: |
+      set_by_lua_block $res {
+        local match, err = ngx.re.match(ngx.var.request_uri, ".*qlik-web-integration-id=([A-Za-z0-9-_]{32})");
+        if err then
+          ngx.log(ngx.ERR, "failed regex matching in (" .. ngx.var.request_uri .. ") while searching for qlik-web-integration-id (" .. tostring(err) .. ")");
+        elseif match and match[1] then
+          return match[1];
+        end
+        return "";
+      }
+      proxy_set_header qlik-web-integration-id $res;
+      proxy_set_header Connection $connection_upgrade;
+      proxy_set_header Upgrade $http_upgrade;
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: engine-proxy
+    app.kubernetes.io/version: 0.10.0
+    chart: engine-proxy-0.10.0
+    domain: analytics
+    heritage: Helm
+    release: engine-proxy
+  name: engine-proxy
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: engine-proxy
+                port:
+                  number: 8080
+            path: /app/
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: engine-proxy
+                port:
+                  number: 8080
+            path: /qvapp/
+            pathType: ImplementationSpecific

@@ -1,0 +1,386 @@
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvaW5zaWdodHM/c3NsPWZhbHNl
+  tokenAuthPrivateKey: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1JR2tBZ0VCQkREc2EvdHoxVWdtWGxZSE9SbUhkVTJrVlpJeU1rVzdZOXdVSTF6SDkwejBmSy9EdUh4OGVlWjIKYzc5ZzVZNGkzZitnQndZRks0RUVBQ0toWkFOaUFBVGMwekc0cmxJNVdzNzJDNDVHZjlTU1RhaHh2dW9BVzRNTQpmbmZ0TDFvcVVES2JIcWVsU0FnaDVtaFAzYnRXSVlXbGJRN1BtVVljLy9rcmtsTEw2L1NsN08zdlA4KzJCQkgwCi90M3lHL0hOYUtTcUErU3VES3dmQk5IZll1c0lnaEk9Ci0tLS0tRU5EIEVDIFBSSVZBVEUgS0VZLS0tLS0K
+  tokenAuthPrivateKeyId: MGpteWs2bFg0VUd0ekM1MmxZUG8tNlVOMEhFMW9maHBHdWF2TFd3ZHQySQ==
+kind: Secret
+metadata:
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  engineUri: http://engine:9076
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080/v1/keys/qlik.api.internal
+  policyDecisionsUri: http://policy-decisions:5080
+  tenantsUri: http://tenants:8080
+kind: ConfigMap
+metadata:
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "9292"
+    prometheus.io/scrape: "true"
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights
+  namespace: default
+spec:
+  ports:
+    - name: insights
+      port: 9292
+      protocol: TCP
+      targetPort: 9292
+  selector:
+    app: insights
+    release: insights
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insights
+  template:
+    metadata:
+      annotations:
+        checksum/configs: 354c3ab21a1f99de5f5451258854942410eb60eec0ee2946c316947ca30b5fc5
+        checksum/secrets: 2e7f052c9db61b75c8d9754aef00c330233d7d0095672e30cabff86a1e2b8946
+      labels:
+        app: insights
+        release: insights
+    spec:
+      containers:
+        - env:
+            - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+              value: /run/secrets/qlik.com/insights/tokenAuthPrivateKey
+            - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+              value: /run/secrets/qlik.com/insights/tokenAuthPrivateKeyId
+            - name: EDGE_AUTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: edgeAuthUri
+                  name: insights-configs
+            - name: ENCRYPTION_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: encryptionUri
+                  name: insights-configs
+            - name: ENGINE_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: engineUri
+                  name: insights-configs
+            - name: FEATURE_FLAGS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: featureFlagsUri
+                  name: insights-configs
+            - name: INGRESS_AUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ingressAuthUrl
+                  name: insights-configs
+            - name: KEYS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: keysUri
+                  name: insights-configs
+            - name: POLICY_DECISIONS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: policyDecisionsUri
+                  name: insights-configs
+            - name: TENANTS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: tenantsUri
+                  name: insights-configs
+            - name: DISABLE_OTLP
+              value: "true"
+            - name: JAEGER_DISABLED
+              value: "true"
+            - name: AUTH_JWT_AUD
+              value: qlik.api.internal
+            - name: AUTH_JWT_ISS
+              value: qlik.api.internal
+            - name: NO_JWT_VALIDATION
+              value: "true"
+            - name: JAEGER_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTLP_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HTTP_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpProxy
+                  name: qliksense-configs
+            - name: HTTPS_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: httpsProxy
+                  name: qliksense-configs
+            - name: NO_PROXY
+              valueFrom:
+                configMapKeyRef:
+                  key: noProxy
+                  name: qliksense-configs
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  key: mongodbUri
+                  name: qliksense-secrets
+            - name: MONGODB_URI_FILE
+              value: /run/secrets/qlik.com/qliksense/mongodbUri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redisPassword
+                  name: qliksense-secrets
+            - name: REDIS_PASSWORD_FILE
+              value: /run/secrets/qlik.com/qliksense/redisPassword
+          image: ghcr.io/qlik-download/insights:2.1.36
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          name: insights
+          ports:
+            - containerPort: 9292
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 400m
+              memory: 600Mi
+            requests:
+              cpu: 250m
+              memory: 300Mi
+          volumeMounts:
+            - mountPath: /run/secrets/qlik.com/insights
+              name: insights-secrets
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: ca-certificates
+            - mountPath: /run/secrets/qlik.com/qliksense
+              name: qliksense-secrets
+      imagePullSecrets:
+        - name: artifactory-docker-secret
+      volumes:
+        - name: insights-secrets
+          secret:
+            secretName: insights-secrets
+        - name: ca-certificates
+          persistentVolumeClaim:
+            claimName: ca-certificates
+        - name: qliksense-secrets
+          secret:
+            secretName: qliksense-secrets
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights-pruning
+  namespace: default
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            checksum/configs: 354c3ab21a1f99de5f5451258854942410eb60eec0ee2946c316947ca30b5fc5
+            checksum/secrets: 2e7f052c9db61b75c8d9754aef00c330233d7d0095672e30cabff86a1e2b8946
+          labels:
+            app: insights
+            release: insights
+        spec:
+          containers:
+            - env:
+                - name: ENVIRONMENT
+                  value: k8s
+                - name: PRUNE_ONLY
+                  value: "true"
+                - name: JAEGER_AGENT_HOST
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.hostIP
+                - name: OTLP_AGENT_HOST
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.hostIP
+                - name: HTTP_PROXY
+                  valueFrom:
+                    configMapKeyRef:
+                      key: httpProxy
+                      name: qliksense-configs
+                - name: HTTPS_PROXY
+                  valueFrom:
+                    configMapKeyRef:
+                      key: httpsProxy
+                      name: qliksense-configs
+                - name: NO_PROXY
+                  valueFrom:
+                    configMapKeyRef:
+                      key: noProxy
+                      name: qliksense-configs
+                - name: MONGODB_URI
+                  valueFrom:
+                    secretKeyRef:
+                      key: mongodbUri
+                      name: qliksense-secrets
+                - name: MONGODB_URI_FILE
+                  value: /run/secrets/qlik.com/qliksense/mongodbUri
+                - name: REDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: redisPassword
+                      name: qliksense-secrets
+                - name: REDIS_PASSWORD_FILE
+                  value: /run/secrets/qlik.com/qliksense/redisPassword
+              image: ghcr.io/qlik-download/insights:2.1.36
+              imagePullPolicy: IfNotPresent
+              name: insights-pruning
+              volumeMounts:
+                - mountPath: /run/secrets/qlik.com/insights
+                  name: insights-secrets
+                  readOnly: true
+                - mountPath: /etc/ssl/certs
+                  name: ca-certificates
+                - mountPath: /run/secrets/qlik.com/qliksense
+                  name: qliksense-secrets
+          imagePullSecrets:
+            - name: artifactory-docker-secret
+          restartPolicy: Never
+          volumes:
+            - name: insights-secrets
+              secret:
+                secretName: insights-secrets
+            - name: ca-certificates
+              persistentVolumeClaim:
+                claimName: ca-certificates
+            - name: qliksense-secrets
+              secret:
+                secretName: qliksense-secrets
+  schedule: 0 0 * * *
+  successfulJobsHistoryLimit: 1
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+  labels:
+    app: insights
+    app.kubernetes.io/component: insights
+    app.kubernetes.io/instance: insights
+    app.kubernetes.io/name: insights
+    app.kubernetes.io/version: 2.1.52
+    chart: insights-2.1.52
+    heritage: Helm
+    release: insights
+  name: insights
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: insights
+                port:
+                  number: 9292
+            path: /api/v1/insights
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: insights
+                port:
+                  number: 9292
+            path: /api/v1/insight
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: insights
+                port:
+                  number: 9292
+            path: /share
+            pathType: ImplementationSpecific
