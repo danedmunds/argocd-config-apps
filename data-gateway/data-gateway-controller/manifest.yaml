@@ -1,207 +1,24 @@
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-
-  labels:
-    app: data-gateway-controller
-    app.kubernetes.io/component: data-gateway-controller
-    app.kubernetes.io/instance: data-gateway-controller
-    app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.4
-    chart: data-gateway-controller-0.0.4
-    heritage: Helm
-    release: data-gateway-controller
   name: data-gateway-controller
-  namespace: default
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app: data-gateway-controller
-    app.kubernetes.io/component: data-gateway-controller
-    app.kubernetes.io/instance: data-gateway-controller
-    app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.4
-    chart: data-gateway-controller-0.0.4
-    heritage: Helm
-    release: data-gateway-controller
-  name: data-gateway-controller-secrets
-  namespace: default
-type: Opaque
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: v1
-data:
-  enableChartCleanup: "true"
-  httpAddr: :8080
-  httpServerIdleTimeoutSeconds: "30"
-  httpServerReadTimeoutSeconds: "10"
-  httpServerWriteTimeoutSeconds: "600"
-  logLevel: info
-  terminationGracePeriodSeconds: "30"
-kind: ConfigMap
-metadata:
-  labels:
-    app: data-gateway-controller
-    app.kubernetes.io/component: data-gateway-controller
-    app.kubernetes.io/instance: data-gateway-controller
-    app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.4
-    chart: data-gateway-controller-0.0.4
-    heritage: Helm
-    release: data-gateway-controller
-  name: data-gateway-controller-configs
-  namespace: default
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: data-gateway-controller-cluster-role-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: data-gateway-controller
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
     namespace: default
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    prometheus.io/port: "8080"
-    prometheus.io/scrape: "true"
-    prometheus.io/scrape_high_cardinality: "true"
-  labels:
-    app: data-gateway-controller
-    app.kubernetes.io/component: data-gateway-controller
-    app.kubernetes.io/instance: data-gateway-controller
-    app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.4
-    chart: data-gateway-controller-0.0.4
-    heritage: Helm
-    release: data-gateway-controller
-  name: data-gateway-controller
-  namespace: default
-spec:
-  ports:
-  - name: data-gateway-controller
-    port: 8080
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: data-gateway-controller
-    release: data-gateway-controller
-  type: ClusterIP
----
-# Source: data-gateway-controller/templates/manifest.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: data-gateway-controller
-    app.kubernetes.io/component: data-gateway-controller
-    app.kubernetes.io/instance: data-gateway-controller
-    app.kubernetes.io/name: data-gateway-controller
-    app.kubernetes.io/version: 0.0.4
-    chart: data-gateway-controller-0.0.4
-    heritage: Helm
-    release: data-gateway-controller
-  name: data-gateway-controller
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: data-gateway-controller
-      release: data-gateway-controller
-  template:
-    metadata:
-      annotations:
-        checksum/configs: d560c81ec3df6d1ba0887b6d63b966801bdc8ae8fcc2aa2f3a3c13421e3a0480
-        checksum/secrets: 114e09639a0478d711e9ed0e979788c50a955c9c3a95c7da53a35ca094352670
-      labels:
-        app: data-gateway-controller
-        release: data-gateway-controller
-    spec:
-      containers:
-      - env:
-        - name: ENABLE_CHART_CLEANUP
-          valueFrom:
-            configMapKeyRef:
-              key: enableChartCleanup
-              name: data-gateway-controller-configs
-        - name: HTTP_ADDR
-          valueFrom:
-            configMapKeyRef:
-              key: httpAddr
-              name: data-gateway-controller-configs
-        - name: HTTP_SERVER_IDLE_TIMEOUT_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              key: httpServerIdleTimeoutSeconds
-              name: data-gateway-controller-configs
-        - name: HTTP_SERVER_READ_TIMEOUT_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              key: httpServerReadTimeoutSeconds
-              name: data-gateway-controller-configs
-        - name: HTTP_SERVER_WRITE_TIMEOUT_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              key: httpServerWriteTimeoutSeconds
-              name: data-gateway-controller-configs
-        - name: LOG_LEVEL
-          valueFrom:
-            configMapKeyRef:
-              key: logLevel
-              name: data-gateway-controller-configs
-        - name: TERMINATION_GRACE_PERIOD_SECONDS
-          valueFrom:
-            configMapKeyRef:
-              key: terminationGracePeriodSeconds
-              name: data-gateway-controller-configs
-        - name: JAEGER_DISABLED
-          value: "true"
-        - name: DISABLE_OTLP
-          value: "true"
-        image: ghcr.io/qlik-download/data-gateway-controller:0.0.4
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            path: /live
-            port: http
-        name: data-gateway-controller
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-      dnsConfig:
-        options:
-        - name: timeout
-          value: "1"
-      imagePullSecrets:
-      - name: artifactory-docker-secret
-      serviceAccountName: data-gateway-controller
-      volumes:
-      - name: data-gateway-controller-secrets
-        secret:
-          secretName: data-gateway-controller-secrets
----
-# Source: data-gateway-controller/templates/manifest.yaml
-# empty top level secret required by qlikcommon charts, if you don't set the release name to data-gateway-controller qlikcommon
-# tries to mount a secret named data-gateway-controller-secrets without creating it first
----
-# Source: data-gateway-controller/templates/manifest.yaml
----
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: ghcr.io/qlik-download/helm
+    chart: data-gateway-controller
+    targetRevision: 0.0.4
+    helm:
+      parameters:
+      - name: image.registry
+        value: ghcr.io/qlik-download
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
