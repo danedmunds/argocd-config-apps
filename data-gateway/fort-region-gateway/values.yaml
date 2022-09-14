@@ -1,0 +1,16 @@
+fort-region-gateway:
+  image:
+    registry: ghcr.io/qlik-download
+  configs:
+   data:
+     redisUri: redis-master:6379
+     enableRedisTokens: false
+  ingress:
+    paths: []
+  fortIdp:
+    enabled: false
+  regionRedirect:
+    enabled: false
+  egressServices: []
+  redis:
+   enabled: false

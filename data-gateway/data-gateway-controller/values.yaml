@@ -1,0 +1,10 @@
+data-gateway-controller:
+  image:
+   registry: ghcr.io/qlik-download
+  iotConfig:
+    provision: false
+  iotSecret:
+    provision: false
+  configs:
+    data:
+      mqttEnabled: true
