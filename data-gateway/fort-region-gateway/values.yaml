@@ -6,6 +6,7 @@ fort-region-gateway:
      redisUri: redis-master:6379
      enableRedisTokens: false
   ingress:
+    enabled: false
     paths: []
   fortIdp:
     enabled: false
