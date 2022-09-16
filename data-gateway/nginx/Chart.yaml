@@ -1,9 +1,0 @@
-apiVersion: v2
-name: nginx
-type: application
-version: 13.2.4
-appVersion: 13.2.4
-dependencies:
-- name: nginx
-  version: 13.2.4
-  repository: https://charts.bitnami.com/bitnami
