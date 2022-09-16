@@ -5,7 +5,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://github.com/qlik-download/argocd-config-apps'
+      repoURL: 'https://github.com/danedmunds/argocd-config-apps'
       revision: "main"
       directories:
         - path: data-gateway/*
@@ -15,7 +15,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: 'https://github.com/qlik-download/argocd-config-apps'
+        repoURL: 'https://github.com/danedmunds/argocd-config-apps'
         targetRevision: "main"
         path: '{{path}}'
       destination:
