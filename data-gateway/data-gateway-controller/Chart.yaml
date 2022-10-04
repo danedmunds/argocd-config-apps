@@ -1,9 +1,9 @@
 apiVersion: v2
 name: data-gateway-controller
 type: application
-version: 0.0.9
-appVersion: 0.0.9
+version: 0.0.10
+appVersion: 0.0.10
 dependencies:
 - name: data-gateway-controller
-  version: 0.0.9
+  version: 0.0.10
   repository: oci://ghcr.io/qlik-download/helm
