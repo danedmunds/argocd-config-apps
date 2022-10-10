@@ -1,0 +1,318 @@
+apiVersion: v1
+data:
+  nats-server.conf: |-
+    listen: 0.0.0.0:4222
+    http: 0.0.0.0:8222
+    client_advertise: messaging-nats-client:4222
+
+    # Authorization for client connections
+    authorization {
+      timeout:  1
+      users: [
+        {
+          user: "natsClient",
+          password: "natsClientPassword",
+        }
+      ]
+    }
+
+
+    # Logging options
+    debug: false
+    trace: false
+    logtime: false
+
+    # Pid file
+    pid_file: "/tmp/nats-server.pid"
+
+    # Some system overides
+
+
+    # Clustering definition
+    cluster {
+      listen: 0.0.0.0:6222
+
+      no_advertise: false
+
+      # Authorization for cluster connections
+      authorization {
+        user: natsCluster
+        password: natsClusterPassword
+        timeout:  1
+      }
+
+      # Routes are actively solicited and connected to from this server.
+      # Other servers can connect to us if they supply the correct credentials
+      # in their routes definitions from above
+      routes = [
+        nats://natsCluster:natsClusterPassword@messaging-nats-0.messaging-nats-headless.default.svc.cluster.local:6222
+        nats://natsCluster:natsClusterPassword@messaging-nats-1.messaging-nats-headless.default.svc.cluster.local:6222
+        nats://natsCluster:natsClusterPassword@messaging-nats-2.messaging-nats-headless.default.svc.cluster.local:6222
+      ]
+    }
+  users.json: '[{"stanPermissions":{"publish":["system-events.access-control.cache"],"subscribe":["system-events.spaces","system-events.users","system-events.policy-administrations","system-events.licenses"]},"user":"access-controls"},{"stanPermissions":{"publish":["system-events.evaluations","system-events.evaluation-statistics"]},"user":"app-evaluator"},{"stanPermissions":{"subscribe":["system-events.app","system-events.odag.request","system-events.engine.app","system-events.engine.session","system-events.user-session","system-events.spaces","system-events.licenses","system-events.generic-links","system-events.api-keys","system-events.user-identity","system-events.web-security","system-events.webhook","system-events.tenants","system-events.users","system-events.groups","system-events.notification-channel","system-events.alerting","system-events.oauth-clients","system-events.oauth-tokens","system-events.qem-server","system-events.integration-app","system-events.template","system-events.consumption","system-events.encryption","system-events.encryption.keyprovider","system-events.business-glossary"]},"user":"audit"},{"stanPermissions":{"publish":["chronos-worker.\u003e"]},"user":"chronos-worker"},{"natsPermissions":{"subscribe":["system-events.\u003e"]},"stanPermissions":{"subscribe":["system-events.\u003e"]},"user":"data-engineering-exporter"},{"natsPermissions":{"publish":["system-events.rate-limit"]},"stanPermissions":{"publish":["system-events.user-session","system-events.user-identity","system-events.oauth-tokens"],"subscribe":["system-events.users","system-events.groups","system-events.roles","system-events.user-session","system-events.identity-providers","system-events.licenses","system-events.oauth-clients","system-events.policy-administrations","system-events.rate-limit","system-events.scope-permissions","system-events.encryption.keyprovider-migration","private.idp-sync"]},"user":"edge-auth"},{"stanPermissions":{"publish":["com.qlik.app","com.qlik.engine.session","com.qlik.engine.system","system-events.engine.app","system-events.app","system-events.engine.session","system-events.engine.system"],"subscribe":["system-events.engine.app"]},"user":"engine"},{"stanPermissions":{"publish":["private.idp-sync","system-events.identity-providers"],"subscribe":["system-events.encryption.keyprovider-migration"]},"user":"identity-providers"},{"stanPermissions":{"publish":["system-events.invite"],"subscribe":["system-events.users"]},"user":"invite"},{"stanPermissions":{"subscribe":["system-events.engine.app"]},"user":"nl-parser"},{"stanPermissions":{"publish":["system-events.odag.request","odag.\u003e"],"subscribe":["odag.\u003e","system-events.engine.app","system-events.reloadResults","system-events.encryption.keyprovider-migration"]},"user":"odag"},{"stanPermissions":{"publish":["system-events.policy-administrations"]},"user":"policy-administrations"},{"stanPermissions":{"publish":["reload","internal-events.reloads.jobs","system-events.reloadResults"],"subscribe":["reload","internal-events.reloads.jobs","chronos-worker.system-events.reloadTasks","system-events.engine-sessions-queue","system-events.consumption"]},"user":"reloads"},{"stanPermissions":{"publish":["system-events.resource-library"]},"user":"resource-library"},{"stanPermissions":{"publish":["system-events.tenants","system-events.web-integrations"],"subscribe":["system-events.licenses","chronos-worker.system-events.tenant-purge-date-reached"]},"user":"tenants"},{"stanPermissions":{"publish":["system-events.groups","system-events.users","system-events.roles"],"subscribe":["system-events.tenants","system-events.policy-administrations","system-events.oauth-clients"]},"user":"identities"},{"stanPermissions":{"publish":["system-events.api-keys"],"subscribe":["system-events.users","system-events.groups","system-events.tenants","system-events.identity-providers"]},"user":"api-keys"},{"stanPermissions":{"publish":["system-events.items"],"subscribe":["system-events.sharing","system-events.engine.app","system-events.generic-links","system-events.catalog","system-events.automl","system-events.access-control.cache","system-events.business-glossary"]},"user":"collections"},{"stanPermissions":{"publish":["system-events.licenses"],"subscribe":["system-events.licenses"]},"user":"licenses"},{"stanPermissions":{"publish":["system-events.spaces"],"subscribe":["system-events.users","system-events.groups","system-events.engine.app"]},"user":"spaces"},{"stanPermissions":{"subscribe":["system-events.engine.app"]},"user":"precedents"},{"stanPermissions":{"publish":["system-events.notification-request","system-events.trigger","system-events.app","system-events.engine.app","system-events.engine.session","chronos-worker.system-events.reloadTasks","system-events.reloadResults","system-events.evaluations","system-events.automl"],"subscribe":["system-events.notes","system-events.app","system-events.engine.app","system-events.engine.session","system-events.spaces","system-events.web-notifications","system-events.sharing","system-events.condition-manager","system-events.evaluations","chronos-worker.system-events.alerting-trigger","system-events.report-subscription","system-events.users","system-events.forts","chronos-worker.system-events.reloadTasks","system-events.reloadResults","system-events.datafiles","system-events.automl"]},"user":"eventing"},{"stanPermissions":{"publish":["system-events.engine-sessions-queue","internal-events.qix-sessions"],"subscribe":["system-events.engine.app","system-events.engine.session","system-events.engine.system","system-events.reloadResults","system-events.tenants","system-events.engine-sessions-queue","internal-events.qix-sessions"]},"user":"qix-sessions"},{"stanPermissions":{"publish":["system-events.datafiles"],"subscribe":["system-events.engine.app","system-events.spaces","system-events.encryption.keyprovider-migration"]},"user":"qix-datafiles"},{"stanPermissions":{"publish":["system-events.notification-request","system-events.sharing","system-events.alerting","system-events.report-subscription","system-events.notification-digest"],"subscribe":["system-events.engine.app","system-events.trigger","system-events.transport-request"]},"user":"sharing"},{"stanPermissions":{"publish":["system-events.consumption"],"subscribe":["system-events.engine.app","system-events.automl","system-events.reloadResults","system-events.automation","system-events.reporting-service"]},"user":"usage-tracker"},{"stanPermissions":{"subscribe":["system-events.\u003e"]},"user":"sre-de-exporter"},{"stanPermissions":{"subscribe":["system-events.tenants","system-events.users","system-events.spaces","system-events.engine.app","system-events.sharing"]},"user":"subscriptions"},{"stanPermissions":{"publish":["system-events.transport-request"],"subscribe":["system-events.notification-request"]},"user":"notification-prep"},{"stanPermissions":{"publish":["system-events.web-notifications","system-events.transport-request"],"subscribe":["system-events.transport-request","system-events.users"]},"user":"web-notifications"},{"stanPermissions":{"publish":["system-events.generic-links"],"subscribe":["system-events.users"]},"user":"generic-links"},{"stanPermissions":{"publish":["system-events.dataconnection","system-events.datacredential"],"subscribe":["system-events.spaces","system-events.encryption.keyprovider-migration"]},"user":"data-connections"},{"stanPermissions":{"publish":["system-events.transport-response","system-events.notification-request","system-events.notification-channel"],"subscribe":["system-events.transport-request","system-events.users","system-events.licenses"]},"user":"transport"},{"stanPermissions":{"publish":["system-events.web-security"]},"user":"web-security"},{"stanPermissions":{"publish":["system-events.reloadTasks"],"subscribe":["system-events.engine.app","system-events.reloadResults"]},"user":"reload-tasks"},{"stanPermissions":{"publish":["reporting.\u003e","system-events.reporting-service"],"subscribe":["system-events.consumption"]},"user":"reporting"},{"stanPermissions":{"publish":["system-events.report-template"],"subscribe":["system-events.users"]},"user":"reporting-templates"},{"stanPermissions":{"publish":["nl-app-search.\u003e"],"subscribe":["system-events.engine.app","system-events.reloadResults","nl-app-search.\u003e"]},"user":"nl-app-search"},{"stanPermissions":{"subscribe":["system-events.spaces"]},"user":"policy-decisions"},{"stanPermissions":{"publish":["system-events.catalog","events.catalog","internal.ssk.admin"],"subscribe":["system-events.catalog","system-events.datafiles","system-events.tenants","internal.ssk.admin"]},"user":"catalog"},{"stanPermissions":{"publish":["internal.data-condition-evaluations"],"subscribe":["internal.data-condition-evaluations.evaluation-request.evaluation","internal.data-condition-evaluations.evaluation-request.preview"]},"user":"data-condition-evaluator"},{"stanPermissions":{"publish":["system-events.condition-manager","internal.data-condition-evaluations.evaluation-request.evaluation","internal.data-condition-evaluations.evaluation-request.preview"],"subscribe":["internal.data-condition-evaluations"]},"user":"condition-manager"},{"stanPermissions":{"subscribe":["system-events.engine.session","system-events.app","system-events.engine.app","system-events.catalog","system-events.generic-links","system-events.sharing","system-events.automation","system-events.notes","lineage.stats","system-events.automl"]},"user":"most-recently-used"},{"stanPermissions":{"publish":["system-events.webhook"],"subscribe":["system-events.engine.app","system-events.users","system-events.automl","system-events.automation","system-events.api-keys"]},"user":"webhooks"},{"stanPermissions":{"publish":["system-events.template"]},"user":"templates"},{"stanPermissions":{"publish":["system-events.profile","system-events.profile.reloadResults"],"subscribe":["system-events.catalog","system-events.engine.app","system-events.tenants","system-events.encryption.keyprovider-migration"]},"user":"profile"},{"stanPermissions":{"subscribe":["system-events.users"]},"user":"customization"},{"natsPermissions":{"publish":["system-events.nl-broker"],"subscribe":["system-events.nl-broker"]},"stanPermissions":{"subscribe":["system-events.users","system-events.tenants","system-events.encryption.keyprovider-migration"]},"user":"nl-broker"},{"natsPermissions":{"publish":["internal.notes.\u003e"],"subscribe":["internal.notes.\u003e"]},"stanPermissions":{"publish":["system-events.notes"],"subscribe":["reporting","system-events.encryption.keyprovider-migration","system-events.notes"]},"user":"notes-broker"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app"],"subscribe":["internal.di.\u003e"]},"user":"qdi-app-manager"},{"stanPermissions":{"publish":["system-events.qem-server"]},"user":"qdi-qem-manager"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.encryption.keyprovider-migration"],"subscribe":["system-events.qem-server","internal.di.\u003e","system-events.encryption.keyprovider-migration"]},"user":"replicate-agent-service"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app.landing","system-events.integration-app.landing.\u003e"],"subscribe":["internal.di.\u003e"]},"user":"qdi-replicate-module"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app.qvd.\u003e"],"subscribe":["internal.di.\u003e"]},"user":"qdi-qvd-generator"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app.dw-storage.\u003e","system-events.integration-app.storage.\u003e"],"subscribe":["internal.di.\u003e"]},"user":"qdi-dw-storage"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app.connectors-landing.\u003e"],"subscribe":["internal.di.\u003e"]},"user":"qdi-connectors-landing"},{"stanPermissions":{"publish":["internal.di.\u003e"],"subscribe":["internal.di.\u003e","system-events.integration-app"]},"user":"data-app-design"},{"stanPermissions":{"subscribe":["system-events.dataconnection","system-events.datacredential","system-events.spaces"]},"user":"dcaas"},{"stanPermissions":{"publish":["internal.di.\u003e","system-events.integration-app.dcaas-bulkloader.\u003e"],"subscribe":["internal.di.\u003e"]},"user":"dcaas-bulkloader"},{"stanPermissions":{"publish":["internal.di.inventory.updates"],"subscribe":["internal.di.inventory.updates"]},"user":"inventory"},{"natsPermissions":{"subscribe":["system-events.rate-limit"]},"stanPermissions":{"publish":["system-events.rate-limit"]},"user":"rate-limiter"},{"stanPermissions":{"publish":["lineage.\u003e","system-events.lineage"],"subscribe":["system-events.engine.app","lineage.\u003e"]},"user":"lineage"},{"stanPermissions":{"publish":["system-events.automation","system-events.automation.\u003e"],"subscribe":["system-events.users","system-events.licenses","system-events.tenants"]},"user":"automations-core"},{"stanPermissions":{"publish":["system-events.oauth-clients"],"subscribe":["system-events.tenants"]},"user":"oauth-clients"},{"natsPermissions":{"publish":["system-events.ml-endpoints"],"subscribe":["system-events.ml-endpoints"]},"user":"ml-endpoints"},{"stanPermissions":{"publish":["system-events.forts"]},"user":"forts"},{"stanPermissions":{"publish":["system-events.dqix.indexing"],"subscribe":["system-events.dqix.source-data","system-events.catalog"]},"user":"dqix-indexing-manager"},{"stanPermissions":{"subscribe":["system-events.dqix.indexing"]},"user":"dqix-search-gateway"},{"stanPermissions":{"subscribe":["system-events.dqix.indexing"]},"user":"dqix-data-connector"},{"stanPermissions":{"subscribe":["system-events.engine.system"]},"user":"stats"},{"stanPermissions":{"publish":["internal.di.\u003e"],"subscribe":["internal.di.\u003e","system-events.integration-app","system-events.engine.app","system-events.reloadTasks"]},"user":"active-analytics-orch"},{"stanPermissions":{"publish":["system-events.scope-grants","system-events.scope-permissions"],"subscribe":["system-events.users","system-events.oauth-clients","system-events.tenants","system-events.roles","system-events.policy-administrations"]},"user":"scopes"},{"natsPermissions":{"publish":["system-events.ml-sse"],"subscribe":["system-events.ml-sse"]},"user":"ml-sse"},{"stanPermissions":{"publish":["automl.\u003e","system-events.automl"],"subscribe":["automl.\u003e","system-events.automl","system-events.catalog","system-events.datafiles","system-events.encryption.keyprovider-migration","system-events.spaces"]},"user":"automl"},{"stanPermissions":{"publish":["internal.encryption.\u003e","encryption.\u003e","system-events.encryption","system-events.encryption.keyprovider","system-events.encryption.keyprovider-migration"],"subscribe":["internal.encryption.\u003e"]},"user":"encryption"},{"stanPermissions":{"subscribe":["system-events.encryption.keyprovider-migration"]},"user":"temporary-contents"},{"stanPermissions":{"publish":["system-events.business-glossary"]},"user":"business-glossary"},{"stanPermissions":{"publish":["\u003e"],"subscribe":["\u003e"]},"user":"messaging-configurator"}]'
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  natsClientPassword: PLACEHOLDER
+  natsClientUser: PLACEHOLDER
+  natsClusterPassword: PLACEHOLDER
+  natsClusterUser: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: messaging-nats-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats-client
+  namespace: default
+spec:
+  ports:
+  - appProtocol: TCP
+    name: client
+    port: 4222
+    targetPort: client
+  selector:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats-cluster
+  namespace: default
+spec:
+  ports:
+  - appProtocol: TCP
+    name: cluster
+    port: 6222
+    targetPort: cluster
+  selector:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats-headless
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - name: client
+    port: 4222
+    targetPort: client
+  - name: cluster
+    port: 6222
+    targetPort: cluster
+  selector:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "7777"
+    prometheus.io/scrape: "true"
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats-monitoring
+  namespace: default
+spec:
+  ports:
+  - name: monitoring
+    port: 8222
+    targetPort: monitoring
+  selector:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nats
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: nats-4.7.196
+    heritage: Helm
+    release: qlik-default
+  name: messaging-nats
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  serviceName: messaging-nats-headless
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: nats
+      labels:
+        app: nats
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        chart: nats-4.7.196
+        release: qlik-default
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: nats
+                  app.kubernetes.io/name: qliksense
+                  app.kubernetes.io/part-of: qliksense
+                  release: messaging
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - args:
+        - -c
+        - /opt/bitnami/nats/nats-server.conf
+        - --jwt_users_file=/opt/bitnami/nats/users.json
+        - --jwt_auth_url=http://keys:8080/v1/keys/qlik.api.internal
+        command:
+        - qnats-server
+        env:
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/qnats-server:4.7.196
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: monitoring
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nats
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 6222
+          name: cluster
+        - containerPort: 8222
+          name: monitoring
+        readinessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: monitoring
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/bitnami/nats
+          name: config
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - configMap:
+          name: messaging-nats-configs
+        name: config
+  updateStrategy:
+    type: RollingUpdate

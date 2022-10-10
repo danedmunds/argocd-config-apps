@@ -1,0 +1,400 @@
+apiVersion: v1
+data:
+  dependentServicesReadinessCheckEnabled: "true"
+  enabledCustomTtl: "false"
+  engineSessionTtlSeconds: "10"
+  engineSessionsUri: http://qix-sessions:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  logLevel: debug
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 0.14.0
+    chart: engine-proxy-0.14.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: engine-proxy-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 0.14.0
+    chart: engine-proxy-0.14.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: engine-proxy-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 0.14.0
+    chart: engine-proxy-0.14.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: engine-proxy
+  namespace: default
+spec:
+  ports:
+  - name: engine-proxy
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 0.14.0
+    chart: engine-proxy-0.14.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: engine-proxy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine-proxy
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: engine-proxy
+        checksum/configs: f1325efe8ea9957fa0a0f73c25d89d076b07a141aa55e95d3a4b2f99661469d1
+        checksum/secrets: aa3620fa2f7a45c730e257359a1bd1417144fc75945655ffdda4f02e73e51d86
+      labels:
+        app: engine-proxy
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: analytics
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: DEPENDENT_SERVICES_READINESS_CHECK_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: dependentServicesReadinessCheckEnabled
+              name: engine-proxy-configs
+        - name: ENABLED_CUSTOM_TTL
+          valueFrom:
+            configMapKeyRef:
+              key: enabledCustomTtl
+              name: engine-proxy-configs
+        - name: ENGINE_SESSION_TTL_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: engineSessionTtlSeconds
+              name: engine-proxy-configs
+        - name: ENGINE_SESSIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: engineSessionsUri
+              name: engine-proxy-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: engine-proxy-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: engine-proxy-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: engine-proxy-configs
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/engine-proxy:0.14.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: http
+        name: engine-proxy
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: engine-proxy-secrets
+        secret:
+          secretName: engine-proxy-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-snippet: |
+      set_by_lua_block $res {
+        local match, err = ngx.re.match(ngx.var.request_uri, ".*qlik-web-integration-id=([A-Za-z0-9-_]{32})");
+        if err then
+          ngx.log(ngx.ERR, "failed regex matching in (" .. ngx.var.request_uri .. ") while searching for qlik-web-integration-id (" .. tostring(err) .. ")");
+        elseif match and match[1] then
+          return match[1];
+        end
+        return "";
+      }
+      proxy_set_header qlik-web-integration-id $res;
+      proxy_set_header Connection $connection_upgrade;
+      proxy_set_header Upgrade $http_upgrade;
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: engine-proxy
+    app.kubernetes.io/component: engine-proxy
+    app.kubernetes.io/instance: engine-proxy
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 0.14.0
+    chart: engine-proxy-0.14.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: engine-proxy
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: engine-proxy
+            port:
+              number: 8080
+        path: /app/
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: engine-proxy
+            port:
+              number: 8080
+        path: /qvapp/
+        pathType: ImplementationSpecific

@@ -1,0 +1,537 @@
+apiVersion: v1
+data:
+  accessControlsUri: http://access-controls:5080
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: debug
+  minioBucket: qlik
+  minioUri: minio-sde:9000
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://temporary-contents-nats-client:4222
+  policyDecisionsUri: http://policy-decisions:5080
+  redisUri: redis-master:6379
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  MinioAccessKey: YWRtaW4=
+  MinioSecretKey: UWxpazEyMzQ=
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvdGNz
+  redisPassword: bXlwYXNz
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: Y2taSmJqT3pTMXpXSE1WOFhxWDVRX1lLV3gyQTRGSXVHTS1BYzhQRjRhQQ==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "6080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents
+  namespace: default
+spec:
+  ports:
+  - name: temporary-contents
+    port: 6080
+    protocol: TCP
+    targetPort: 6080
+  selector:
+    app: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-storage
+  volumeName: temporary-contents
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporary-contents
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: temporary-contents
+        checksum/configs: b6b672c803acc88ec2d5e43c9af8d74e35826959d6f8e49e25786408d3547f7c
+        checksum/secrets: 82ec25320bf4e720d7b1e3b81198d01bbe87a70d1851264150f45cfdaad3edc3
+      labels:
+        app: temporary-contents
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: data-connectors
+        release: qlik-default
+        temporary-contents-nats-client: "true"
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MINIO_ACCESS_KEY_FILE
+          value: /run/secrets/qlik.com/temporary-contents/MinioAccessKey
+        - name: MINIO_SECRET_KEY_FILE
+          value: /run/secrets/qlik.com/temporary-contents/MinioSecretKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/temporary-contents/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/temporary-contents/tokenAuthPrivateKeyId
+        - name: ACCESS_CONTROLS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: accessControlsUri
+              name: temporary-contents-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: temporary-contents-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: temporary-contents-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: temporary-contents-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: temporary-contents-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: temporary-contents-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: temporary-contents-configs
+        - name: MINIO_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              key: minioBucket
+              name: temporary-contents-configs
+        - name: MINIO_URI
+          valueFrom:
+            configMapKeyRef:
+              key: minioUri
+              name: temporary-contents-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: temporary-contents-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: temporary-contents-configs
+        - name: POLICY_DECISIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: policyDecisionsUri
+              name: temporary-contents-configs
+        - name: REDIS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: redisUri
+              name: temporary-contents-configs
+        - name: ACCESS_CONTROL_ENABLED
+          value: "true"
+        - name: ACS_ENABLED
+          value: "true"
+        - name: AUTH_ENABLED
+          value: "true"
+        - name: CONTENT_TIME_TO_LIVE
+          value: "10000"
+        - name: ENCRYPTION_CLIENT
+          value: encryption
+        - name: ENCRYPTION_ENABLED
+          value: "true"
+        - name: ENVIRONMENT
+          value: qseok
+        - name: KEYS_ENDPOINT
+          value: /v1/keys/qlik.api.internal
+        - name: MINIO_MAX_CONCURRENCY
+          value: "15"
+        - name: S3_CONNECTION_READY_CHECK_ENABLED
+          value: "false"
+        - name: STORAGE_PATH
+          value: /qlik/temp-contents
+        - name: TERMINATION_GRACE_PERIOD_SECONDS
+          value: "1800"
+        - name: TOKEN_AUTH_ENABLED
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/temporary-contents:3.5.48
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 6080
+        name: temporary-contents
+        ports:
+        - containerPort: 6080
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 6080
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/temporary-contents
+          name: temporary-contents-secrets
+          readOnly: true
+        - mountPath: /qlik/temp-contents
+          name: temporary-contents
+          readOnly: false
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 1800
+      volumes:
+      - name: temporary-contents-secrets
+        secret:
+          secretName: temporary-contents-secrets
+      - name: temporary-contents
+        persistentVolumeClaim:
+          claimName: temporary-contents
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 10m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      # Only set if origin is sent as header
+      if ( $http_origin ) {
+           set $origin $http_origin;
+           set $Access_Control_Allow_Credentials "true";
+           set $Access_Control_Allow_Methods "GET, HEAD, POST, PATCH, OPTIONS";
+           set $Access_Control_Allow_Headers "DNT,Qlik-Web-Integration-ID,Qlik-CSRF-Token,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,Content-Location,Tus-Resumable,Upload-Length,Upload-Metadata,Upload-Offset";
+           set $Access_Control_Max_Age "1728000";
+           set $Access_Control_Expose_Headers "Qlik-CSRF-Token,Content-Location,Location,Upload-Length,Upload-Offset";
+      }
+
+      if ( $request_method = 'OPTIONS' ) {
+          more_set_headers 'Access-Control-Allow-Origin: $origin';
+          more_set_headers 'Access-Control-Allow-Credentials: $Access_Control_Allow_Credentials';
+          more_set_headers 'Access-Control-Allow-Methods: $Access_Control_Allow_Methods';
+          more_set_headers 'Access-Control-Allow-Headers: $Access_Control_Allow_Headers';
+          more_set_headers 'Access-Control-Expose-Headers: $Access_Control_Expose_Headers';
+          more_set_headers 'Access-Control-Max-Age: $Access_Control_Max_Age';
+          more_set_headers 'Tus-Resumable: 1.0.0';
+          more_set_headers 'Tus-Version: 1.0.0';
+          more_set_headers 'Tus-Extension: creation';
+          more_set_headers 'Content-Type: text/plain charset=UTF-8';
+          more_set_headers 'Content-Length: 0';
+          return 204;
+      }
+
+      more_set_headers 'Access-Control-Allow-Origin: $access_control_allow_origin';
+      more_set_headers 'Vary: $vary';
+      more_set_headers 'Access-Control-Allow-Credentials: $Access_Control_Allow_Credentials';
+      more_set_headers 'Access-Control-Allow-Methods: $Access_Control_Allow_Methods';
+      more_set_headers 'Access-Control-Allow-Headers: $Access_Control_Allow_Headers';
+      more_set_headers 'Access-Control-Expose-Headers: $Access_Control_Expose_Headers';
+
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "604800"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "604800"
+    nginx.org/client-max-body-size: "0"
+  labels:
+    app: temporary-contents
+    app.kubernetes.io/component: temporary-contents
+    app.kubernetes.io/instance: temporary-contents
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.5.48
+    chart: temporary-contents-3.5.48
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: temporary-contents
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: temporary-contents
+            port:
+              number: 6080
+        path: /api/v1/temp-contents
+        pathType: ImplementationSpecific

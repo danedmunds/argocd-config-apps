@@ -1,0 +1,572 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb
+  namespace: default
+secrets:
+- name: mongodb
+---
+apiVersion: v1
+data:
+  setup-hidden.sh: |-
+    #!/bin/bash
+
+    . /opt/bitnami/scripts/mongodb-env.sh
+    echo "Advertised Hostname: $MONGODB_ADVERTISED_HOSTNAME"
+    echo "Configuring node as a hidden node"
+    export MONGODB_REPLICA_SET_MODE="hidden"
+    export MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD="$MONGODB_ROOT_PASSWORD"
+    export MONGODB_INITIAL_PRIMARY_PORT_NUMBER="$MONGODB_PORT_NUMBER"
+    export MONGODB_ROOT_PASSWORD="" MONGODB_USERNAME="" MONGODB_DATABASE="" MONGODB_PASSWORD=""
+    export MONGODB_ROOT_PASSWORD_FILE="" MONGODB_USERNAME_FILE="" MONGODB_DATABASE_FILE="" MONGODB_PASSWORD_FILE=""
+    exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
+  setup.sh: |-
+    #!/bin/bash
+
+    . /opt/bitnami/scripts/mongodb-env.sh
+
+    echo "Advertised Hostname: $MONGODB_ADVERTISED_HOSTNAME"
+
+    if [[ "$MY_POD_NAME" = "mongodb-0" ]]; then
+        echo "Pod name matches initial primary pod name, configuring node as a primary"
+        export MONGODB_REPLICA_SET_MODE="primary"
+    else
+        echo "Pod name doesn't match initial primary pod name, configuring node as a secondary"
+        export MONGODB_REPLICA_SET_MODE="secondary"
+        export MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD="$MONGODB_ROOT_PASSWORD"
+        export MONGODB_INITIAL_PRIMARY_PORT_NUMBER="$MONGODB_PORT_NUMBER"
+        export MONGODB_ROOT_PASSWORD="" MONGODB_USERNAME="" MONGODB_DATABASE="" MONGODB_PASSWORD=""
+        export MONGODB_ROOT_PASSWORD_FILE="" MONGODB_USERNAME_FILE="" MONGODB_DATABASE_FILE="" MONGODB_PASSWORD_FILE=""
+    fi
+
+    exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb-scripts
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodb-password: YWJjZGVmZ2g=
+  mongodb-replica-set-key: enhjdmJubQ==
+  mongodb-root-password: YWJjZGVmZ2g=
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: mongodb
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - name: mongodb-primary
+    port: 27017
+    protocol: TCP
+    targetPort: mongodb
+  selector:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    primary: "true"
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: arbiter
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb-arbiter-headless
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - name: tcp-mongodb
+    port: 27017
+    targetPort: mongodb
+  selector:
+    app: mongodb
+    app.kubernetes.io/component: arbiter
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb-headless
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: mongodb
+  publishNotReadyAddresses: true
+  selector:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb
+  namespace: default
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+      app.kubernetes.io/component: mongodb
+      app.kubernetes.io/instance: mongodb
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  serviceName: mongodb-headless
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: mongodb
+      labels:
+        app: mongodb
+        app.kubernetes.io/component: mongodb
+        app.kubernetes.io/instance: mongodb
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        helm.sh/chart: mongodb-10.20.0
+        release: qlik-default
+    spec:
+      affinity:
+        nodeAffinity: null
+        podAffinity: null
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: mongodb
+                  app.kubernetes.io/component: mongodb
+                  app.kubernetes.io/instance: mongodb
+                  app.kubernetes.io/name: qliksense
+                  app.kubernetes.io/part-of: qliksense
+              namespaces:
+              - default
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - command:
+        - /scripts/setup.sh
+        env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_SERVICE_NAME
+          value: mongodb-headless
+        - name: MONGODB_INITIAL_PRIMARY_HOST
+          value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: MONGODB_REPLICA_SET_NAME
+          value: rs0
+        - name: MONGODB_ADVERTISED_HOSTNAME
+          value: $(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: MONGODB_USERNAME
+          value: fort-user
+        - name: MONGODB_DATABASE
+          value: qliksense
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "no"
+        - name: MONGODB_SYSTEM_LOG_VERBOSITY
+          value: "0"
+        - name: MONGODB_DISABLE_SYSTEM_LOG
+          value: "no"
+        - name: MONGODB_DISABLE_JAVASCRIPT
+          value: "no"
+        - name: MONGODB_ENABLE_JOURNAL
+          value: "yes"
+        - name: MONGODB_ENABLE_IPV6
+          value: "no"
+        - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+          value: "no"
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mongodbReplicaSetKey
+              name: qliksense-secrets
+        - name: MONGODB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodbRootPassword
+              name: qliksense-secrets
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodbPassword
+              name: qliksense-secrets
+        image: ghcr.io/qlik-download/bitnami/mongodb:4.4.6-debian-10-r8
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - mongo
+            - --disableImplicitSessions
+            - --eval
+            - db.adminCommand('ping')
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        readinessProbe:
+          exec:
+            command:
+            - bash
+            - -ec
+            - |
+              # Run the proper check depending on the version
+              [[ $(mongo --version | grep "MongoDB shell") =~ ([0-9]+\.[0-9]+\.[0-9]+) ]] && VERSION=${BASH_REMATCH[1]}
+              . /opt/bitnami/scripts/libversion.sh
+              VERSION_MAJOR="$(get_sematic_version "$VERSION" 1)"
+              VERSION_MINOR="$(get_sematic_version "$VERSION" 2)"
+              VERSION_PATCH="$(get_sematic_version "$VERSION" 3)"
+              if [[ "$VERSION_MAJOR" -ge 4 ]] && [[ "$VERSION_MINOR" -ge 4 ]] && [[ "$VERSION_PATCH" -ge 2 ]]; then
+                  mongo --disableImplicitSessions $TLS_OPTIONS --eval 'db.hello().isWritablePrimary || db.hello().secondary' | grep -q 'true'
+              else
+                  mongo --disableImplicitSessions $TLS_OPTIONS --eval 'db.isMaster().ismaster || db.isMaster().secondary' | grep -q 'true'
+              fi
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits: {}
+          requests: {}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+        volumeMounts:
+        - mountPath: /bitnami/mongodb
+          name: datadir
+          subPath: null
+        - mountPath: /scripts/setup.sh
+          name: scripts
+          subPath: setup.sh
+      - env:
+        - name: LABEL_SELECTOR
+          value: app.kubernetes.io/component=mongodb
+        - name: NAMESPACE
+          value: default
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/combor/k8s-mongo-labeler-sidecar:0.1.2
+        imagePullPolicy: Always
+        name: mongo-labeler
+      initContainers:
+      - args:
+        - |
+          mkdir -p /bitnami/mongodb
+          chown -R "1001:1001" "/bitnami/mongodb"
+        command:
+        - /bin/bash
+        - -ec
+        env:
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/bitnami/bitnami-shell:10-debian-10-r91
+        imagePullPolicy: IfNotPresent
+        name: volume-permissions
+        resources:
+          limits: {}
+          requests: {}
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /bitnami/mongodb
+          name: datadir
+      securityContext:
+        fsGroup: 1001
+        sysctls: []
+      serviceAccountName: mongodb
+      volumes:
+      - configMap:
+          defaultMode: 493
+          name: mongodb-scripts
+        name: scripts
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app: mongodb
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+      name: datadir
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi
+      selector:
+        matchLabels:
+          role: mongodb-replica
+      storageClassName: local-storage
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: mongodb
+    app.kubernetes.io/component: arbiter
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: mongodb-10.20.0
+    release: qlik-default
+  name: mongodb-arbiter
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+      app.kubernetes.io/component: arbiter
+      app.kubernetes.io/instance: mongodb
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  serviceName: mongodb-arbiter-headless
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: mongodb
+      labels:
+        app: mongodb
+        app.kubernetes.io/component: arbiter
+        app.kubernetes.io/instance: mongodb
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        helm.sh/chart: mongodb-10.20.0
+        release: qlik-default
+    spec:
+      affinity:
+        nodeAffinity: null
+        podAffinity: null
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: mongodb
+                  app.kubernetes.io/component: arbiter
+                  app.kubernetes.io/instance: mongodb
+                  app.kubernetes.io/name: qliksense
+                  app.kubernetes.io/part-of: qliksense
+              namespaces:
+              - default
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_SERVICE_NAME
+          value: mongodb-arbiter-headless
+        - name: MONGODB_REPLICA_SET_MODE
+          value: arbiter
+        - name: MONGODB_INITIAL_PRIMARY_HOST
+          value: mongodb-0.mongodb-headless.$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: MONGODB_REPLICA_SET_NAME
+          value: rs0
+        - name: MONGODB_ADVERTISED_HOSTNAME
+          value: $(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "no"
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        - name: MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodbRootPassword
+              name: qliksense-secrets
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mongodbReplicaSetKey
+              name: qliksense-secrets
+        image: ghcr.io/qlik-download/bitnami/mongodb:4.4.6-debian-10-r8
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: mongodb
+          timeoutSeconds: 5
+        name: mongodb-arbiter
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        readinessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: mongodb
+          timeoutSeconds: 5
+        resources:
+          limits: {}
+          requests: {}
+        securityContext:
+          runAsUser: 1001
+      initContainers: null
+      securityContext:
+        fsGroup: 1001
+        sysctls: []
+      serviceAccountName: mongodb

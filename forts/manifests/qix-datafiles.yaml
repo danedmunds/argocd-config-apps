@@ -1,0 +1,561 @@
+apiVersion: v1
+data:
+  awss3Accesskey: minio-access-key
+  awss3Enabled: "true"
+  awss3Secretkey: minio-secret-key
+  awss3Uri: http://minio:9000/
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  featureFlagsCacheexpirationinseconds: "30"
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: info
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://messaging-nats-client:4222
+  otlpAgentPort: "55680"
+  policyDecisionsUri: http://policy-decisions:5080
+  policyDecisionsUseaccesscontrolservice: "false"
+  spacesUri: http://spaces:6080
+  temporaryContentsUri: http://temporary-contents:6080
+  usersUri: http://identities:8080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvcWl4LWRhdGFmaWxlcz9zc2w9ZmFsc2U=
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: enBpWi1rbFM2NWxmY3ExSzAtbzI5U2EwQUFaWVlyNE9OXzFWQ3RBYk1FQQ==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles
+  namespace: default
+spec:
+  ports:
+  - name: qix-datafiles
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: grpc
+    port: 50051
+    protocol: TCP
+    targetPort: 50051
+  selector:
+    app: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-storage
+  volumeName: qix-datafiles
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qix-datafiles
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: qix-datafiles
+        checksum/configs: a89b1ec44d254e9c0a482e0c26e806bf94e96e09286156e2cfba5dfed354e5c8
+        checksum/secrets: 9d2e91dddc7d9436f79cb0e286f37a4759625544a35412021239e1f455b8b6d1
+      labels:
+        app: qix-datafiles
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: data-connectors
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qix-datafiles/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/qix-datafiles/tokenAuthPrivateKeyId
+        - name: AWSS3_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: awss3Enabled
+              name: qix-datafiles-configs
+        - name: AWSS3_URI
+          valueFrom:
+            configMapKeyRef:
+              key: awss3Uri
+              name: qix-datafiles-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: qix-datafiles-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: qix-datafiles-configs
+        - name: FEATURE_FLAGS_CACHEEXPIRATIONINSECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsCacheexpirationinseconds
+              name: qix-datafiles-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: qix-datafiles-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: qix-datafiles-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: qix-datafiles-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: qix-datafiles-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: qix-datafiles-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: qix-datafiles-configs
+        - name: OTLP_AGENT_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: otlpAgentPort
+              name: qix-datafiles-configs
+        - name: POLICY_DECISIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: policyDecisionsUri
+              name: qix-datafiles-configs
+        - name: POLICY_DECISIONS_USEACCESSCONTROLSERVICE
+          valueFrom:
+            configMapKeyRef:
+              key: policyDecisionsUseaccesscontrolservice
+              name: qix-datafiles-configs
+        - name: SPACES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: spacesUri
+              name: qix-datafiles-configs
+        - name: TEMPORARY_CONTENTS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: temporaryContentsUri
+              name: qix-datafiles-configs
+        - name: USERS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: usersUri
+              name: qix-datafiles-configs
+        - name: DATA_DIRECTORY
+          value: /qlik/qix-datafiles
+        - name: JWTAUTHENTICATION_REQUIRESIGNEDTOKENS
+          value: "true"
+        - name: NATS_AUTHENABLED
+          value: "true"
+        - name: TERMINATION_GRACE_PERIOD_SECONDS
+          value: "1800"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        - name: AWSS3_SECRETKEY
+          value: $(MINIO_ROOT_PASSWORD)
+        - name: AWSS3_ACCESSKEY
+          value: $(MINIO_ROOT_USER)
+        image: ghcr.io/qlik-download/qix-datafiles:4.1.27
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        name: qix-datafiles
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50051
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/qix-datafiles
+          name: qix-datafiles-secrets
+          readOnly: true
+        - mountPath: /qlik/qix-datafiles
+          name: qix-datafiles
+          readOnly: false
+        - mountPath: /tmp
+          name: qix-datafiles-tmpdir
+          readOnly: false
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 1800
+      volumes:
+      - name: qix-datafiles-secrets
+        secret:
+          secretName: qix-datafiles-secrets
+      - emptyDir: {}
+        name: qix-datafiles-tmpdir
+      - name: qix-datafiles
+        persistentVolumeClaim:
+          claimName: qix-datafiles
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles
+  namespace: default
+spec:
+  maxReplicas: 1
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: qix-datafiles
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 10m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/v1/(.*) /v1/$1 break;
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "7200"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "7200"
+    nginx.org/client-max-body-size: 500m
+  labels:
+    app: qix-datafiles
+    app.kubernetes.io/component: qix-datafiles
+    app.kubernetes.io/instance: qix-datafiles
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 4.1.27
+    chart: qix-datafiles-4.1.27
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: qix-datafiles
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: qix-datafiles
+            port:
+              number: 8080
+        path: /api/v1/qix-datafiles
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: qix-datafiles
+            port:
+              number: 8080
+        path: /api/v1/data-files
+        pathType: ImplementationSpecific

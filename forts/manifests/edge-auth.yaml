@@ -1,0 +1,708 @@
+apiVersion: v1
+data:
+  apiKeysUri: http://api-keys:8080
+  encryptionUri: http://encryption:8080
+  featureFlagsUri: http://feature-flags:8080
+  groupsUri: http://identities:8080
+  identitiesUri: http://identities:8080
+  identityProvidersExtUri: http://identity-providers-ext:8080
+  identityProvidersUri: http://identity-providers:8080
+  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  licensesUri: http://licenses:9200
+  logLevel: info
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: http://messaging-nats-client:4222
+  oauthClientsUri: http://oauth-clients:8080
+  policyAdministrationsUri: http://policy-administrations:7070
+  rateLimiterLimit: "1e+06"
+  redirects: https://elastic.example/login/callback
+  redisUri: redis://redis-master:6379
+  scopesUri: http://scopes:8080
+  tenantsUri: http://tenants:8080
+  usersUri: http://identities:8080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  accessTokenPrivateKey: PLACEHOLDER
+  cookiesKeys: WyJVaUw2WWVQRWNVTWsyTXFpR2sxQnVHc3FNV2ZvSHorYjFTdVgxM2xLdXZVPSJd
+  loginStateKey: ckxrOWRNa3cxbm1jblJQbWErMENROHY2UEJaQVB4UWFlZW5vUVBKYzRQST0=
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvZWRnZS1hdXRoP3NzbD1mYWxzZQ==
+  oauthClientMyQlikSaltedHashes: W3sic2FsdCI6IjQzYmY3OTgxZGE4MThlYmE1ZTY2YzI2MTVjMzNiNDYwY2MzOTMyNmZmYjYwNDhmMTEyOGVjMGNhOTA0YjBjMTgiLCJoYXNoIjoiNjMwZTMwOWU4Y2YxZTRhZTU0YzRjZTdmZjdlMDA5ZDY5NmZjMzE1YzFlYzM3MWJmZjExNGFhNDI4ODEzYjYzMyJ9XQ==
+  redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
+  refreshTokenPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKey: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+    prometheus.io/scrape_high_cardinality: "true"
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth
+  namespace: default
+spec:
+  ports:
+  - appProtocol: TCP
+    name: edge-auth
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-auth
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: edge-auth
+        checksum/configs: 0e31f18bd139406976117984c841bc5a363048818597fc0d192c68b0be5a4e2b
+        checksum/secrets: c087aacaa936c6130c2b1e2500ca872c6b52cfd9b57573ebde1f269839f577cd
+      labels:
+        app: edge-auth
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: authentication
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ACCESS_TOKEN_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/edge-auth/accessTokenPrivateKey
+        - name: COOKIES_KEYS_FILE
+          value: /run/secrets/qlik.com/edge-auth/cookiesKeys
+        - name: LOGIN_STATE_KEY_FILE
+          value: /run/secrets/qlik.com/edge-auth/loginStateKey
+        - name: REFRESH_TOKEN_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/edge-auth/refreshTokenPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/edge-auth/tokenAuthPrivateKey
+        - name: OAUTH_CLIENT_MY_QLIK_SALTED_HASHES_FILE
+          value: /run/secrets/qlik.com/edge-auth/oauthClientMyQlikSaltedHashes
+        - name: API_KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: apiKeysUri
+              name: edge-auth-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: edge-auth-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: edge-auth-configs
+        - name: GROUPS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: groupsUri
+              name: edge-auth-configs
+        - name: IDENTITIES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: identitiesUri
+              name: edge-auth-configs
+        - name: IDENTITY_PROVIDERS_EXT_URI
+          valueFrom:
+            configMapKeyRef:
+              key: identityProvidersExtUri
+              name: edge-auth-configs
+        - name: IDENTITY_PROVIDERS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: identityProvidersUri
+              name: edge-auth-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: edge-auth-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: edge-auth-configs
+        - name: LICENSES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: licensesUri
+              name: edge-auth-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: edge-auth-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: edge-auth-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: edge-auth-configs
+        - name: OAUTH_CLIENTS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: oauthClientsUri
+              name: edge-auth-configs
+        - name: POLICY_ADMINISTRATIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: policyAdministrationsUri
+              name: edge-auth-configs
+        - name: RATE_LIMITER_LIMIT
+          valueFrom:
+            configMapKeyRef:
+              key: rateLimiterLimit
+              name: edge-auth-configs
+        - name: REDIS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: redisUri
+              name: edge-auth-configs
+        - name: SCOPES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: scopesUri
+              name: edge-auth-configs
+        - name: TENANTS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: tenantsUri
+              name: edge-auth-configs
+        - name: USERS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: usersUri
+              name: edge-auth-configs
+        - name: ACTIVE_SESSION_RELOGIN_ENABLED
+          value: "true"
+        - name: GLOBAL_AGENT_FORCE_GLOBAL_AGENT
+          value: "true"
+        - name: CACHE_MAX_AGE
+          value: "7.2e+06"
+        - name: CACHE_MAX_SIZE
+          value: "250"
+        - name: CACHE_REDIS_ENABLED
+          value: "true"
+        - name: CACHE_STORES_FEATURES
+          value: redis
+        - name: CACHE_STORES_IDENTITIES
+          value: redis
+        - name: CACHE_STORES_KEYS
+          value: redis
+        - name: CACHE_STORES_LICENSES
+          value: redis
+        - name: CACHE_STORES_OAUTH_CLIENTS
+          value: redis
+        - name: CACHE_STORES_SESSIONS
+          value: redis
+        - name: CACHE_STORES_TENANTS
+          value: redis
+        - name: CACHE_STORES_USERS
+          value: redis
+        - name: ENFORCE_TLS
+          value: "true"
+        - name: ENVIRONMENT
+          value: qseok
+        - name: MONGO_CHECK_SERVER_IDENTITY
+          value: ""
+        - name: MONGO_SSL
+          value: ""
+        - name: MONGO_SSL_VALIDATE
+          value: ""
+        - name: NATS_ENABLED
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_GROUPS_MANUAL_ACKS
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_GROUPS_QUEUE_GROUP
+          value: edge-auth.groups
+        - name: NATS_SUBSCRIPTIONS_LICENSES_MANUAL_ACKS
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_LICENSES_QUEUE_GROUP
+          value: edge-auth.licenses
+        - name: NATS_SUBSCRIPTIONS_OAUTH_CLIENTS_MANUAL_ACKS
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_OAUTH_CLIENTS_QUEUE_GROUP
+          value: edge-auth.oauthClients
+        - name: NATS_SUBSCRIPTIONS_TENANTS_MANUAL_ACKS
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_TENANTS_QUEUE_GROUP
+          value: edge-auth.tenants
+        - name: NATS_SUBSCRIPTIONS_USERS_MANUAL_ACKS
+          value: "true"
+        - name: NATS_SUBSCRIPTIONS_USERS_QUEUE_GROUP
+          value: edge-auth.users
+        - name: REGION
+          value: example
+        - name: SECURE_COOKIES
+          value: "true"
+        - name: SESSION_MAX_LIFETIME
+          value: "86400"
+        - name: SESSION_TTL
+          value: "1800"
+        - name: STATE_LIFETIME
+          value: 7 days
+        - name: TERMINATION_GRACE_PERIOD_SECONDS
+          value: "30"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        - name: GLOBAL_AGENT_HTTPS_PROXY
+          value: $(HTTPS_PROXY)
+        - name: GLOBAL_AGENT_HTTP_PROXY
+          value: $(HTTP_PROXY)
+        - name: GLOBAL_AGENT_NO_PROXY
+          value: $(NO_PROXY)
+        image: ghcr.io/qlik-download/edge-auth:6.23.30
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: http
+        name: edge-auth
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/edge-auth
+          name: edge-auth-secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      dnsConfig:
+        options:
+        - name: timeout
+          value: "1"
+      hostAliases:
+      - hostnames:
+        - elastic.example
+        ip: 127.0.0.1
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: edge-auth-secrets
+        secret:
+          secretName: edge-auth-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $host_and_uri $http_host$request_uri;
+      if ( $host_and_uri ~* "^.{2049,}$" ) { return 414; }
+      more_clear_input_headers "X-Forwarded-Host" "X-Forwarded-For" "X-Forwarded-Proto" "X-Original-URI" "X-Original-URL";
+      more_set_headers 'Access-Control-Allow-Origin: $http_origin';
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /logout
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /oauth
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /.well-known/openid-configuration
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /.well-known/oauth-authorization-server
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /.well-known/jwks.json
+        pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $host_and_uri $http_host$request_uri;
+      if ( $host_and_uri ~* "^.{2049,}$" ) { return 414; }
+      rewrite (?i)/api/(.*) /$1 break;
+      more_clear_input_headers "X-Forwarded-Host" "X-Forwarded-For" "X-Forwarded-Proto" "X-Original-URI" "X-Original-URL";
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth-api
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /api/v1/diagnose-claims
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /api/v1/csrf-token
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /api/v1/oauth-tokens
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /api/v1/claims/me
+        pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $host_and_uri $http_host$request_uri;
+      if ( $host_and_uri ~* "^.{4096,}$" ) { return 414; }
+      more_clear_input_headers "X-Forwarded-Host" "X-Forwarded-For" "X-Forwarded-Proto" "X-Original-URI" "X-Original-URL";
+      more_set_headers 'Access-Control-Allow-Origin: $http_origin';
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+  labels:
+    app: edge-auth
+    app.kubernetes.io/component: edge-auth
+    app.kubernetes.io/instance: edge-auth
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 6.23.30
+    chart: edge-auth-6.23.30
+    domain: authentication
+    heritage: Helm
+    release: qlik-default
+  name: edge-auth-login
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: edge-auth
+            port:
+              number: 8080
+        path: /login
+        pathType: ImplementationSpecific

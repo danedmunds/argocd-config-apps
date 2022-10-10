@@ -1,0 +1,503 @@
+apiVersion: v1
+data:
+  csp: 'default-src ''none''; base-uri ''self''; img-src ''self'' data: maps.qlikcloud.com
+    ibasemaps-api.arcgis.com cdn.pendo.io app.pendo.io pendo-static-5763789454311424.storage.googleapis.com
+    data.pendo.io *.gravatar.com *.wp.com *.googleusercontent.com cdn.qlik-stage.com
+    cdn.qlikcloud.com ; media-src ''self'' data: qvmedia.s35678.amazonaws.com; script-src
+    ''self'' ''unsafe-inline'' ''unsafe-eval'' blob: www.google-analytics.com ssl.google-analytics.com
+    maps.qlikcloud.com edge.fullstory.com app.pendo.io pendo-io-static.storage.googleapis.com
+    cdn.pendo.io pendo-static-5763789454311424.storage.googleapis.com data.pendo.io
+    cdn.qlik-stage.com cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net f99hbcdmsb16.statuspage.io;
+    style-src ''self'' ''unsafe-inline'' fonts.googleapis.com app.pendo.io cdn.pendo.io
+    pendo-static-5763789454311424.storage.googleapis.com cdn.qlik-stage.com cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net;
+    font-src ''self'' data: fonts.gstatic.com fonts.googleapis.com cdn.qlik-stage.com
+    cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net; frame-ancestors ''self'' app.pendo.io;
+    frame-src ''self'' app.pendo.io www.youtube.com www.youtube-nocookie.com help.qlik.com
+    f99hbcdmsb16.statuspage.io survey.qlik.com qliktech.ca1.qualtrics.com; connect-src
+    ''self'' www.google-analytics.com api.qlikdataengineering.com sqs.us-east-1.amazonaws.com
+    maps.qlikcloud.com api.rollbar.com rs.fullstory.com app.launchdarkly.com events.launchdarkly.com
+    app.pendo.io data.pendo.io pendo-static-5763789454311424.storage.googleapis.com
+    cdn.qlik-stage.com cdn.qlikcloud.com  ; child-src blob: app.pendo.io; block-all-mixed-content;
+    upgrade-insecure-requests; worker-src blob:;'
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: csp-configmap
+  namespace: default
+---
+apiVersion: v1
+data:
+  assetsUrl: 7.779.0/
+  cspFallback: 'default-src ''none''; base-uri ''self''; img-src ''self'' data: maps.qlikcloud.com
+    ibasemaps-api.arcgis.com cdn.pendo.io app.pendo.io pendo-static-5763789454311424.storage.googleapis.com
+    data.pendo.io *.gravatar.com *.wp.com *.googleusercontent.com cdn.qlik-stage.com
+    cdn.qlikcloud.com; media-src ''self'' data: qvmedia.s35678.amazonaws.com; script-src
+    ''self'' ''unsafe-inline'' ''unsafe-eval'' blob: www.google-analytics.com ssl.google-analytics.com
+    maps.qlikcloud.com edge.fullstory.com app.pendo.io pendo-io-static.storage.googleapis.com
+    cdn.pendo.io pendo-static-5763789454311424.storage.googleapis.com data.pendo.io
+    cdn.qlik-stage.com cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net f99hbcdmsb16.statuspage.io;
+    style-src ''self'' ''unsafe-inline'' fonts.googleapis.com app.pendo.io cdn.pendo.io
+    pendo-static-5763789454311424.storage.googleapis.com cdn.qlik-stage.com cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net;
+    font-src ''self'' data: fonts.gstatic.com fonts.googleapis.com cdn.qlik-stage.com
+    cdn.qlikcloud.com  d19uocc72ax6zk.cloudfront.net; frame-ancestors ''self'' app.pendo.io;
+    frame-src ''self'' app.pendo.io www.youtube.com www.youtube-nocookie.com help.qlik.com
+    f99hbcdmsb16.statuspage.io survey.qlik.com qliktech.ca1.qualtrics.com; connect-src
+    ''self'' www.google-analytics.com api.qlikdataengineering.com sqs.us-east-1.amazonaws.com
+    maps.qlikcloud.com api.rollbar.com rs.fullstory.com app.launchdarkly.com events.launchdarkly.com
+    app.pendo.io data.pendo.io pendo-static-5763789454311424.storage.googleapis.com
+    cdn.qlik-stage.com cdn.qlikcloud.com  ; child-src blob: app.pendo.io; block-all-mixed-content;
+    upgrade-insecure-requests; worker-src blob:;'
+  cspFetchUrl: http://fort-region-gateway:8080/v1/csp-header
+  devDomain: ""
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  productInfo: '{ "composition": { "productName": "Qlik Cloud Services", "senseId":
+    "QlikCloudServices", "releaseLabel": "-", "deploymentEnvironment": "dev" }, "components":
+    [{ "component": "Client", "version": "7.779.0" }], "externalUrls": { "serverHelpBaseUrl":
+    "http://help.qlik.com/en-US/cloud-services/csh/", "personalHelpBaseUrl": "http://help.qlik.com/en-US/cloud-services/csh/",
+    "cloudBaseUrl": "https://qlikcloud.com/", "cloudUploadUrl": "https://qlikcloud.com/upload?",
+    "personalUpgradeBase": "qlik.com/QlikSenseDesktopUpgrade", "personalUpgradeUrl":
+    "http://qlik.com/QlikSenseDesktopUpgrade", "qlikWebPageUrl": "https://www.qlik.com/"
+    } }'
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9180"
+    prometheus.io/scrape: "true"
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client
+  namespace: default
+spec:
+  ports:
+  - name: sense-client
+    port: 9050
+    protocol: TCP
+    targetPort: 9050
+  selector:
+    app: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sense-client
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: sense-client
+        checksum/configs: 8682e01662566c1acc0190e9f3c3fef8ea0a3214ffc239b7c1b9450dd4509d80
+        checksum/secrets: e48a559e32e96916933c872f69dd3ac1ef1dd0fa6f4789c32a02cf91131a49f8
+      labels:
+        app: sense-client
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: analytics
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: ASSETS_URL
+          valueFrom:
+            configMapKeyRef:
+              key: assetsUrl
+              name: sense-client-configs
+        - name: CSP_FALLBACK
+          valueFrom:
+            configMapKeyRef:
+              key: cspFallback
+              name: sense-client-configs
+        - name: CSP_FETCH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: cspFetchUrl
+              name: sense-client-configs
+        - name: DEV_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              key: devDomain
+              name: sense-client-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: sense-client-configs
+        - name: PRODUCT_INFO
+          valueFrom:
+            configMapKeyRef:
+              key: productInfo
+              name: sense-client-configs
+        - name: BASE_ASSETS_URL
+          value: ""
+        - name: CDN_BASE_URL
+          value: ""
+        - name: CSP_ENABLED
+          value: "true"
+        - name: DEPLOYMENT_ENVIRONMENT
+          value: dev
+        - name: PERSONAL_HELP_BASE_URL
+          value: http://help.qlik.com/en-US/cloud-services/csh/
+        - name: SERVER_HELP_BASE_URL
+          value: http://help.qlik.com/en-US/cloud-services/csh/
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/sense-client:7.779.0
+        imagePullPolicy: IfNotPresent
+        name: sense-client
+        ports:
+        - containerPort: 9050
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: sense-client-secrets
+        secret:
+          secretName: sense-client-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Cache-Control" "Pragma" "X-XSS-Protection: 1; mode=block" "X-Content-Type-Options: nosniff";
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /sense
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /dataloadeditor
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /datamodelviewer
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /single
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /nebula
+        pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Cache-Control" "Pragma" "Access-Control-Allow-Origin: *";
+  labels:
+    app: sense-client
+    app.kubernetes.io/component: sense-client
+    app.kubernetes.io/instance: sense-client
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 7.779.0
+    chart: sense-client-7.779.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: sense-client-resources
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: sense-client
+            port:
+              number: 9050
+        path: /resources
+        pathType: ImplementationSpecific

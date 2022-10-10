@@ -1,0 +1,503 @@
+apiVersion: v1
+data:
+  accessControlsUri: http://nl-broker-access-controls:5080
+  collectionsUri: http://nl-broker-collections:8080
+  dataPrepUri: http://data-prep:9072
+  edgeAuthUri: http://nl-broker-edge-auth:8080
+  encryptionUri: http://nl-broker-encryption:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  natsEnabled: "true"
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: http://messaging-nats-client:4222
+  nlAppSearchUri: http://nl-app-search:9085
+  nlParserUri: http://nl-parser:30302
+  qixSessionsUri: http://qix-sessions:8080
+  reportingUri: http://reporting:8282
+  temporaryContentsUri: http://nl-broker-temporary-contents:6080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-broker
+    app.kubernetes.io/component: nl-broker
+    app.kubernetes.io/instance: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.99.0
+    chart: nl-broker-3.99.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-broker-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvbmwtYnJva2VyP3NzbD1mYWxzZQ==
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: ZGQzNUdjWE1YYjVNZVRqSWUydGp3VURjbWwtLWdYR3RHQWxSV2dTejNobw==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-broker
+    app.kubernetes.io/component: nl-broker
+    app.kubernetes.io/instance: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.99.0
+    chart: nl-broker-3.99.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-broker-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "30301"
+    prometheus.io/scrape: "true"
+  labels:
+    app: nl-broker
+    app.kubernetes.io/component: nl-broker
+    app.kubernetes.io/instance: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.99.0
+    chart: nl-broker-3.99.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-broker
+  namespace: default
+spec:
+  ports:
+  - name: nl-broker
+    port: 30301
+    protocol: TCP
+    targetPort: 30301
+  selector:
+    app: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-broker
+    app.kubernetes.io/component: nl-broker
+    app.kubernetes.io/instance: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.99.0
+    chart: nl-broker-3.99.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-broker
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nl-broker
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: nl-broker
+        checksum/configs: 2e4595f5b879d70b74bfd7f01a7edd2647014fc12ff7c14790b88be38dc02985
+        checksum/secrets: 03800fea56f44e6b9b62268f70cd86a0c83f8c22f03ebcce0d96b3c4b8c26caa
+      labels:
+        app: nl-broker
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: nlp-cognitive
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/nl-broker/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/nl-broker/tokenAuthPrivateKeyId
+        - name: ACCESS_CONTROLS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: accessControlsUri
+              name: nl-broker-configs
+        - name: COLLECTIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: collectionsUri
+              name: nl-broker-configs
+        - name: DATA_PREP_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dataPrepUri
+              name: nl-broker-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: nl-broker-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: nl-broker-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: nl-broker-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: nl-broker-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: nl-broker-configs
+        - name: NATS_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: natsEnabled
+              name: nl-broker-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: nl-broker-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: nl-broker-configs
+        - name: NL_APP_SEARCH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: nlAppSearchUri
+              name: nl-broker-configs
+        - name: NL_PARSER_URI
+          valueFrom:
+            configMapKeyRef:
+              key: nlParserUri
+              name: nl-broker-configs
+        - name: QIX_SESSIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: qixSessionsUri
+              name: nl-broker-configs
+        - name: REPORTING_URI
+          valueFrom:
+            configMapKeyRef:
+              key: reportingUri
+              name: nl-broker-configs
+        - name: TEMPORARY_CONTENTS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: temporaryContentsUri
+              name: nl-broker-configs
+        - name: DPS_ROUTING
+          value: "false"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/nl-broker:3.99.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nl-broker
+        ports:
+        - containerPort: 30301
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/nl-broker
+          name: nl-broker-secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: nl-broker-secrets
+        secret:
+          secretName: nl-broker-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+  labels:
+    app: nl-broker
+    app.kubernetes.io/component: nl-broker
+    app.kubernetes.io/instance: nl-broker
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.99.0
+    chart: nl-broker-3.99.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-broker
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/sentences
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/narrative
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/nl/query
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/questions/actions/ask
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/nlmetrics
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/nlsettings
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: nl-broker
+            port:
+              number: 30301
+        path: /api/v1/nl/languages
+        pathType: ImplementationSpecific

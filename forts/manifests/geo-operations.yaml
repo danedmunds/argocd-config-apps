@@ -1,0 +1,475 @@
+apiVersion: v1
+data:
+  dcaasUri: http://dcaas:9026
+  edgeAuthUri: http://edge-auth:8080
+  featureFlagsUri: http://feature-flags:8080
+  geoAnalyticsServerKey: ""
+  geoAnalyticsServerUrl: https://ga.qlikcloud.com
+  licensesUri: http://licenses:9200
+  logLevel: info
+  maxDatasetBytes: ""
+  maxDatasetRows: ""
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: geo-operations
+    app.kubernetes.io/component: geo-operations
+    app.kubernetes.io/instance: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.26.1
+    chart: geo-operations-2.26.1
+    heritage: Helm
+    release: qlik-default
+  name: geo-operations-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: TjBJM3JvRVZvaDF1dFNiMUpGa3FrbGFoUlhtR2lrcThGSWt4TEx1RXBjVQ==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: geo-operations
+    app.kubernetes.io/component: geo-operations
+    app.kubernetes.io/instance: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.26.1
+    chart: geo-operations-2.26.1
+    heritage: Helm
+    release: qlik-default
+  name: geo-operations-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "40072"
+    prometheus.io/scrape: "true"
+  labels:
+    app: geo-operations
+    app.kubernetes.io/component: geo-operations
+    app.kubernetes.io/instance: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.26.1
+    chart: geo-operations-2.26.1
+    heritage: Helm
+    release: qlik-default
+  name: geo-operations
+  namespace: default
+spec:
+  ports:
+  - name: grpc
+    port: 50072
+    protocol: TCP
+    targetPort: 50072
+  - name: http
+    port: 40072
+    protocol: TCP
+    targetPort: 40072
+  selector:
+    app: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: geo-operations
+    app.kubernetes.io/component: geo-operations
+    app.kubernetes.io/instance: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.26.1
+    chart: geo-operations-2.26.1
+    heritage: Helm
+    release: qlik-default
+  name: geo-operations
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geo-operations
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: geo-operations
+        checksum/configs: da364c5d30d355a41c55c5301be9fcac73703108197825578a385ec40efdbca0
+        checksum/secrets: 68e72985daf3fa7b60831be3181cceea8f1ca6309f906944782e6a4240906bc6
+      labels:
+        app: geo-operations
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/geo-operations/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/geo-operations/tokenAuthPrivateKeyId
+        - name: DCAAS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dcaasUri
+              name: geo-operations-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: geo-operations-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: geo-operations-configs
+        - name: GEO_ANALYTICS_SERVER_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: geoAnalyticsServerKey
+              name: geo-operations-configs
+        - name: GEO_ANALYTICS_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: geoAnalyticsServerUrl
+              name: geo-operations-configs
+        - name: LICENSES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: licensesUri
+              name: geo-operations-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: geo-operations-configs
+        - name: MAX_DATASET_BYTES
+          valueFrom:
+            configMapKeyRef:
+              key: maxDatasetBytes
+              name: geo-operations-configs
+        - name: MAX_DATASET_ROWS
+          valueFrom:
+            configMapKeyRef:
+              key: maxDatasetRows
+              name: geo-operations-configs
+        - name: LICENSES_KEY_ID
+          value: KEY4
+        - name: THROTTLING_ENABLED
+          value: "true"
+        - name: THROTTLING_MAX_CONCURRENT
+          value: "3"
+        - name: THROTTLING_QUEUE_LIMIT
+          value: "5"
+        - name: THROTTLING_TIMEOUT
+          value: "180000"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/geo-operations-service:2.26.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 40072
+        name: geo-operations
+        ports:
+        - containerPort: 40072
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 40072
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/geo-operations
+          name: geo-operations-secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: geo-operations-secrets
+        secret:
+          secretName: geo-operations-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: geo-operations
+    app.kubernetes.io/component: geo-operations
+    app.kubernetes.io/instance: geo-operations
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.26.1
+    chart: geo-operations-2.26.1
+    heritage: Helm
+    release: qlik-default
+  name: geo-operations
+  namespace: default
+spec:
+  egress:
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+  - ports:
+    - port: 9026
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+      podSelector:
+        matchLabels:
+          app: dcaas
+          app.kubernetes.io/name: qliksense
+          app.kubernetes.io/part-of: qliksense
+          release: geo-operations
+  - ports:
+    - port: 8080
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+      podSelector:
+        matchLabels:
+          app: edge-auth
+          app.kubernetes.io/name: qliksense
+          app.kubernetes.io/part-of: qliksense
+          release: geo-operations
+  - ports:
+    - port: 8080
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+      podSelector:
+        matchLabels:
+          app: feature-flags
+          app.kubernetes.io/name: qliksense
+          app.kubernetes.io/part-of: qliksense
+          release: geo-operations
+  - ports:
+    - port: 9200
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+      podSelector:
+        matchLabels:
+          app: licenses
+          app.kubernetes.io/name: qliksense
+          app.kubernetes.io/part-of: qliksense
+          release: geo-operations
+  - ports:
+    - port: 55680
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+      podSelector:
+        matchLabels:
+          app: opentelemetry
+          app.kubernetes.io/name: qliksense
+          app.kubernetes.io/part-of: qliksense
+          component: otel-agent
+          release: tracing
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: geo-operations
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: geo-operations
+  policyTypes:
+  - Egress
+  - Ingress
