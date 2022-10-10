@@ -34,8 +34,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -65,8 +65,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -91,8 +91,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -126,8 +126,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -145,8 +145,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: edge-auth
-        checksum/configs: 0e31f18bd139406976117984c841bc5a363048818597fc0d192c68b0be5a4e2b
-        checksum/secrets: c087aacaa936c6130c2b1e2500ca872c6b52cfd9b57573ebde1f269839f577cd
+        checksum/configs: 56d64426167d2eeff75975a6ce53687349ecef594c21e457a19c8688a0341236
+        checksum/secrets: cfc80bd9c511e63045c270a0f4fcf66cde9c2a09f4f3becd9048451091718bb2
       labels:
         app: edge-auth
         app.kubernetes.io/name: qliksense
@@ -489,7 +489,7 @@ spec:
           value: $(HTTP_PROXY)
         - name: GLOBAL_AGENT_NO_PROXY
           value: $(NO_PROXY)
-        image: ghcr.io/qlik-download/edge-auth:6.23.30
+        image: ghcr.io/qlik-download/edge-auth:6.23.31
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -555,8 +555,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -625,8 +625,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default
@@ -687,8 +687,8 @@ metadata:
     app.kubernetes.io/instance: edge-auth
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.23.30
-    chart: edge-auth-6.23.30
+    app.kubernetes.io/version: 6.23.31
+    chart: edge-auth-6.23.31
     domain: authentication
     heritage: Helm
     release: qlik-default

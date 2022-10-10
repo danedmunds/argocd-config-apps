@@ -12,8 +12,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -34,8 +34,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -64,8 +64,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -110,8 +110,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -137,8 +137,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -163,8 +163,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -201,8 +201,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -220,8 +220,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: app-evaluator
-        checksum/configs: 90f1ce4d3888ee0e2a899dba6dda1087e4fadcab0518337177aa061f41850964
-        checksum/secrets: 1ab830999b6c5c3acf8d30177526db9a133b2858db6923f15e538dd40b2755b3
+        checksum/configs: cd000eb1be3f674db0dd56004fc6197f59ff8e5c46e5c94ea5e660515adad073
+        checksum/secrets: ac8a4c259ee650094f77b7cc4ca271447cc126a168087a51a9681e8cf2de2fcb
       labels:
         app: app-evaluator
         app.kubernetes.io/name: qliksense
@@ -486,7 +486,7 @@ spec:
             secretKeyRef:
               key: mongodbPassword
               name: qliksense-secrets
-        image: ghcr.io/qlik-download/app-evaluator:1.10.2
+        image: ghcr.io/qlik-download/app-evaluator:1.10.3
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -542,8 +542,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.2
-    chart: app-evaluator-1.10.2
+    app.kubernetes.io/version: 1.10.3
+    chart: app-evaluator-1.10.3
     domain: analytics
     heritage: Helm
     release: qlik-default
