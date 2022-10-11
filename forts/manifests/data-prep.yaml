@@ -1,0 +1,511 @@
+apiVersion: v1
+data:
+  dataConnectionsUri: http://data-connections:9011
+  edgeAuthUri: http://edge-auth:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: verbose
+  precedentsUri: http://precedents:9054
+  qixDataFilesUri: http://qix-datafiles:8080
+  qixSessionsUri: http://qix-sessions:8080
+  redisUri: redis://redis-master:6379
+  spacesUri: http://spaces:6080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-prep
+    app.kubernetes.io/component: data-prep
+    app.kubernetes.io/instance: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.439.0
+    chart: data-prep-3.439.0
+    heritage: Helm
+    release: qlik-default
+  name: data-prep-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL2VsYXN0aWMtaW5mcmEtbW9uZ29kYjoyNzAxNy9kYXRhLXByZXA/c3NsPWZhbHNl
+  redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: d2NWY0RfbkR3dy1mT3dMTjVUc3RNejBoU1pVQmJ5NG14NzdJY2FjYVExVQ==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-prep
+    app.kubernetes.io/component: data-prep
+    app.kubernetes.io/instance: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.439.0
+    chart: data-prep-3.439.0
+    heritage: Helm
+    release: qlik-default
+  name: data-prep-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9072"
+    prometheus.io/scrape: "true"
+  labels:
+    app: data-prep
+    app.kubernetes.io/component: data-prep
+    app.kubernetes.io/instance: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.439.0
+    chart: data-prep-3.439.0
+    heritage: Helm
+    release: qlik-default
+  name: data-prep
+  namespace: default
+spec:
+  ports:
+  - name: data-prep
+    port: 9072
+    protocol: TCP
+    targetPort: 9072
+  selector:
+    app: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-prep
+    app.kubernetes.io/component: data-prep
+    app.kubernetes.io/instance: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.439.0
+    chart: data-prep-3.439.0
+    heritage: Helm
+    release: qlik-default
+  name: data-prep
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-prep
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: data-prep
+        checksum/configs: 7e543b0d4488d32cfcd5dfcaf590c82de19a16e40441981c8bbe141923f4191d
+        checksum/secrets: 2f5932b01e15c5d732504191e7e61147cc6cc0d91bb26f8f0b7569aa8248cbf2
+      labels:
+        app: data-prep
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/data-prep/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/data-prep/tokenAuthPrivateKeyId
+        - name: DATA_CONNECTIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dataConnectionsUri
+              name: data-prep-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: data-prep-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: data-prep-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: data-prep-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: data-prep-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: data-prep-configs
+        - name: PRECEDENTS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: precedentsUri
+              name: data-prep-configs
+        - name: QIX_DATA_FILES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: qixDataFilesUri
+              name: data-prep-configs
+        - name: QIX_SESSIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: qixSessionsUri
+              name: data-prep-configs
+        - name: REDIS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: redisUri
+              name: data-prep-configs
+        - name: SPACES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: spacesUri
+              name: data-prep-configs
+        - name: BINDADDRESS
+          value: '::'
+        - name: DATAPATH
+          value: /
+        - name: KEEPALIVE
+          value: "30000"
+        - name: LOGICALAPPSFOLDER
+          value: /qlik/apps
+        - name: LOGICALGEOFOLDER
+          value: /geo
+        - name: LOGPATH
+          value: /logs
+        - name: MODE
+          value: elastic
+        - name: PORT
+          value: "9072"
+        - name: TTL
+          value: "10000"
+        - name: WORKERPOOL
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/data-prep-service:3.439.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: data-prep
+        ports:
+        - containerPort: 9072
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/data-prep
+          name: data-prep-secrets
+          readOnly: true
+        - mountPath: /qlik/apps
+          name: data-prep-apps-storage
+          readOnly: false
+        - mountPath: /Apps
+          name: data-prep-apps-storage
+          readOnly: false
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: data-prep-secrets
+        secret:
+          secretName: data-prep-secrets
+      - emptyDir: {}
+        name: data-prep-apps-storage
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/dataprepservice/(.*) /$1 break;
+      rewrite (?i)/dataprepservice/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/cors-allow-headers: x-qlik-xrfkey,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,Qlik-Web-Integration-ID,Qlik-CSRF-Token
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: data-prep
+    app.kubernetes.io/component: data-prep
+    app.kubernetes.io/instance: data-prep
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 3.439.0
+    chart: data-prep-3.439.0
+    heritage: Helm
+    release: qlik-default
+  name: data-prep
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/openapi
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/model/current
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/model/last(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/global/analysis/descriptor
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/analysis
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/assets
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/business-model
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/vocabulary
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/associativeInsight
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/model/session/close
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-prep
+            port:
+              number: 9072
+        path: /api/dataprepservice/v1/apps/(.*)/influencer
+        pathType: ImplementationSpecific

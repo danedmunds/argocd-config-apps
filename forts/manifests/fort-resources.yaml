@@ -1,0 +1,649 @@
+apiVersion: v1
+data:
+  gatewayType: minio
+  gcpProjectId: ""
+  nasNfsCapacity: 8Gi
+  nasNfsMountOptions: '["nfsvers=4.1","rsize=1048576","wsize=1048576","hard","timeo=600","retrans=2","noresvport"]'
+  nasNfsServer: 1.2.3.4
+  nasNfsServerPath: /
+  s3ServiceEndpoint: https://s3.amazonaws.com
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/instance: minio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: minio-7.1.1
+    release: qlik-default
+  name: minio-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  acceptEULA: "yes"
+  caCommand: echo "$CUSTOM_CERTS" >> /mnt/certs/ca-certificates.crt
+  fortHttpPort: "8080"
+  fortHttpsPort: "443"
+  fortId: PLACEHOLDER
+  fortName: PLACEHOLDER
+  fortOriginUrl: PLACEHOLDER
+  fortTenantUrl: PLACEHOLDER
+  fortWebIntegrationId: PLACEHOLDER
+  fortressId: PLACEHOLDER
+  fortressThingDataEndpoint: PLACEHOLDER
+  fsRootDir: /data/qliksense
+  httpProxy: ""
+  httpsProxy: ""
+  imageRegistry: ghcr.io/qlik-download
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  ingressClass: nginx
+  iotAwsRegion: PLACEHOLDER
+  iotCredentialUrl: PLACEHOLDER
+  iotThingRoleAliasName: PLACEHOLDER
+  logPathPrefix: /data
+  menderServer: PLACEHOLDER
+  noProxy: ""
+  sslCertSecret: default/elastic-infra-tls-secret
+  storageClassName: local-storage
+  storagePathPrefix: /data/qliksense
+  tenantId: PLACEHOLDER
+  thingName: PLACEHOLDER
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qliksense
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: qliksense-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  azureStorageAccountKey: JChBWlVSRV9BQ0NPVU5UX0tFWSk=
+  azureStorageAccountName: JChBWlVSRV9BQ0NPVU5UX05BTUUp
+  keyJson: JChHQ1BfS0VZX0pTT04p
+  rootPassword: bWluaW8tc2VjcmV0LWtleQ==
+  rootUser: bWluaW8tYWNjZXNzLWtleQ==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/instance: minio
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    helm.sh/chart: minio-7.1.1
+    release: qlik-default
+  name: minio-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  caCertificates: ""
+  dockerConfigJson: ""
+  interactiveIdpClientId: PLACEHOLDER
+  interactiveIdpClientSecret: PLACEHOLDER
+  iotFortThingCert: PLACEHOLDER
+  iotFortThingPrivateKey: PLACEHOLDER
+  iotRootCa: PLACEHOLDER
+  iotThingCertificate: PLACEHOLDER
+  iotThingPrivateKey: PLACEHOLDER
+  iotThingPublicKey: PLACEHOLDER
+  menderTenantToken: PLACEHOLDER
+  minioRootPassword: PLACEHOLDER
+  minioRootUser: PLACEHOLDER
+  mongodbPassword: PLACEHOLDER
+  mongodbReplicaSetKey: PLACEHOLDER
+  mongodbRootPassword: PLACEHOLDER
+  mongodbUri: PLACEHOLDER
+  redisEncryptionKey: PLACEHOLDER
+  redisPassword: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qliksense
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: qliksense-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: ca-certificates
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 500Mi
+  claimRef:
+    name: ca-certificates
+    namespace: default
+  local:
+    path: /data/qliksense/ca-certificates
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: engine
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    name: engine
+    namespace: default
+  local:
+    path: /data/qliksense/engine
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: fluent-bit
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: fluent-bit
+    namespace: default
+  local:
+    path: /data/logs
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: messaging-nats-streaming
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  claimRef:
+    name: messaging-nats-streaming
+    namespace: default
+  local:
+    path: /data/qliksense/nats-streaming
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: 1.58.20
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: minio-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: data-minio-0
+    namespace: default
+  local:
+    path: $(STORAGE_PATH_PREFIX)/minio-0
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: 1.58.20
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: minio-1
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: data-minio-1
+    namespace: default
+  local:
+    path: $(STORAGE_PATH_PREFIX)/minio-1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: 1.58.20
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: minio-2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: data-minio-2
+    namespace: default
+  local:
+    path: $(STORAGE_PATH_PREFIX)/minio-2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: 1.58.20
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: minio-3
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: data-minio-3
+    namespace: default
+  local:
+    path: $(STORAGE_PATH_PREFIX)/minio-3
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+    role: mongodb-replica
+  name: mongodb-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    name: datadir-mongodb-0
+    namespace: default
+  local:
+    path: /data/qliksense/mongodb-0
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: nl-app-search
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    name: nl-app-search-apps-metadata
+    namespace: default
+  local:
+    path: /data/qliksense/nl-app-search
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: qix-datafiles
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    name: qix-datafiles
+    namespace: default
+  local:
+    path: /data/qliksense/qix-datafiles
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: reporting
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    name: reporting
+    namespace: default
+  local:
+    path: /data/qliksense/reporting
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: 1.58.20
+  labels:
+    app: local-volumes
+    release: qliksense
+  name: temporary-contents
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    name: temporary-contents
+    namespace: default
+  local:
+    path: /data/qliksense/temporary-contents
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: Exists
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: ca-certificates
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: local-storage
+  volumeName: ca-certificates
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: fluent-bit
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: local-storage
+  volumeMode: Filesystem
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qliksense
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: ca-certificates-(( random.String 5 "[a-z]" ))
+  namespace: default
+spec:
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app: qliksense
+        release: qlik-default
+    spec:
+      containers:
+      - args:
+        - cp /etc/ssl/certs/ca-certificates.crt /mnt/certs/ca-certificates.crt; $(CERTS_COMMAND)
+        command:
+        - /bin/sh
+        - -c
+        env:
+        - name: CERTS_COMMAND
+          valueFrom:
+            configMapKeyRef:
+              key: caCommand
+              name: qliksense-configs
+        - name: CUSTOM_CERTS
+          valueFrom:
+            secretKeyRef:
+              key: caCertificates
+              name: qliksense-secrets
+        image: ghcr.io/qlik-download/alpine:latest
+        imagePullPolicy: IfNotPresent
+        name: certs
+        volumeMounts:
+        - mountPath: /mnt/certs
+          name: ca-certificates
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      restartPolicy: Never
+      volumes:
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates

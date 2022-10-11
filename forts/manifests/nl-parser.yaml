@@ -1,0 +1,675 @@
+apiVersion: v1
+data:
+  dataPrepUri: http://data-prep:9072
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  logLevel: info
+  nlAppSearchUri: http://nl-app-search:9085
+  nlParserModelUrl: http://nl-parser-model:8501/v1/models/intentsrl:predict
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "30302"
+    prometheus.io/scrape: "true"
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser
+  namespace: default
+spec:
+  ports:
+  - name: nl-parser
+    port: 30302
+    protocol: TCP
+    targetPort: 30302
+  selector:
+    app: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/path: /monitoring/prometheus/metrics
+    prometheus.io/port: "8501"
+    prometheus.io/scrape: "true"
+  labels:
+    app: nl-parser-model
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-model
+  namespace: default
+spec:
+  ports:
+  - name: nl-parser
+    port: 8501
+    protocol: TCP
+    targetPort: 8501
+  selector:
+    app: nl-parser-model
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nl-parser
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: nl-parser
+        checksum/configs: 553cc1d5dfc4e4adfcd8da592a51d4b8a78d0ee8223f7252e65104eb534ca79c
+        checksum/secrets: d58ea66f590a3a911dcd1cac544778de870c71f795ecb86d78233e0bd2bac9c4
+      labels:
+        app: nl-parser
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: nlp-cognitive
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: DATA_PREP_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dataPrepUri
+              name: nl-parser-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: nl-parser-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: nl-parser-configs
+        - name: NL_APP_SEARCH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: nlAppSearchUri
+              name: nl-parser-configs
+        - name: NL_PARSER_MODEL_URL
+          valueFrom:
+            configMapKeyRef:
+              key: nlParserModelUrl
+              name: nl-parser-configs
+        - name: DPS_ROUTING_ENABLED
+          value: "false"
+        - name: NLU_MULTI_LINGUAL
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/nl-parser:2.58.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 30302
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nl-parser
+        ports:
+        - containerPort: 30302
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: nl-parser-secrets
+        secret:
+          secretName: nl-parser-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: nl-parser-model
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-model
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nl-parser-model
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: nl-parser-model
+        checksum/configs: 553cc1d5dfc4e4adfcd8da592a51d4b8a78d0ee8223f7252e65104eb534ca79c
+        checksum/secrets: d58ea66f590a3a911dcd1cac544778de870c71f795ecb86d78233e0bd2bac9c4
+      labels:
+        app: nl-parser-model
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: nlp-cognitive
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: MODEL_NAME
+          value: intentsrl
+        - name: TF_CPP_VMODULE
+          value: http_server=1
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/nl-parser-model:2.58.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /v1/models/intentsrl
+            port: http-model
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nl-parser-model
+        ports:
+        - containerPort: 8501
+          name: http-model
+          protocol: TCP
+        startupProbe:
+          failureThreshold: 25
+          httpGet:
+            path: /v1/models/intentsrl
+            port: http-model
+          initialDelaySeconds: 15
+          periodSeconds: 2
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: nl-parser-secrets
+        secret:
+          secretName: nl-parser-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/v1/(.*) /v1/$1 break;
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-models
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: nl-parser-model
+            port:
+              number: 8501
+        path: /api/v1/models
+        pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/v1/(.*) /v1/$1 break;
+  labels:
+    app: nl-parser
+    app.kubernetes.io/component: nl-parser
+    app.kubernetes.io/instance: nl-parser
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.58.0
+    chart: nl-parser-2.58.0
+    domain: nlp-cognitive
+    heritage: Helm
+    release: qlik-default
+  name: nl-parser-parse
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: nl-parser
+            port:
+              number: 30302
+        path: /api/v1/parse
+        pathType: ImplementationSpecific

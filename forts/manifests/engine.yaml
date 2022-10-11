@@ -1,0 +1,2660 @@
+apiVersion: v1
+data:
+  rules.yaml: |
+    - allow: |
+        # If app or QV app has originAppId and user is publisher in a managed space user can republish
+        resource.IsAppOrQvApp() and resource.UserIsPublisherInManagedSpace() and resource.originAppId == app.id and resource._actions={"republish"}
+        # Professional user can create an app in a personal space or in a shared space where the user is an editor.
+        resource.IsApp() and user.IsProfessional() and resource.IsOwnedInPersonalOrSharedSpace() and resource._actions={"create"}
+        # A user can delete app or QlikView app if the user is the owner in a personal space or in a shared space where the user is producer. A tenant admin can always delete an app
+        resource.IsAppOrQvApp() and (resource.IsOwnedInPersonalSpace() or resource.UserIsEditorInSharedSpace() or resource.UserIsFacilitatorInManagedSpace()) and !resource.IsPublished() and resource._actions={"delete"}
+        # A professional user can copy an app or QV app if he is copying it to a personal space or a shared space where the user is producer. Read access on the src file is implicit
+        resource.IsAppOrQvApp() and user.IsProfessional() and resource.IsOwnedInPersonalOrSharedSpace() and !resource.IsPublished() and resource._actions={"duplicate"}
+        # A professional user can import an app if the user is importing to a personal space or to a shared space where the user is producer.
+        resource.IsApp() and user.IsProfessional() and resource.IsOwnedInPersonalOrSharedSpace() and resource._actions={"import"}
+        # The app can be opened in a personal space by the owner who has a valid license.
+        resource.IsApp() and user.HasLicense() and resource.IsOwnedInPersonalSpace() and resource._actions={"read"}
+        # A tenant admin can open all apps.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:read")) and resource._actions={"read"}
+        # A tenant admin can delete all apps and QlikView apps.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:delete")) and resource._actions={"delete"}
+        # A tenant admin can delete all apps and QlikView apps.
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:delete")) and resource._actions={"delete"}
+        # A tenant admin can change the owner and export personal apps or QlikView apps.
+        resource.IsAppOrQvApp() and user.IsTenantAdmin() and resource.MissingOrEmptyProp(spaceId) and !resource.IsPublished() and resource._actions={"change_owner","export"}
+        # A tenant admin can change the owner and export personal apps or QlikView apps.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:change_owner")) and resource.MissingOrEmptyProp(spaceId) and !resource.IsPublished() and resource._actions={"change_owner"}
+        # A tenant admin can change the owner and export personal apps or QlikView apps.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:export")) and resource.MissingOrEmptyProp(spaceId) and !resource.IsPublished() and resource._actions={"export"}
+        # A tenant admin can change the owner and export personal apps or QlikView apps.
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:change_owner")) and resource.MissingOrEmptyProp(spaceId) and !resource.IsPublished() and resource._actions={"change_owner"}
+        # A tenant admin can change the owner and export personal apps or QlikView apps.
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:export")) and resource.MissingOrEmptyProp(spaceId) and !resource.IsPublished() and resource._actions={"export"}
+        # A tenant admin can change the owner on apps and QlikView apps in a shared space
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:change_owner")) and resource.IsShared() and resource._actions={"change_owner"}
+        # A tenant admin can change the owner on apps and QlikView apps in a shared space
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:change_owner")) and resource.IsShared() and resource._actions={"change_owner"}
+        # A tenant admin can change space on a published app or QlikView app in a managed space
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:change_space")) and resource.IsPublished() and resource.IsManaged() and resource._actions={"change_space"}
+        # A tenant admin can change space on a published app or QlikView app in a managed space
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:change_space")) and resource.IsPublished() and resource.IsManaged() and resource._actions={"change_space"}
+        # A tenant admin can change space on distributed and private apps and QlikView apps.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:change_space")) and resource.MissingOrEmptyProp(spaceId) and resource._actions={"change_space"}
+        # A tenant admin can change space on distributed and private apps and QlikView apps.
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:change_space")) and resource.MissingOrEmptyProp(spaceId) and resource._actions={"change_space"}
+        # A tenant admin can change space on apps and QlikView apps in non existing space.
+        resource.IsApp() and (user.IsTenantAdmin() or user.HasAdminPermission("app:change_space")) and resource.IsInNonExistingSpace() and resource._actions={"change_space"}
+        # A tenant admin can change space on apps and QlikView apps in non existing space.
+        resource.IsQvApp() and (user.IsTenantAdmin() or user.HasAdminPermission("qvapp:change_space")) and resource.IsInNonExistingSpace() and resource._actions={"change_space"}
+        # A user who has a valid license can open apps that the user has access to in a shared space
+        resource.IsApp() and user.HasLicense() and resource.UserIsSharedSpaceMember() and resource._actions={"read"}
+        # A user who has a valid license can open apps or qvapps that the user has access to in a managed space
+        resource.IsAppOrQvApp() and user.HasLicense() and (resource.UserIsViewerInManagedSpace() or resource.UserIsFacilitatorInManagedSpace()) and resource._actions={"read"}
+        # A user who has basic consumer role can open apps or qvapps in a managed space
+        resource.IsAppOrQvApp() and resource.UserIsBasicConsumerInManagedSpace() and resource._actions={"read"}
+        # Professional user that owns the app can edit scripts and reload and use the app as data source if it's a personal space.
+        resource.IsApp() and user.IsProfessional() and resource.IsOwnedInPersonalSpace() and !resource.IsPublished() and resource._actions={"reload","source"}
+        # Professional user can edit scripts and reload the app if the user is an editor in the shared space
+        resource.IsApp() and user.IsProfessional() and resource.UserIsEditorInSharedSpace() and !resource.IsPublished() and resource._actions={"reload"}
+        # Professional user can do binary loads from apps located in a shared space if the user is an editor
+        resource.IsAppOrQvApp() and user.IsProfessional() and resource.UserIsEditorInSharedSpace() and !resource.IsPublished() and resource._actions={"source"}
+        # Professional user can reload the app if the user is facilitator in a managed space
+        resource.IsApp() and user.IsProfessional() and resource.UserIsFacilitatorInManagedSpace() and !resource.IsPublished() and resource._actions={"reload"}
+        # Professional user can update app attributes on app or QV app if the user is facilitator in a managed space
+        resource.IsAppOrQvApp() and user.IsProfessional() and resource.UserIsFacilitatorInManagedSpace() and !resource.IsPublished() and resource._actions={"update"}
+        # A user can update app attributes on apps and QV apps in a shared space as producer.
+        resource.IsAppOrQvApp() and resource.UserIsEditorInSharedSpace() and !resource.IsPublished() and resource._actions={"update"}
+        # A user can update app attributes on personal apps and QV apps.
+        resource.IsAppOrQvApp() and resource.IsOwnedInPersonalSpace() and !resource.IsPublished() and resource._actions={"update"}
+        # A facilitator can change the owner of an app and a QlikView app in a shared space.
+        resource.IsAppOrQvApp() and resource.UserIsFacilitator() and resource._actions={"change_owner"}
+        # A user can change the space on personal apps and QlikView apps or as editor of shared apps.
+        resource.IsAppOrQvApp() and resource.IsOwnedInPersonalOrSharedSpace() and resource.MissingOrEmptyProp(originAppId) and !resource.IsPublished() and resource._actions={"change_space"}
+        # A user can change the space as facilitator in managed apps and QlikView apps.
+        resource.IsAppOrQvApp() and resource.UserIsFacilitatorInManagedSpace() and !resource.MissingOrEmptyProp(originAppId) and !resource.IsPublished() and resource._actions={"change_space"}
+        # A publisher can publish an app or a QlikView app to a managed space.
+        resource.IsAppOrQvApp() and resource.UserIsPublisherInManagedSpace() and resource._actions={"publish"}
+        # Impersonator from the ODAG service can change owner. This rule will be removed when odag does not need to impersonate
+        resource.IsApp() and user.act.sub == "odag" and resource._actions={"read","change_owner"}
+        # Impersonator from the Data condition Evaluator service can create session apps. This rule will be changed when session apps are it's own resource type
+        resource.IsApp() and user.act.sub == "data-condition-evaluator" and resource._actions={"create","reload"}
+        # Impersonator from the Data condition Evaluator service can update the script in owned personal apps.
+        resource.IsAppObject() and user.act.sub == "data-condition-evaluator" and resource.IsOwnedInPersonalSpace() and resource.IsScriptObject() and resource._actions={"read","update"}
+        # A user can export apps that the user owns or in a shared space as producer or facilitator. Only user visible (objects and data) will be exported
+        resource.IsApp() and resource.HasPrivilege("read") and resource.IsOwnedInPersonalOrSharedSpace() and !resource.IsPublished() and resource._actions={"export"}
+        # A user can take apps offline if user is offline enabled or app is private
+        resource.IsApp() and resource.HasPrivilege("read") and (resource.IsOwnedInPersonalSpace() or resource.UserIsOfflineEnabled()) and resource._actions={"export_reduced"}
+        # Professional user can import an appobject if the user is importing to a personal space or to a shared space where the user is a producer.
+        resource.IsAppObject() and user.IsProfessional() and resource.app.IsOwnedInPersonalOrSharedSpace() and resource._actions={"import"}
+        # In apps that the user has read access to, the user can read all published objects and his personal objects and all master items.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and ((resource.IsOwnedByMe() or resource.IsPublished() or resource.IsMasterObject() or resource.IsPublicObject()) and !resource.IsScriptObject()) and resource._actions={"read"}
+        # A professional user can read the script in owned personal apps or as editor in a shared space, or as facilitator in managed space.
+        resource.IsAppObject() and user.IsProfessional() and (resource.app.IsOwnedInPersonalOrSharedSpace() or resource.app.UserIsFacilitatorInManagedSpace()) and resource.IsScriptObject() and resource._actions={"read"}
+        # A Tenant admin in an Expired tenant can read all scripts.
+        resource.IsAppObject() and user.IsTenantAdminExpiredLicense() and resource.IsScriptObject() and resource._actions={"read"}
+        # An admin in an Expired tenant can read all scripts.
+        resource.IsAppObject() and user.IsAdminExpiredLicense() and user.HasAdminPermission("app.object:read") and resource.IsScriptObject() and resource._actions={"read"}
+        # A professional user can update the script in owned personal apps or owned apps in a shared space.
+        resource.IsAppObject() and user.IsProfessional() and (resource.app.IsOwnedInPersonalSpace() or (resource.app.UserIsEditorInSharedSpace() and resource.app.IsOwnedByMe())) and resource.IsScriptObject() and resource._actions={"update"}
+        # A professional user can create any object in an unpublished app that is in a personal space or in a shared space as producer
+        resource.IsAppObject() and user.IsProfessional() and resource.app.HasPrivilege("read") and !resource.app.IsPublished() and resource.app.IsOwnedInPersonalOrSharedSpace() and (resource.IsOwnedByMe() or resource.IsScriptObject()) and resource._actions={"create"}
+        # In apps that a user has read access to, a professional user can update, delete master objects and other public objects.
+        resource.IsAppObject() and user.IsProfessional() and resource.app.HasPrivilege("read") and (resource.IsMasterObject() or resource.IsPublicObject()) and resource.app.IsOwnedInPersonalOrSharedSpace() and resource._actions={"update","delete"}
+        # In apps that a user has update access to, the user can update app properties.
+        resource.IsAppObject() and resource.app.HasPrivilege("update") and resource._objecttype == "appprops" and resource._actions={"update"}
+        # A professional user can update and delete any unpublished object in an unpublished app that the user owns or in a shared space as producer.
+        resource.IsAppObject() and user.IsProfessional() and resource.app.HasPrivilege("read") and resource.app.IsOwnedInPersonalOrSharedSpace() and !resource.IsPublished() and resource.IsOwnedByMe() and !resource.IsScriptObject() and resource._actions={"update","delete"}
+        # A professional user can publish objects in an unpublished app that the user owns or in a shared space as producer.
+        resource.IsAppObject() and user.IsProfessional() and resource.app.HasPrivilege("read") and !resource.app.IsPublished() and resource.app.IsOwnedInPersonalOrSharedSpace() and !resource.IsScriptObject() and resource._actions={"publish"}
+        # A user can create a story object (stories, bookmarks and snapshot) in a shared space where the user is a consumer.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and resource.app.UserIsSharedSpaceMember() and resource.IsStoryObject() and !resource.IsPublished() and resource._actions={"create"}
+        # A user can update and delete an owned personal story object (stories, bookmarks and snapshot) in a shared space where the user is a consumer.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and resource.app.UserIsSharedSpaceMember() and resource.IsStoryObject() and !resource.IsPublished()  and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # A user can create, update and delete personal story objects (stories, bookmarks and snapshot) in a personal space.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and resource.app.IsOwnedInPersonalSpace() and resource.IsStoryObject() and !resource.IsPublished() and resource._actions={"create","update","delete"}
+        # A user can create and read an alert bookmark if user has access to app.
+        resource.IsAlertBookmark() and resource.app.HasPrivilege("read") and resource._actions={"read","create"}
+        # A user can update and delete an owned alert bookmark if user has access to app.
+        resource.IsAlertBookmark() and resource.app.HasPrivilege("read") and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # A user can duplicate objects if the user has duplicate access on the app
+        resource.IsAppObject() and resource.app.HasPrivilege("duplicate") and resource.app.IsOwnedInPersonalOrSharedSpace() and resource._actions={"duplicate"}
+        # Analyser users can create app objects of type stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and resource.app.UserIsFullMemberInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsStoryObject() and !resource.IsPublished() and resource._actions={"create"}
+        # Analyser users can update, duplicate and delete owned, unpublished app objects of type stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and resource.app.UserIsFullMemberInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsStoryObject() and !resource.IsPublished() and resource.IsOwnedByMe() and resource._actions={"update","duplicate","delete"}
+        # Professional users can create app objects of type sheets, stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsContentObject() and resource._actions={"create"}
+        # Professional users can update and delete owned, unpublished app objects of type sheets, stories, snapshot and bookmarks in managed apps that allows self service
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsContentObject() and !resource.IsPublished() and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # Professional users can publish and unpublish app objects of type sheets, stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsContentObject() and resource.IsOwnedByMe() and !resource.IsApproved() and resource._actions={"publish"}
+        # Analyzer users can publish and unpublish app objects of type stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsAnalyzer() and resource.app.UserIsContributorInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsStoryObject() and resource.IsOwnedByMe() and !resource.IsApproved() and resource._actions={"publish"}
+        # Professional facilitators and space owners can unpublish app objects of type sheets, stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsFacilitatorInManagedSpace() and resource.app.HasPrivilege("read") and resource.IsContentObject() and resource.IsPublished() and !resource.IsApproved() and resource._actions={"publish"}
+        # External services and bot can read, import, create, update, and delete apps.
+        resource.IsAppOrAppObject() and (user.IsExternal() or user.IsBot()) and resource._actions={"read","import","create","update","delete"}
+        # Bot can reload apps.
+        resource.IsApp() and user.IsBot() and resource._actions={"reload"}
+        # Professional user can use an app or QlikView app as data source if the user is data consumer in a space
+        resource.IsAppOrQvApp() and user.IsProfessional() and resource.UserIsDataConsumerInSpace() and resource._actions={"source"}
+        # Professional user that owns the app can use the QlikView app as data source if it's a personal space.
+        resource.IsQvApp() and user.IsProfessional() and resource.IsOwnedInPersonalSpace() and !resource.IsPublished() and resource._actions={"source"}
+        # A professional user shall be able to upload a QlikView app
+        resource.IsQvApp() and user.IsQvEnabled() and user.IsProfessional() and resource.IsOwnedInPersonalSpace() and resource._actions={"import"}
+        # External services shall have full access to QlikView apps
+        resource.IsQvApp() and user.IsExternal() and resource._actions={"read","import","create","update","delete"}
+        # The QlikView app can be opened in a personal space by the owner.
+        resource.IsQvApp() and user.IsQvEnabled() and user.HasLicense() and resource.IsOwnedInPersonalSpace() and resource._actions={"read"}
+        # A tenant admin can open all QlikView apps
+        resource.IsQvApp() and user.IsQvEnabled() and (user.IsTenantAdmin() or user.HasAdminPermission("app:read")) and resource._actions={"read"}
+        # A user can open QlikView apps that the user has access to in a managed space
+        resource.IsQvApp() and user.IsQvEnabled() and user.HasLicense() and (resource.UserIsViewerInManagedSpace() or resource.UserIsFacilitatorInManagedSpace()) and resource._actions={"read"}
+        # A shared space member user can open QlikView apps in a shared space
+        resource.IsQvApp() and user.IsQvEnabled() and user.HasLicense() and resource.UserIsSharedSpaceMember() and resource._actions={"read"}
+        # A shared space editor professional user can import QlikView apps to a shared space
+        resource.IsQvApp() and user.IsQvEnabled() and user.IsProfessional() and resource.UserIsEditorInSharedSpace() and resource._actions={"import"}
+        # If you have access to the QlikView app you can read all objects
+        resource.IsQvAppObject() and resource.app.HasPrivilege("read") and !resource.IsScriptObject() and resource._actions={"read"}
+        # A basic consumer user can create a bookmark object in a managed space.
+        resource.IsAppObject() and resource.app.UserIsBasicConsumerInManagedSpace() and resource.app.HasPrivilege("read") and resource._objecttype = {"bookmark"} and !resource.IsPublished() and resource._actions={"create"}
+        # A basic consumer user can update and delete an owned private bookmark.
+        resource.IsAppObject() and resource.app.UserIsBasicConsumerInManagedSpace() and resource.app.HasPrivilege("read") and resource._objecttype = {"bookmark"} and !resource.IsPublished() and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # A AnalyticsAdmin can open all distributed, shared and managed apps and QlikView apps.
+        resource.IsAppOrQvApp() and user.IsAnalyticsAdmin() and ((resource.IsShared() or resource.IsManaged()) or (resource.MissingOrEmptyProp(spaceId) and resource.IsPublished())) and resource._actions={"read"}
+        # A AnalyticsAdmin can delete all distributed, shared and managed apps and QlikView apps.
+        resource.IsAppOrQvApp() and user.IsAnalyticsAdmin() and (!resource.MissingOrEmptyProp(spaceId) or resource.IsPublished()) and resource._actions={"delete"}
+        # A AnalyticsAdmin can change space on a published app or QlikView app in a managed space
+        resource.IsAppOrQvApp() and user.IsAnalyticsAdmin() and resource.IsPublished() and resource.IsManaged() and resource._actions={"change_space"}
+        # A AnalyticsAdmin can change space on distributed apps and QlikView apps.
+        resource.IsAppOrQvApp() and user.IsAnalyticsAdmin() and resource.IsPublished() and resource._actions={"change_space"}
+        # A AnalyticsAdmin can change the owner on apps and QlikView apps in a shared space
+        resource.IsAppOrQvApp() and user.IsAnalyticsAdmin() and resource.IsShared() and resource._actions={"change_owner"}
+        # A AnalyticsAdmin admin can open all shared and managed QlikView apps
+        resource.IsQvApp() and user.IsQvEnabled() and user.IsAnalyticsAdmin() and (resource.IsShared() or resource.IsManaged()) and resource._actions={"read"}
+        # Lineage service can read from all apps.
+        resource.IsApp() and user.subType == {"service"} and user.sub == {"lineage"} and resource._actions={"read","reload"}
+        # An app can be shared by owners and facilitators in a space
+        resource.IsApp() and resource.UserIsFacilitator() and resource._actions={"share"}
+        # A shared app can be read if it is shared to the user with the role consumer
+        resource.IsApp() and share.resourceType == "app" and resource.id == share.resourceIds and share.roles == {"consumer", "contributor"} and resource._actions={"read"}
+        # A shared app can be taken offline if it is shared to the user with the role offlineUser
+        resource.IsApp() and share.resourceType == "app" and resource.id == share.resourceIds and share.roles == {"offlineUser"} and resource._actions={"export_reduced"}
+        # Professional users can create app objects of type sheets, stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInShare() and resource.app.HasPrivilege("read") and resource.IsContentObject() and resource._actions={"create"}
+        # Professional users can update and delete owned, unpublished app objects of type sheets, stories, snapshot and bookmarks in managed apps that allows self service
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInShare() and resource.app.HasPrivilege("read") and resource.IsContentObject() and !resource.IsPublished() and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # Professional users can publish and unpublish app objects of type sheets, stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsProfessional() and resource.app.UserIsContributorInShare() and resource.app.HasPrivilege("read") and resource.IsContentObject() and resource.IsOwnedByMe() and !resource.IsApproved() and resource._actions={"publish"}
+        # Analyzer users can publish and unpublish app objects of type stories, snapshot and bookmarks in managed apps
+        resource.IsAppObject() and user.IsAnalyzer() and resource.app.UserIsContributorInShare() and resource.app.HasPrivilege("read") and resource.IsStoryObject() and resource.IsOwnedByMe() and !resource.IsApproved() and resource._actions={"publish"}
+        # A user can create a story object (stories, bookmarks and snapshot) in a shared space where the user is a consumer.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and resource.app.UserIsConsumerInShare() and resource.IsStoryObject() and !resource.IsPublished() and resource._actions={"create"}
+        # A user can update and delete an owned personal story object (stories, bookmarks and snapshot) in a shared space where the user is a consumer.
+        resource.IsAppObject() and resource.app.HasPrivilege("read") and resource.app.UserIsConsumerInShare() and resource.IsStoryObject() and !resource.IsPublished()  and resource.IsOwnedByMe() and resource._actions={"update","delete"}
+        # On global API:s we allow read to everyone
+        resource._resourcetype="node" and resource._actions={"read"}
+        # On global API:s with reload access professional users should have access
+        resource._resourcetype="node" and user.IsProfessional() and resource._actions={"reload"}
+      deny: ""
+      func: |
+        # User is a bot user.
+        IsBot() (self.userType == "bot")
+        # User is a professional or bot user.
+        IsProfessional() (self._provision.accesstype == "professional" or self.IsBot())
+        # User is an analyzer user.
+        IsAnalyzer() (self._provision.accesstype == "analyzer")
+        # User is a basic user.
+        IsBasic() (self._provision.accesstype == "basic")
+        # User is an analyzerTime user.
+        IsAnalyzerTime() (self._provision.accesstype == "analyzer_time")
+        # User has no license allotment.
+        HasNoAllotment() (self._provision.accesstype == "")
+        # User has valid license.
+        HasLicense() (self.IsProfessional() or self.IsAnalyzer())
+        # User is a service user (external).
+        IsExternal() (self.subType == "externalClient" and self.scim != "true")
+        # User is an identity provider external client calling a SCIM endpoint.
+        IsSCIM() (self.subType == "externalClient" and self.scim == "true")
+        # User is another microservice using a service-to-service token.
+        IsService() (self.subType == "service")
+        # User is a tenant administrator.
+        IsTenantAdmin() (self.roles =="TenantAdmin")
+        # User is a tenant administrator with expired license.
+        IsTenantAdminExpiredLicense() (self.roles =="TenantAdmin" and self._provision.status == "expired")
+        # Checks parent app privileges. Privileges on parent must currently be computed in a first pass.
+        app.HasPrivilege(x) (self.app._privileges == x)
+        # Checks if a privilege exists on a resource.
+        HasPrivilege(x) (self._actions.Matched () = x)
+        # Resource is published.
+        IsPublished() (self.published == "true")
+        # App has Section Access.
+        HasSectionAccess() (self.hassectionaccess == "true")
+        # Helper macro for detecting if a property is missing or empty string.
+        MissingOrEmptyProp(prop) (self.prop.empty() or self.prop == "")
+        # In managed space
+        IsManaged() (self.spaceId == space.id and space.type == "managed")
+        # In shared space
+        IsShared() (self.spaceId == space.id and space.type == "shared")
+        # Resource is approved.
+        IsApproved() (self.approved = "true")
+        # Resource is owned by user.
+        IsOwnedByMe() (user.subType == "user" and self.ownerId == user.userId)
+        # Resource is user themselves.
+        IsOwnUser() (user.subType == "user" and (self.id == user.userId or self.originalId == user.userId))
+        # Is app object a master item.
+        IsMasterObject() (self._objecttype = { "masterobject", "dimension", "measure" })
+        # Is app object a story item.
+        IsStoryObject() (self._objecttype = { "story", "snapshot", "bookmark" })
+        # Is app object a content item (sheet, story, snapshot, bookmark).
+        IsContentObject() (self._objecttype = {"sheet", "story", "snapshot", "bookmark" })
+        # Is app object an alert bookmark.
+        IsAlertBookmark() (self._resourcetype=="app.object" and self._objecttype=="alertbookmark")
+        # Public objects created outside of sheets
+        IsPublicObject() (self._objecttype = { "appprops", "colormap", "odagapplink", "loadmodel", "dynamicappview", "businessmodel", "businessvocabulary", "customanalysis", "directquerymodel"})
+        # Is it the script object.
+        IsScriptObject() (self._objecttype = "app_appscript")
+        # Is user an editor (including producer, facilitator or space owner roles) in shared space.
+        UserIsEditorInSharedSpace() (self.spaceId == space.id and space.type == "shared" and (space.roles == {"producer", "facilitator"} or user.userId == space.ownerId))
+        # user is a producer or consumer or faciliator or space owner in a shared space
+        UserIsOwnerProducerFacilitatorInSharedSpace() (self.spaceId == space.id and space.type == "shared" and ( (space.roles == {"producer", "consumer"} and resource.ownerId == user.userId) or space.roles == {"facilitator"} or user.userId == space.ownerId) )
+        # user either owns or is listed as a coauthor of a resource in a shared space
+        UserIsOwnerOrCoauthorInSharedSpace() (self.spaceId == space.id and space.type == "shared" and (space.roles == {"producer", "consumer", "facilitator"} or user.userId == space.ownerId) and (self.ownerId == user.userId or self.coauthors == user.userId) )
+        # user either owns or is listed as a coauthor of a resource in a managed space
+        UserIsOwnerOrCoauthorInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"consumer", "contributor", "facilitator", "basicconsumer"} or user.userId == space.ownerId) and (self.ownerId == user.userId or self.coauthors == user.userId) )
+        # User is an offline enabled user in a space
+        UserIsOfflineEnabled() (self.spaceId == space.id and space.roles == {"offlineUser"})
+        # Is user the owner of this personal space.
+        IsOwnedInPersonalSpace() (self.IsOwnedByMe() and self.MissingOrEmptyProp(spaceId))
+        # Is user member of a shared space that the resource belongs to.
+        UserIsSharedSpaceMember() (self.spaceId == space.id and space.type == "shared" and (space.roles == {"consumer", "producer", "facilitator"} or user.userId == space.ownerId))
+        # User is member of a managed space that the resource belongs to or is the owner of the space.
+        UserIsManagedSpaceMember() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"publisher", "consumer", "contributor", "facilitator"} or user.userId == space.ownerId))
+        # User can publish to a managed space if he has the role publisher or he is the owner of the space.
+        UserIsPublisherInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"publisher"} or user.userId == space.ownerId))
+        # Is user member of a managed space that the resource belongs to.
+        UserIsViewerInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"consumer", "contributor", "facilitator", "basicconsumer"} or user.userId == space.ownerId))
+        # Is user full member of a managed space that the resource belongs to (not basic consumer).
+        UserIsFullMemberInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"consumer", "contributor", "facilitator"} or user.userId == space.ownerId))
+        # Is user member of a managed space that the resource belongs to.
+        UserIsFacilitatorInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"facilitator"} or user.userId == space.ownerId))
+        # Is user member of a managed space that the resource belongs to.
+        UserIsContributorInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"contributor", "facilitator"} or user.userId == space.ownerId))
+        # Is user a basicconsumer in managed space.
+        UserIsBasicConsumerInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"basicconsumer"}))
+        # Is user member of a managed space and owner of the resource in that space
+        UserIsOwnerViewerInManagedSpace() (self.spaceId == space.id and space.type == "managed" and (space.roles == {"consumer", "contributor", "facilitator"} or user.userId == space.ownerId) and resource.ownerId==user.userId)
+        # Is user a facilitator on the space this resource belongs to.
+        UserIsFacilitator() (self.spaceId == space.id and space.type == {"shared", "managed"} and (space.roles == {"facilitator"} or user.userId == space.ownerId))
+        # Is owned in personal space or editor in shared space.
+        IsOwnedInPersonalOrSharedSpace() (self.IsOwnedInPersonalSpace() or self.UserIsEditorInSharedSpace())
+        # Is in a non existing space.
+        IsInNonExistingSpace() (!self.MissingOrEmptyProp(spaceId) and !(self.spaceId == space.id))
+        # Is app.
+        IsApp() (self._resourcetype=={"app"})
+        # Is app or QlikView app.
+        IsAppOrQvApp() (self._resourcetype=={"app", "qvapp"})
+        # Is app object.
+        IsAppObject() (self._resourcetype=={"app.object"})
+        # Is app or app object.
+        IsAppOrAppObject() (self._resourcetype=={"app", "app.object"})
+        # Is QlikView enabled.
+        IsQvEnabled() (self._provision.qvEnabled == "true")
+        # Is a QlikView app.
+        IsQvApp() (self._resourcetype=={"qvapp"})
+        # Is a QlikView app object.
+        IsQvAppObject() (self._resourcetype=={"qvapp.object"})
+        # Is data connection.
+        IsDataConnections() (self._resourcetype=={"dataconnections"})
+        # User is a data administrator.
+        IsDataAdmin() (self.roles =="DataAdmin")
+        # In Data space as professional user
+        ProInDISpace() (resource.spaceId == space.id and space.type =={"data", "dataintegration"} and self.IsProfessional())
+        # Users who have full access in DI space
+        HasFullAccessDiSpace() ((self.ProInDISpace() and self.IsTenantAdmin()) or (self.ProInDISpace() and (self.IsDataAdmin() or space.roles == {"facilitator"} or self.userId == space.ownerId)))
+        # Users who have list and read access in DI space
+        HasListReadAccessDiSpace() (self.ProInDISpace() and (space.roles == {"producer", "dataconsumer"}))
+        # Users who have list only access in DI space
+        HasListAccessDiSpace() (self.ProInDISpace() and (space.roles == {"consumer", "operator"}))
+        # Is user a facilitator in the shared space this resource belongs to.
+        UserIsFacilitatorInSharedSpace() (self.spaceId == space.id and space.type == {"shared"} and (space.roles == {"facilitator"} or user.userId == space.ownerId))
+        # User is a data consumer.
+        UserIsDataConsumerInSpace() (self.spaceId == space.id and (space.roles == {"dataconsumer"} or user.userId == space.ownerId))
+        # Is GenericLink.
+        IsGenericLink() (self._resourcetype=={"genericlink"})
+        # Is SharingService.
+        IsSharingService() (self._resourcetype=={"sharingservice"})
+        # Is SharingServiceTask.
+        IsSharingServiceTask() (self._resourcetype=={"sharingservicetask"})
+        # Is SharingServiceTask Monitoring.
+        IsSharingServiceTaskMonitoring() (self.IsSharingServiceTask() and self.subType == "chart-monitoring")
+        # Is SharingServiceTask Recurring.
+        IsSharingServiceTaskRecurring() (self.IsSharingServiceTask() and (self.subType == {"chart-sharing","sheet-sharing"}))
+        # Is InsightLink.
+        IsInsightLink() (self._resourcetype=={"insightlink"})
+        # Is SharingServiceAlertingTask.
+        IsSharingServiceAlertingTask() (self._resourcetype=={"sharingservicealertingtask"})
+        # Is NotificationChannel.
+        IsNotificationChannel() (self._resourcetype=={"notificationchannel"})
+        # Is Invite.
+        IsInvite() (self._resourcetype=={"invite"})
+        # Is Condition.
+        IsCondition() (self._resourcetype=={"condition"})
+        # Is ConditionEvaluation.
+        IsConditionEvaluation() (self._resourcetype=={"conditionevaluation"})
+        # Is user can edit in the space this resource belongs to. (space owner has all roles)
+        UserIsCanEditInDataSpace() (self.spaceId == space.id and space.type == {"data", "dataintegration"} and (space.roles == {"producer"} or user.userId == space.ownerId))
+        # Is user can view  in the space this resource belongs to. (space owner has all roles)
+        UserIsCanViewInDataSpace() (self.spaceId == space.id and space.type == {"data", "dataintegration"} and (space.roles == {"consumer"} or user.userId == space.ownerId))
+        # Is user can manage in the space this resource belongs to. (space owner has all roles)
+        UserIsCanManageInDataSpace() (self.spaceId == space.id and space.type == {"data", "dataintegration"} and (space.roles == {"facilitator"} or user.userId == space.ownerId))
+        # Is user can operate editor in the space this resource belongs to. (space owner has all roles)
+        UserIsCanOperateInDataSpace() (self.spaceId == space.id and space.type =={"data", "dataintegration"} and (space.roles == {"operator"} or user.userId == space.ownerId))
+        # Is user can consume in the space this resource belongs to. (space owner has all roles)
+        UserIsCanConsumeDataInDataSpace() (self.spaceId == space.id and space.type == {"data", "dataintegration"} and (space.roles == {"dataconsumer"} or user.userId == space.ownerId))
+        # Is user can publish in the space this resource belongs to. (space owner has all roles)
+        UserIsCanPublishDataInDataSpace() (self.spaceId == space.id and space.type == {"data", "dataintegration"} and (space.roles == {"publisher"} or user.userId == space.ownerId))
+        # Resource is DIApp
+        IsDIApp() (self._resourcetype == "diapp")
+        # Resource is DIProject
+        IsDIProject() (self._resourcetype == "diproject")
+        # Resource is Resource Connection
+        IsResourceConnection() (self._resourcetype == "resourceconnection")
+        # Resource is Catalog Object Data Store
+        IsCatalogObjectDataStore() (self._resourcetype == "datastore")
+        # Resource is Catalog Object Data Asset
+        IsCatalogObjectDataAsset() (self._resourcetype == "dataasset")
+        # Resource is Catalog Object Data Set
+        IsCatalogObjectDataSet() (self._resourcetype == "dataset")
+        # Resource is Catalog Object
+        IsCatalogObject() (self.IsCatalogObjectDataStore() or self.IsCatalogObjectDataAsset() or self.IsCatalogObjectDataSet())
+        # Resource is Catalog Object
+        IsDataResource() (self.IsResourceConnection())
+        # If resource is in a space in a data space
+        IsInDataSpace() (space.type=={"data", "dataintegration"} and self.spaceid==space.id)
+        # Is AlertingTaskRecipients.
+        IsAlertingTaskRecipients() (self._resourcetype=={"alertingtaskrecipients"})
+        # User is SharedSpaceCreator
+        IsSharedSpaceCreator() (self.roles=="SharedSpaceCreator")
+        # User is ManagedSpaceCreator
+        IsManagedSpaceCreator() (self.roles=="ManagedSpaceCreator")
+        # User is DataSpaceCreator
+        IsDataSpaceCreator() (self.roles=="DataSpaceCreator")
+        # User is a analytics administrator.
+        IsAnalyticsAdmin() (self.roles =="AnalyticsAdmin")
+        # Is Notification Digest.
+        IsNotificationDigest() (self._resourcetype=={"notificationdigest"})
+        # Is Notification Digest execution.
+        IsNotificationDigestExecution() (self._resourcetype=={"notificationdigestexecution"})
+        # Is EdgeAuth.
+        IsEdgeAuth() (self=={"edge-auth"})
+        # If resource is in a space in a data space
+        IsInSharedOrManagedSpace() (space.type=={"shared", "managed"} and self.spaceid==space.id)
+        # Is datafile.
+        IsDataFile() (self._resourcetype=={"datafile"})
+        # Check if user is admin with a specific permission
+        HasAdminPermission(permission) (self.level=="admin" and self.permissions == permission)
+        # Check if user has a specific permission
+        HasPermission(permission) (self.permissions == permission)
+        # User is an administrator with expired license.
+        IsAdminExpiredLicense() (self.level =="admin" and self._provision.status == "expired")
+        # Resource is an AutoML Experiment
+        IsAutoMLExperiment() (self._resourcetype == "automl-experiment")
+        # Resource is an AutoML Deployment
+        IsAutoMLDeployment() (self._resourcetype == "automl-deployment")
+        # Resource is a bot user
+        IsBotUser() (self.type == "bot")
+        # Is user contributor in a share
+        UserIsContributorInShare() (self.id == share.resourceIds and share.roles == {"contributor"})
+        # User is a developer.
+        IsDeveloper() (self.roles =="Developer")
+        # Is user consumer in a share
+        UserIsConsumerInShare() (self.id == share.resourceIds and share.roles == {"consumer"})
+        # Is user AuditAdmin
+        IsAuditAdmin() (self.roles == {"AuditAdmin"})
+        # Is a glossary type.
+        IsGlossary() (self._resourcetype == "glossary")
+        # Is a category type.
+        IsGlossaryCategory() (self._resourcetype == "glossary.category")
+        # Is a glossary term type.
+        IsGlossaryTerm() (self._resourcetype == "glossary.term")
+        # Is nfs connection.
+        IsNfsConnection() (self._resourcetype=={"nfsConnection"})
+        # Is report template.
+        IsReportTemplate() (self._resourcetype=={"reporttemplate"})
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: engine-engine-rules-cm
+  namespace: default
+---
+apiVersion: v1
+data:
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: engine-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  jwtPrivateKey: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: engine-service-jwt-secret
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: engine
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine
+  namespace: default
+spec:
+  ports:
+  - name: engine
+    port: 9076
+    protocol: TCP
+  selector:
+    app: engine
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: engine
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-storage
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Access-Control-Expose-Headers: Qlik-CSRF-Token,Content-Location,Location,Upload-Offset,Upload-Length";
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET,OPTIONS,PUT,POST,DELETE,PATCH
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.org/client-max-body-size: 500m
+  labels:
+    app: engine
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: engine
+            port:
+              number: 9076
+        path: /api/v1/apps/import
+        pathType: Prefix
+      - backend:
+          service:
+            name: engine
+            port:
+              number: 9076
+        path: /api/v1/apps
+        pathType: Prefix
+      - backend:
+          service:
+            name: engine
+            port:
+              number: 9076
+        path: /api/engine/openapi
+        pathType: Prefix
+      - backend:
+          service:
+            name: engine
+            port:
+              number: 9076
+        path: /api/engine/openrpc
+        pathType: Prefix
+      - backend:
+          service:
+            name: engine
+            port:
+              number: 9076
+        path: /api/engine/asyncapi
+        pathType: Prefix
+---
+apiVersion: qixengine.qlik.com/v1
+kind: Engine
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine-default
+  namespace: default
+spec:
+  controller: Deployment
+  engineVariantName: engine-variant-qliksense
+  labels:
+    qlik.com/default: "true"
+  replicas: 1
+---
+apiVersion: qixengine.qlik.com/v1
+kind: EngineTemplate
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine-template-default
+  namespace: default
+spec:
+  annotations:
+    prometheus.io/job: engine
+    prometheus.io/port: "9090"
+    prometheus.io/scrape: "true"
+  labels:
+    app: engine
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    engine-nats-client: "true"
+    metricsPort: "9090"
+    qix-engine: qix-engine
+    qix-engine-version: 12.1497.0
+    qlik.com/engine-deployment-name: engine-template-default
+    qlik.com/engine-type: qliksense
+    release: qlik-default
+    servicePort: "9076"
+  podSpec:
+    containers:
+    - args:
+      - -S
+      - BasePathPrefix=/api
+      - -S
+      - CheckMemSizeQuotaOnImport=1
+      - -S
+      - ConcurrentImportLimit=7
+      - -S
+      - ContinueOngoingReloadsWhenSuspending=1
+      - -S
+      - DeepTraceReload=1
+      - -S
+      - DocumentDirectory=/qlik/apps
+      - -S
+      - DropLineageInfo=0
+      - -S
+      - EnableGetFieldResourceId=1
+      - -S
+      - EnableIPv6Support=0
+      - -S
+      - EnableQvwRestImport=1
+      - -S
+      - EnableWebSocketIdleManagement=1
+      - -S
+      - FolderConnectionInterface=0
+      - -S
+      - PingIntervalSec=30
+      - -S
+      - ShutdownWait=1
+      - -S
+      - TempContentServiceTimeoutMs=30000
+      - -S
+      - AcceptEULA=$(ACCEPT_EULA)
+      - -S
+      - ExternalHttpMetrics=1
+      - -S
+      - PrometheusServicePort=9090
+      - -S
+      - QvLogMetrics=1
+      - -S
+      - DesktopPort=9076
+      - -S
+      - AuditLogVerbosity=0
+      - -S
+      - EnableExtServiceLogs=1
+      - -S
+      - EventBusLogVerbosity=4
+      - -S
+      - ExternalServicesLogVerbosity=4
+      - -S
+      - HttpTrafficLogVerbosity=4
+      - -S
+      - PerformanceLogVerbosity=0
+      - -S
+      - QixPerformanceLogVerbosity=0
+      - -S
+      - QvLogTelTraceId=1
+      - -S
+      - SSEVerbosity=4
+      - -S
+      - ScriptLogVerbosity=4
+      - -S
+      - SessionLogVerbosity=4
+      - -S
+      - SmartSearchIndexLogVerbosity=3
+      - -S
+      - SmartSearchQueryLogVerbosity=3
+      - -S
+      - SystemLogVerbosity=4
+      - -S
+      - TrafficLogVerbosity=0
+      - -S
+      - RestServiceRequestNbrOfRetries=5
+      - -S
+      - Autosave=1
+      - -S
+      - AutosaveInterval=5
+      - -S
+      - AWSLogVerbosity=2
+      - -S
+      - S3CredentialProvider=environment
+      - -S
+      - S3EndpointOverride=http://minio:9000/
+      - -S
+      - UseAwsS3=1
+      - -S
+      - UseObjectStoragePurger=1
+      - -S
+      - JWKSServiceUrl=http://keys:8080/v1/keys/qlik.api.internal
+      - -S
+      - ValidateJsonWebTokens=2
+      - -S
+      - EnableRenewUserToken=1
+      - -S
+      - InternalTokenServiceUrl=http://edge-auth:8080/v1
+      - -S
+      - JWTSignPrivateKeyId=$(TOKEN_AUTH_PRIVATE_KEY_ID)
+      - -S
+      - JWTSignPrivateKeyPath=/run/secrets/qlik.com/engine/tokenAuthPrivateKey
+      - -S
+      - EnableABAC=1
+      - -S
+      - EnableAccessControlTrace=1
+      - -S
+      - Gen3=1
+      - -S
+      - PersistenceMode=2
+      - -S
+      - SystemRules=/etc/config/rules.yaml
+      - -S
+      - ConnectivityServiceUrl=http://data-connections:9011
+      - -S
+      - ConnectorGetDataRetryCount=3
+      - -S
+      - DataConnectorServiceUrl=http://dcaas:9026
+      - -S
+      - EnableDataConnectivityService=1
+      - -S
+      - EnableGrpcFileStreamConnector=1
+      - -S
+      - HostedFileRetryCount=3
+      - -S
+      - SSEPlugin=GeoOperations,geo-operations:50072
+      - -S
+      - LimitCoresForced=0
+      - -S
+      - LicenseCacheTimeoutSeconds=3600
+      - -S
+      - LicenseServiceUrl=http://licenses:9200
+      - -S
+      - EnableSpaces=1
+      - -S
+      - SpacesServiceUrl=http://spaces:6080
+      - -S
+      - EnableEncryptData=1
+      - -S
+      - EncryptionServiceUrl=http://encryption:8080
+      - -S
+      - UseEncryptionService=1
+      - -S
+      - EnableFeatureFlagService=1
+      - -S
+      - FeatureFlagServiceUrl=http://feature-flags:8080
+      - -S
+      - EnableFetchRulesFromPAS=1
+      - -S
+      - PASRulesTags=common|app
+      - -S
+      - PASServiceUrl=http://policy-administrations:7070
+      - -S
+      - EnableGroupsService=1
+      - -S
+      - GroupsServiceUrl=http://identities:8080
+      - -S
+      - EnableAppExport=1
+      - -S
+      - EnableDownloadFromTCS=1
+      - -S
+      - EnableResumableUpload=1
+      - -S
+      - EnableTempContentService=1
+      - -S
+      - TempContentServiceUrl=http://temporary-contents:6080
+      - -S
+      - DirectQueryWorkload=2
+      - -S
+      - EventBusSubscribe=1
+      - -S
+      - STANCluster=messaging-nats-streaming-cluster
+      - -S
+      - STANMaxReconnect=24
+      - -S
+      - STANReconnectWait=5
+      - -S
+      - STANTimeout=10
+      - -S
+      - STANTrace=1
+      - -S
+      - STANUrl=nats://messaging-nats-client:4222
+      - -S
+      - STANUseToken=1
+      - -S
+      - SendAppObjectEvents=1
+      - -S
+      - StatisticsEventIntervalMs=1000
+      - -S
+      - UseEventBus=1
+      - -S
+      - UseSTAN=1
+      - -S
+      - UseStatisticsEventProducer=1
+      - -S
+      - EnvironmentName="example"
+      - -S
+      - RegionName="example"
+      - -S
+      - DocumentTimeout=60
+      - -S
+      - SessionTimeoutSec=1800
+      - -S
+      - SpacesCacheTimeoutSeconds=2
+      - -S
+      - UseSpacesServicePathWithShares=1
+      - -S
+      - UseRedis=1
+      - -S
+      - RedisHost=redis-master
+      - -S
+      - RedisPort=6379
+      - -S
+      - RedisPasswordFile=$(REDIS_PASSWORD_FILE)
+      - -S
+      - RedisConnectTimeoutMs=500
+      - -S
+      - RedisSocketTimeoutMs=500
+      env:
+      - name: PROMETHEUS_PORT
+        value: "9090"
+      - name: GRPC_DNS_RESOLVER
+        value: native
+      - name: SSL_CERT_FILE
+        value: /etc/ssl/certs/ca-certificates.crt
+      - name: JAEGER_AGENT_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      - name: OTLP_AGENT_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      - name: OTLP_AGENT_PORT
+        value: "55680"
+      - name: HTTP_PROXY
+        valueFrom:
+          configMapKeyRef:
+            key: httpProxy
+            name: qliksense-configs
+      - name: HTTPS_PROXY
+        valueFrom:
+          configMapKeyRef:
+            key: httpsProxy
+            name: qliksense-configs
+      - name: NO_PROXY
+        valueFrom:
+          configMapKeyRef:
+            key: noProxy
+            name: qliksense-configs
+      - name: MONGODB_URI
+        valueFrom:
+          secretKeyRef:
+            key: mongodbUri
+            name: qliksense-secrets
+      - name: MONGODB_URI_FILE
+        value: /run/secrets/qlik.com/qliksense/mongodbUri
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: redisPassword
+            name: qliksense-secrets
+      - name: REDIS_PASSWORD_FILE
+        value: /run/secrets/qlik.com/qliksense/redisPassword
+      - name: REDIS_ENCRYPTION_KEY
+        valueFrom:
+          secretKeyRef:
+            key: redisEncryptionKey
+            name: qliksense-secrets
+      - name: REDIS_ENCRYPTION_KEY_FILE
+        value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+      - name: MINIO_ROOT_USER
+        valueFrom:
+          secretKeyRef:
+            key: minioRootUser
+            name: qliksense-secrets
+      - name: MINIO_ROOT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: minioRootPassword
+            name: qliksense-secrets
+      - name: FORT_ID
+        valueFrom:
+          configMapKeyRef:
+            key: fortId
+            name: qliksense-configs
+      - name: FORT_IOT_CERTIFICATE_ID
+        valueFrom:
+          configMapKeyRef:
+            key: fortIotCertificateId
+            name: qliksense-configs
+      - name: FORT_IOT_THING_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: fortressId
+            name: qliksense-configs
+      - name: FORT_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: fortName
+            name: qliksense-configs
+      - name: FORT_ORIGIN_URL
+        valueFrom:
+          configMapKeyRef:
+            key: fortOriginUrl
+            name: qliksense-configs
+      - name: FORT_TENANT_URL
+        valueFrom:
+          configMapKeyRef:
+            key: fortTenantUrl
+            name: qliksense-configs
+      - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: iotThingRoleAliasName
+            name: qliksense-configs
+      - name: FORTRESS_ID
+        valueFrom:
+          configMapKeyRef:
+            key: fortressId
+            name: qliksense-configs
+      - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+        valueFrom:
+          configMapKeyRef:
+            key: iotCredentialUrl
+            name: qliksense-configs
+      - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+        value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+      - name: FORTRESS_REGION
+        valueFrom:
+          configMapKeyRef:
+            key: iotAwsRegion
+            name: qliksense-configs
+      - name: FORTRESS_THING_CA_FILE
+        value: /run/secrets/qlik.com/qliksense/iotRootCa
+      - name: FORTRESS_THING_CERT_FILE
+        value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+      - name: FORTRESS_THING_DATA_ENDPOINT
+        valueFrom:
+          configMapKeyRef:
+            key: fortressThingDataEndpoint
+            name: qliksense-configs
+      - name: FORTRESS_THING_KEY_FILE
+        value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+      - name: FORTRESS_THING_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: thingName
+            name: qliksense-configs
+      - name: FORT_WEB_INTEGRATION_ID
+        valueFrom:
+          configMapKeyRef:
+            key: fortWebIntegrationId
+            name: qliksense-configs
+      - name: FORT_TENANT_ID
+        valueFrom:
+          configMapKeyRef:
+            key: tenantId
+            name: qliksense-configs
+      - name: FORT_PRIVATE_KEY_FILE
+        value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+      - name: FORT_IOT_PRIVATE_KEY_FILE
+        value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+      - name: JAEGER_DISABLED
+        value: "true"
+      - name: DISABLE_OTLP
+        value: "true"
+      - name: ACCEPT_EULA
+        valueFrom:
+          configMapKeyRef:
+            key: acceptEULA
+            name: qliksense-configs
+      - name: TOKEN_AUTH_PRIVATE_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            key: tokenAuthPrivateKeyId
+            name: engine-secrets
+      - name: AWS_ACCESS_KEY_ID
+        value: $(MINIO_ROOT_USER)
+      - name: AWS_SECRET_ACCESS_KEY
+        value: $(MINIO_ROOT_PASSWORD)
+      image: ghcr.io/qlik-download/engine:12.1497.0
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 9076
+        initialDelaySeconds: 0
+        periodSeconds: 10
+        timeoutSeconds: 10
+      name: engine
+      ports:
+      - containerPort: 9076
+      - containerPort: 9090
+        name: metrics
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ready
+          port: 9076
+        initialDelaySeconds: 0
+        periodSeconds: 10
+        timeoutSeconds: 5
+      startupProbe:
+        failureThreshold: 12
+        httpGet:
+          path: /health
+          port: 9076
+        initialDelaySeconds: 0
+        periodSeconds: 10
+        timeoutSeconds: 10
+      volumeMounts:
+      - mountPath: /qlik/apps
+        name: apps-storage
+      - mountPath: /run/secrets/qlik.com/engine
+        name: secrets
+        readOnly: true
+      - mountPath: /etc/config
+        name: rules-volume
+      - mountPath: /home/engine/Qlik/Sense
+        name: storagepath
+      - mountPath: /tmp
+        name: tmpdir
+      - mountPath: /etc/ssl/certs
+        name: ca-certificates
+      - mountPath: /run/secrets/qlik.com/qliksense
+        name: qliksense-secrets
+        readOnly: true
+    dnsConfig:
+      options:
+      - name: timeout
+        value: "1"
+      - name: single-request-reopen
+    imagePullSecrets:
+    - name: artifactory-docker-secret
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: apps-storage
+      persistentVolumeClaim:
+        claimName: engine
+    - name: secrets
+      secret:
+        secretName: engine-secrets
+    - configMap:
+        defaultMode: 493
+        name: engine-prestop-hook
+        optional: true
+      name: engine-prestop-hook
+    - configMap:
+        name: engine-engine-rules-cm
+      name: rules-volume
+    - emptyDir: {}
+      name: storagepath
+    - emptyDir: {}
+      name: tmpdir
+    - name: ca-certificates
+      persistentVolumeClaim:
+        claimName: ca-certificates
+    - name: qliksense-secrets
+      secret:
+        secretName: qliksense-secrets
+---
+apiVersion: qixengine.qlik.com/v1
+kind: EngineVariant
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine-variant-direct-query
+  namespace: default
+spec:
+  annotations:
+    prometheus.io/job: engine-direct-query
+  args:
+  - -S
+  - BasePathPrefix=/api
+  - -S
+  - CheckMemSizeQuotaOnImport=1
+  - -S
+  - ConcurrentImportLimit=7
+  - -S
+  - ContinueOngoingReloadsWhenSuspending=1
+  - -S
+  - DeepTraceReload=1
+  - -S
+  - DocumentDirectory=/qlik/apps
+  - -S
+  - DropLineageInfo=0
+  - -S
+  - EnableGetFieldResourceId=1
+  - -S
+  - EnableIPv6Support=0
+  - -S
+  - EnableQvwRestImport=1
+  - -S
+  - EnableWebSocketIdleManagement=1
+  - -S
+  - FolderConnectionInterface=0
+  - -S
+  - PingIntervalSec=30
+  - -S
+  - ShutdownWait=1
+  - -S
+  - TempContentServiceTimeoutMs=30000
+  - -S
+  - AcceptEULA=$(ACCEPT_EULA)
+  - -S
+  - ExternalHttpMetrics=1
+  - -S
+  - PrometheusServicePort=9090
+  - -S
+  - QvLogMetrics=1
+  - -S
+  - DesktopPort=9076
+  - -S
+  - AuditLogVerbosity=0
+  - -S
+  - EnableExtServiceLogs=1
+  - -S
+  - EventBusLogVerbosity=4
+  - -S
+  - ExternalServicesLogVerbosity=4
+  - -S
+  - HttpTrafficLogVerbosity=4
+  - -S
+  - PerformanceLogVerbosity=0
+  - -S
+  - QixPerformanceLogVerbosity=0
+  - -S
+  - QvLogTelTraceId=1
+  - -S
+  - SSEVerbosity=4
+  - -S
+  - ScriptLogVerbosity=4
+  - -S
+  - SessionLogVerbosity=4
+  - -S
+  - SmartSearchIndexLogVerbosity=3
+  - -S
+  - SmartSearchQueryLogVerbosity=3
+  - -S
+  - SystemLogVerbosity=4
+  - -S
+  - TrafficLogVerbosity=0
+  - -S
+  - RestServiceRequestNbrOfRetries=5
+  - -S
+  - Autosave=1
+  - -S
+  - AutosaveInterval=5
+  - -S
+  - AWSLogVerbosity=2
+  - -S
+  - S3CredentialProvider=environment
+  - -S
+  - S3EndpointOverride=http://minio:9000/
+  - -S
+  - UseAwsS3=1
+  - -S
+  - UseObjectStoragePurger=1
+  - -S
+  - JWKSServiceUrl=http://keys:8080/v1/keys/qlik.api.internal
+  - -S
+  - ValidateJsonWebTokens=2
+  - -S
+  - EnableRenewUserToken=1
+  - -S
+  - InternalTokenServiceUrl=http://edge-auth:8080/v1
+  - -S
+  - JWTSignPrivateKeyId=$(TOKEN_AUTH_PRIVATE_KEY_ID)
+  - -S
+  - JWTSignPrivateKeyPath=/run/secrets/qlik.com/engine/tokenAuthPrivateKey
+  - -S
+  - EnableABAC=1
+  - -S
+  - EnableAccessControlTrace=1
+  - -S
+  - Gen3=1
+  - -S
+  - PersistenceMode=2
+  - -S
+  - SystemRules=/etc/config/rules.yaml
+  - -S
+  - ConnectivityServiceUrl=http://data-connections:9011
+  - -S
+  - ConnectorGetDataRetryCount=3
+  - -S
+  - DataConnectorServiceUrl=http://dcaas:9026
+  - -S
+  - EnableDataConnectivityService=1
+  - -S
+  - EnableGrpcFileStreamConnector=1
+  - -S
+  - HostedFileRetryCount=3
+  - -S
+  - SSEPlugin=GeoOperations,geo-operations:50072
+  - -S
+  - LimitCoresForced=0
+  - -S
+  - LicenseCacheTimeoutSeconds=3600
+  - -S
+  - LicenseServiceUrl=http://licenses:9200
+  - -S
+  - EnableSpaces=1
+  - -S
+  - SpacesServiceUrl=http://spaces:6080
+  - -S
+  - EnableEncryptData=1
+  - -S
+  - EncryptionServiceUrl=http://encryption:8080
+  - -S
+  - UseEncryptionService=1
+  - -S
+  - EnableFeatureFlagService=1
+  - -S
+  - FeatureFlagServiceUrl=http://feature-flags:8080
+  - -S
+  - EnableFetchRulesFromPAS=1
+  - -S
+  - PASRulesTags=common|app
+  - -S
+  - PASServiceUrl=http://policy-administrations:7070
+  - -S
+  - EnableGroupsService=1
+  - -S
+  - GroupsServiceUrl=http://identities:8080
+  - -S
+  - EnableAppExport=1
+  - -S
+  - EnableDownloadFromTCS=1
+  - -S
+  - EnableResumableUpload=1
+  - -S
+  - EnableTempContentService=1
+  - -S
+  - TempContentServiceUrl=http://temporary-contents:6080
+  - -S
+  - DirectQueryWorkload=1
+  - -S
+  - EventBusSubscribe=1
+  - -S
+  - STANCluster=messaging-nats-streaming-cluster
+  - -S
+  - STANMaxReconnect=24
+  - -S
+  - STANReconnectWait=5
+  - -S
+  - STANTimeout=10
+  - -S
+  - STANTrace=1
+  - -S
+  - STANUrl=nats://messaging-nats-client:4222
+  - -S
+  - STANUseToken=1
+  - -S
+  - SendAppObjectEvents=1
+  - -S
+  - StatisticsEventIntervalMs=1000
+  - -S
+  - UseEventBus=1
+  - -S
+  - UseSTAN=1
+  - -S
+  - UseStatisticsEventProducer=1
+  - -S
+  - EnvironmentName="example"
+  - -S
+  - RegionName="example"
+  - -S
+  - DocumentTimeout=60
+  - -S
+  - SessionTimeoutSec=1800
+  - -S
+  - SpacesCacheTimeoutSeconds=2
+  - -S
+  - UseSpacesServicePathWithShares=1
+  - -S
+  - UseRedis=1
+  - -S
+  - RedisHost=redis-master
+  - -S
+  - RedisPort=6379
+  - -S
+  - RedisPasswordFile=$(REDIS_PASSWORD_FILE)
+  - -S
+  - RedisConnectTimeoutMs=500
+  - -S
+  - RedisSocketTimeoutMs=500
+  engineTemplateName: engine-template-default
+  env:
+  - name: HTTP_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpProxy
+        name: qliksense-configs
+  - name: HTTPS_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpsProxy
+        name: qliksense-configs
+  - name: NO_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: noProxy
+        name: qliksense-configs
+  - name: MONGODB_URI
+    valueFrom:
+      secretKeyRef:
+        key: mongodbUri
+        name: qliksense-secrets
+  - name: MONGODB_URI_FILE
+    value: /run/secrets/qlik.com/qliksense/mongodbUri
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: redisPassword
+        name: qliksense-secrets
+  - name: REDIS_PASSWORD_FILE
+    value: /run/secrets/qlik.com/qliksense/redisPassword
+  - name: REDIS_ENCRYPTION_KEY
+    valueFrom:
+      secretKeyRef:
+        key: redisEncryptionKey
+        name: qliksense-secrets
+  - name: REDIS_ENCRYPTION_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+  - name: MINIO_ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        key: minioRootUser
+        name: qliksense-secrets
+  - name: MINIO_ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: minioRootPassword
+        name: qliksense-secrets
+  - name: FORT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortId
+        name: qliksense-configs
+  - name: FORT_IOT_CERTIFICATE_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortIotCertificateId
+        name: qliksense-configs
+  - name: FORT_IOT_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORT_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortName
+        name: qliksense-configs
+  - name: FORT_ORIGIN_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortOriginUrl
+        name: qliksense-configs
+  - name: FORT_TENANT_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortTenantUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: iotThingRoleAliasName
+        name: qliksense-configs
+  - name: FORTRESS_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: iotCredentialUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+    value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+  - name: FORTRESS_REGION
+    valueFrom:
+      configMapKeyRef:
+        key: iotAwsRegion
+        name: qliksense-configs
+  - name: FORTRESS_THING_CA_FILE
+    value: /run/secrets/qlik.com/qliksense/iotRootCa
+  - name: FORTRESS_THING_CERT_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+  - name: FORTRESS_THING_DATA_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: fortressThingDataEndpoint
+        name: qliksense-configs
+  - name: FORTRESS_THING_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+  - name: FORTRESS_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: thingName
+        name: qliksense-configs
+  - name: FORT_WEB_INTEGRATION_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortWebIntegrationId
+        name: qliksense-configs
+  - name: FORT_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: tenantId
+        name: qliksense-configs
+  - name: FORT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: FORT_IOT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: JAEGER_DISABLED
+    value: "true"
+  - name: DISABLE_OTLP
+    value: "true"
+  - name: ACCEPT_EULA
+    valueFrom:
+      configMapKeyRef:
+        key: acceptEULA
+        name: qliksense-configs
+  - name: TOKEN_AUTH_PRIVATE_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: tokenAuthPrivateKeyId
+        name: engine-secrets
+  - name: AWS_ACCESS_KEY_ID
+    value: $(MINIO_ROOT_USER)
+  - name: AWS_SECRET_ACCESS_KEY
+    value: $(MINIO_ROOT_PASSWORD)
+  image: ghcr.io/qlik-download/engine:12.1497.0
+  labels:
+    qlik.com/engine-type: direct-query
+---
+apiVersion: qixengine.qlik.com/v1
+kind: EngineVariant
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine-variant-qliksense
+  namespace: default
+spec:
+  args:
+  - -S
+  - BasePathPrefix=/api
+  - -S
+  - CheckMemSizeQuotaOnImport=1
+  - -S
+  - ConcurrentImportLimit=7
+  - -S
+  - ContinueOngoingReloadsWhenSuspending=1
+  - -S
+  - DeepTraceReload=1
+  - -S
+  - DocumentDirectory=/qlik/apps
+  - -S
+  - DropLineageInfo=0
+  - -S
+  - EnableGetFieldResourceId=1
+  - -S
+  - EnableIPv6Support=0
+  - -S
+  - EnableQvwRestImport=1
+  - -S
+  - EnableWebSocketIdleManagement=1
+  - -S
+  - FolderConnectionInterface=0
+  - -S
+  - PingIntervalSec=30
+  - -S
+  - ShutdownWait=1
+  - -S
+  - TempContentServiceTimeoutMs=30000
+  - -S
+  - AcceptEULA=$(ACCEPT_EULA)
+  - -S
+  - ExternalHttpMetrics=1
+  - -S
+  - PrometheusServicePort=9090
+  - -S
+  - QvLogMetrics=1
+  - -S
+  - DesktopPort=9076
+  - -S
+  - AuditLogVerbosity=0
+  - -S
+  - EnableExtServiceLogs=1
+  - -S
+  - EventBusLogVerbosity=4
+  - -S
+  - ExternalServicesLogVerbosity=4
+  - -S
+  - HttpTrafficLogVerbosity=4
+  - -S
+  - PerformanceLogVerbosity=0
+  - -S
+  - QixPerformanceLogVerbosity=0
+  - -S
+  - QvLogTelTraceId=1
+  - -S
+  - SSEVerbosity=4
+  - -S
+  - ScriptLogVerbosity=4
+  - -S
+  - SessionLogVerbosity=4
+  - -S
+  - SmartSearchIndexLogVerbosity=3
+  - -S
+  - SmartSearchQueryLogVerbosity=3
+  - -S
+  - SystemLogVerbosity=4
+  - -S
+  - TrafficLogVerbosity=0
+  - -S
+  - RestServiceRequestNbrOfRetries=5
+  - -S
+  - Autosave=1
+  - -S
+  - AutosaveInterval=5
+  - -S
+  - AWSLogVerbosity=2
+  - -S
+  - S3CredentialProvider=environment
+  - -S
+  - S3EndpointOverride=http://minio:9000/
+  - -S
+  - UseAwsS3=1
+  - -S
+  - UseObjectStoragePurger=1
+  - -S
+  - JWKSServiceUrl=http://keys:8080/v1/keys/qlik.api.internal
+  - -S
+  - ValidateJsonWebTokens=2
+  - -S
+  - EnableRenewUserToken=1
+  - -S
+  - InternalTokenServiceUrl=http://edge-auth:8080/v1
+  - -S
+  - JWTSignPrivateKeyId=$(TOKEN_AUTH_PRIVATE_KEY_ID)
+  - -S
+  - JWTSignPrivateKeyPath=/run/secrets/qlik.com/engine/tokenAuthPrivateKey
+  - -S
+  - EnableABAC=1
+  - -S
+  - EnableAccessControlTrace=1
+  - -S
+  - Gen3=1
+  - -S
+  - PersistenceMode=2
+  - -S
+  - SystemRules=/etc/config/rules.yaml
+  - -S
+  - ConnectivityServiceUrl=http://data-connections:9011
+  - -S
+  - ConnectorGetDataRetryCount=3
+  - -S
+  - DataConnectorServiceUrl=http://dcaas:9026
+  - -S
+  - EnableDataConnectivityService=1
+  - -S
+  - EnableGrpcFileStreamConnector=1
+  - -S
+  - HostedFileRetryCount=3
+  - -S
+  - SSEPlugin=GeoOperations,geo-operations:50072
+  - -S
+  - LimitCoresForced=0
+  - -S
+  - LicenseCacheTimeoutSeconds=3600
+  - -S
+  - LicenseServiceUrl=http://licenses:9200
+  - -S
+  - EnableSpaces=1
+  - -S
+  - SpacesServiceUrl=http://spaces:6080
+  - -S
+  - EnableEncryptData=1
+  - -S
+  - EncryptionServiceUrl=http://encryption:8080
+  - -S
+  - UseEncryptionService=1
+  - -S
+  - EnableFeatureFlagService=1
+  - -S
+  - FeatureFlagServiceUrl=http://feature-flags:8080
+  - -S
+  - EnableFetchRulesFromPAS=1
+  - -S
+  - PASRulesTags=common|app
+  - -S
+  - PASServiceUrl=http://policy-administrations:7070
+  - -S
+  - EnableGroupsService=1
+  - -S
+  - GroupsServiceUrl=http://identities:8080
+  - -S
+  - EnableAppExport=1
+  - -S
+  - EnableDownloadFromTCS=1
+  - -S
+  - EnableResumableUpload=1
+  - -S
+  - EnableTempContentService=1
+  - -S
+  - TempContentServiceUrl=http://temporary-contents:6080
+  - -S
+  - DirectQueryWorkload=2
+  - -S
+  - EventBusSubscribe=1
+  - -S
+  - STANCluster=messaging-nats-streaming-cluster
+  - -S
+  - STANMaxReconnect=24
+  - -S
+  - STANReconnectWait=5
+  - -S
+  - STANTimeout=10
+  - -S
+  - STANTrace=1
+  - -S
+  - STANUrl=nats://messaging-nats-client:4222
+  - -S
+  - STANUseToken=1
+  - -S
+  - SendAppObjectEvents=1
+  - -S
+  - StatisticsEventIntervalMs=1000
+  - -S
+  - UseEventBus=1
+  - -S
+  - UseSTAN=1
+  - -S
+  - UseStatisticsEventProducer=1
+  - -S
+  - EnvironmentName="example"
+  - -S
+  - RegionName="example"
+  - -S
+  - DocumentTimeout=60
+  - -S
+  - SessionTimeoutSec=1800
+  - -S
+  - SpacesCacheTimeoutSeconds=2
+  - -S
+  - UseSpacesServicePathWithShares=1
+  - -S
+  - UseRedis=1
+  - -S
+  - RedisHost=redis-master
+  - -S
+  - RedisPort=6379
+  - -S
+  - RedisPasswordFile=$(REDIS_PASSWORD_FILE)
+  - -S
+  - RedisConnectTimeoutMs=500
+  - -S
+  - RedisSocketTimeoutMs=500
+  engineTemplateName: engine-template-default
+  env:
+  - name: HTTP_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpProxy
+        name: qliksense-configs
+  - name: HTTPS_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpsProxy
+        name: qliksense-configs
+  - name: NO_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: noProxy
+        name: qliksense-configs
+  - name: MONGODB_URI
+    valueFrom:
+      secretKeyRef:
+        key: mongodbUri
+        name: qliksense-secrets
+  - name: MONGODB_URI_FILE
+    value: /run/secrets/qlik.com/qliksense/mongodbUri
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: redisPassword
+        name: qliksense-secrets
+  - name: REDIS_PASSWORD_FILE
+    value: /run/secrets/qlik.com/qliksense/redisPassword
+  - name: REDIS_ENCRYPTION_KEY
+    valueFrom:
+      secretKeyRef:
+        key: redisEncryptionKey
+        name: qliksense-secrets
+  - name: REDIS_ENCRYPTION_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+  - name: MINIO_ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        key: minioRootUser
+        name: qliksense-secrets
+  - name: MINIO_ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: minioRootPassword
+        name: qliksense-secrets
+  - name: FORT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortId
+        name: qliksense-configs
+  - name: FORT_IOT_CERTIFICATE_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortIotCertificateId
+        name: qliksense-configs
+  - name: FORT_IOT_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORT_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortName
+        name: qliksense-configs
+  - name: FORT_ORIGIN_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortOriginUrl
+        name: qliksense-configs
+  - name: FORT_TENANT_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortTenantUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: iotThingRoleAliasName
+        name: qliksense-configs
+  - name: FORTRESS_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: iotCredentialUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+    value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+  - name: FORTRESS_REGION
+    valueFrom:
+      configMapKeyRef:
+        key: iotAwsRegion
+        name: qliksense-configs
+  - name: FORTRESS_THING_CA_FILE
+    value: /run/secrets/qlik.com/qliksense/iotRootCa
+  - name: FORTRESS_THING_CERT_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+  - name: FORTRESS_THING_DATA_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: fortressThingDataEndpoint
+        name: qliksense-configs
+  - name: FORTRESS_THING_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+  - name: FORTRESS_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: thingName
+        name: qliksense-configs
+  - name: FORT_WEB_INTEGRATION_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortWebIntegrationId
+        name: qliksense-configs
+  - name: FORT_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: tenantId
+        name: qliksense-configs
+  - name: FORT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: FORT_IOT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: JAEGER_DISABLED
+    value: "true"
+  - name: DISABLE_OTLP
+    value: "true"
+  - name: ACCEPT_EULA
+    valueFrom:
+      configMapKeyRef:
+        key: acceptEULA
+        name: qliksense-configs
+  - name: TOKEN_AUTH_PRIVATE_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: tokenAuthPrivateKeyId
+        name: engine-secrets
+  - name: AWS_ACCESS_KEY_ID
+    value: $(MINIO_ROOT_USER)
+  - name: AWS_SECRET_ACCESS_KEY
+    value: $(MINIO_ROOT_PASSWORD)
+  image: ghcr.io/qlik-download/engine:12.1497.0
+  labels:
+    qlik.com/engine-type: qliksense
+---
+apiVersion: qixengine.qlik.com/v1
+kind: EngineVariant
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: engine-variant-qlikview
+  namespace: default
+spec:
+  annotations:
+    prometheus.io/job: engine-qlikview
+  args:
+  - -S
+  - BasePathPrefix=/api
+  - -S
+  - CheckMemSizeQuotaOnImport=1
+  - -S
+  - ConcurrentImportLimit=7
+  - -S
+  - ContinueOngoingReloadsWhenSuspending=1
+  - -S
+  - DeepTraceReload=1
+  - -S
+  - DocumentDirectory=/qlik/apps
+  - -S
+  - DropLineageInfo=0
+  - -S
+  - EnableGetFieldResourceId=1
+  - -S
+  - EnableIPv6Support=0
+  - -S
+  - EnableQvwRestImport=1
+  - -S
+  - EnableWebSocketIdleManagement=1
+  - -S
+  - FolderConnectionInterface=0
+  - -S
+  - PingIntervalSec=30
+  - -S
+  - ShutdownWait=1
+  - -S
+  - TempContentServiceTimeoutMs=30000
+  - -S
+  - AcceptEULA=$(ACCEPT_EULA)
+  - -S
+  - ExternalHttpMetrics=1
+  - -S
+  - PrometheusServicePort=9090
+  - -S
+  - QvLogMetrics=1
+  - -S
+  - DesktopPort=9076
+  - -S
+  - AuditLogVerbosity=0
+  - -S
+  - EnableExtServiceLogs=1
+  - -S
+  - EventBusLogVerbosity=4
+  - -S
+  - ExternalServicesLogVerbosity=4
+  - -S
+  - HttpTrafficLogVerbosity=4
+  - -S
+  - PerformanceLogVerbosity=0
+  - -S
+  - QixPerformanceLogVerbosity=0
+  - -S
+  - QvLogTelTraceId=1
+  - -S
+  - SSEVerbosity=4
+  - -S
+  - ScriptLogVerbosity=4
+  - -S
+  - SessionLogVerbosity=4
+  - -S
+  - SmartSearchIndexLogVerbosity=3
+  - -S
+  - SmartSearchQueryLogVerbosity=3
+  - -S
+  - SystemLogVerbosity=4
+  - -S
+  - TrafficLogVerbosity=0
+  - -S
+  - RestServiceRequestNbrOfRetries=5
+  - -S
+  - Autosave=1
+  - -S
+  - AutosaveInterval=5
+  - -S
+  - AWSLogVerbosity=2
+  - -S
+  - S3CredentialProvider=environment
+  - -S
+  - S3EndpointOverride=http://minio:9000/
+  - -S
+  - UseAwsS3=1
+  - -S
+  - UseObjectStoragePurger=1
+  - -S
+  - JWKSServiceUrl=http://keys:8080/v1/keys/qlik.api.internal
+  - -S
+  - ValidateJsonWebTokens=2
+  - -S
+  - EnableRenewUserToken=1
+  - -S
+  - InternalTokenServiceUrl=http://edge-auth:8080/v1
+  - -S
+  - JWTSignPrivateKeyId=$(TOKEN_AUTH_PRIVATE_KEY_ID)
+  - -S
+  - JWTSignPrivateKeyPath=/run/secrets/qlik.com/engine/tokenAuthPrivateKey
+  - -S
+  - EnableABAC=1
+  - -S
+  - EnableAccessControlTrace=1
+  - -S
+  - Gen3=1
+  - -S
+  - PersistenceMode=2
+  - -S
+  - SystemRules=/etc/config/rules.yaml
+  - -S
+  - ConnectivityServiceUrl=http://data-connections:9011
+  - -S
+  - ConnectorGetDataRetryCount=3
+  - -S
+  - DataConnectorServiceUrl=http://dcaas:9026
+  - -S
+  - EnableDataConnectivityService=1
+  - -S
+  - EnableGrpcFileStreamConnector=1
+  - -S
+  - HostedFileRetryCount=3
+  - -S
+  - SSEPlugin=GeoOperations,geo-operations:50072
+  - -S
+  - LimitCoresForced=0
+  - -S
+  - LicenseCacheTimeoutSeconds=3600
+  - -S
+  - LicenseServiceUrl=http://licenses:9200
+  - -S
+  - EnableSpaces=1
+  - -S
+  - SpacesServiceUrl=http://spaces:6080
+  - -S
+  - EnableEncryptData=1
+  - -S
+  - EncryptionServiceUrl=http://encryption:8080
+  - -S
+  - UseEncryptionService=1
+  - -S
+  - EnableFeatureFlagService=1
+  - -S
+  - FeatureFlagServiceUrl=http://feature-flags:8080
+  - -S
+  - EnableFetchRulesFromPAS=1
+  - -S
+  - PASRulesTags=common|app
+  - -S
+  - PASServiceUrl=http://policy-administrations:7070
+  - -S
+  - EnableGroupsService=1
+  - -S
+  - GroupsServiceUrl=http://identities:8080
+  - -S
+  - EnableAppExport=1
+  - -S
+  - EnableDownloadFromTCS=1
+  - -S
+  - EnableResumableUpload=1
+  - -S
+  - EnableTempContentService=1
+  - -S
+  - TempContentServiceUrl=http://temporary-contents:6080
+  - -S
+  - DirectQueryWorkload=2
+  - -S
+  - EventBusSubscribe=1
+  - -S
+  - STANCluster=messaging-nats-streaming-cluster
+  - -S
+  - STANMaxReconnect=24
+  - -S
+  - STANReconnectWait=5
+  - -S
+  - STANTimeout=10
+  - -S
+  - STANTrace=1
+  - -S
+  - STANUrl=nats://messaging-nats-client:4222
+  - -S
+  - STANUseToken=1
+  - -S
+  - SendAppObjectEvents=1
+  - -S
+  - StatisticsEventIntervalMs=1000
+  - -S
+  - UseEventBus=1
+  - -S
+  - UseSTAN=1
+  - -S
+  - UseStatisticsEventProducer=1
+  - -S
+  - EnvironmentName="example"
+  - -S
+  - RegionName="example"
+  - -S
+  - DocumentTimeout=60
+  - -S
+  - SessionTimeoutSec=1800
+  - -S
+  - BasicQlikviewEnabled=1
+  - -S
+  - BundledContentsRootFolder=/usr/local/share/Bundled
+  - -S
+  - SkiaFontPaths=/usr/share/fonts
+  - -S
+  - SpacesCacheTimeoutSeconds=2
+  - -S
+  - UseSpacesServicePathWithShares=1
+  - -S
+  - UseRedis=1
+  - -S
+  - RedisHost=redis-master
+  - -S
+  - RedisPort=6379
+  - -S
+  - RedisPasswordFile=$(REDIS_PASSWORD_FILE)
+  - -S
+  - RedisConnectTimeoutMs=500
+  - -S
+  - RedisSocketTimeoutMs=500
+  engineTemplateName: engine-template-default
+  env:
+  - name: HTTP_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpProxy
+        name: qliksense-configs
+  - name: HTTPS_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpsProxy
+        name: qliksense-configs
+  - name: NO_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: noProxy
+        name: qliksense-configs
+  - name: MONGODB_URI
+    valueFrom:
+      secretKeyRef:
+        key: mongodbUri
+        name: qliksense-secrets
+  - name: MONGODB_URI_FILE
+    value: /run/secrets/qlik.com/qliksense/mongodbUri
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: redisPassword
+        name: qliksense-secrets
+  - name: REDIS_PASSWORD_FILE
+    value: /run/secrets/qlik.com/qliksense/redisPassword
+  - name: REDIS_ENCRYPTION_KEY
+    valueFrom:
+      secretKeyRef:
+        key: redisEncryptionKey
+        name: qliksense-secrets
+  - name: REDIS_ENCRYPTION_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+  - name: MINIO_ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        key: minioRootUser
+        name: qliksense-secrets
+  - name: MINIO_ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: minioRootPassword
+        name: qliksense-secrets
+  - name: FORT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortId
+        name: qliksense-configs
+  - name: FORT_IOT_CERTIFICATE_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortIotCertificateId
+        name: qliksense-configs
+  - name: FORT_IOT_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORT_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortName
+        name: qliksense-configs
+  - name: FORT_ORIGIN_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortOriginUrl
+        name: qliksense-configs
+  - name: FORT_TENANT_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortTenantUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: iotThingRoleAliasName
+        name: qliksense-configs
+  - name: FORTRESS_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: iotCredentialUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+    value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+  - name: FORTRESS_REGION
+    valueFrom:
+      configMapKeyRef:
+        key: iotAwsRegion
+        name: qliksense-configs
+  - name: FORTRESS_THING_CA_FILE
+    value: /run/secrets/qlik.com/qliksense/iotRootCa
+  - name: FORTRESS_THING_CERT_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+  - name: FORTRESS_THING_DATA_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: fortressThingDataEndpoint
+        name: qliksense-configs
+  - name: FORTRESS_THING_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+  - name: FORTRESS_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: thingName
+        name: qliksense-configs
+  - name: FORT_WEB_INTEGRATION_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortWebIntegrationId
+        name: qliksense-configs
+  - name: FORT_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: tenantId
+        name: qliksense-configs
+  - name: FORT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: FORT_IOT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: JAEGER_DISABLED
+    value: "true"
+  - name: DISABLE_OTLP
+    value: "true"
+  - name: ACCEPT_EULA
+    valueFrom:
+      configMapKeyRef:
+        key: acceptEULA
+        name: qliksense-configs
+  - name: TOKEN_AUTH_PRIVATE_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: tokenAuthPrivateKeyId
+        name: engine-secrets
+  - name: AWS_ACCESS_KEY_ID
+    value: $(MINIO_ROOT_USER)
+  - name: AWS_SECRET_ACCESS_KEY
+    value: $(MINIO_ROOT_PASSWORD)
+  image: ghcr.io/qlik-download/engine-qv:12.1497.0
+  labels:
+    qlik.com/engine-type: qlikview
+---
+apiVersion: qixengine.qlik.com/v1
+kind: EngineVariant
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: engine-12.1497.0
+    heritage: Helm
+    release: qlik-default
+  name: sense-reload-engine-variant
+  namespace: default
+spec:
+  annotations:
+    prometheus.io/job: engine-reload
+  args:
+  - -S
+  - BasePathPrefix=/api
+  - -S
+  - CheckMemSizeQuotaOnImport=1
+  - -S
+  - ConcurrentImportLimit=7
+  - -S
+  - ContinueOngoingReloadsWhenSuspending=1
+  - -S
+  - DeepTraceReload=1
+  - -S
+  - DocumentDirectory=/qlik/apps
+  - -S
+  - DropLineageInfo=0
+  - -S
+  - EnableGetFieldResourceId=1
+  - -S
+  - EnableIPv6Support=0
+  - -S
+  - EnableQvwRestImport=1
+  - -S
+  - EnableWebSocketIdleManagement=1
+  - -S
+  - FolderConnectionInterface=0
+  - -S
+  - PingIntervalSec=30
+  - -S
+  - ShutdownWait=1
+  - -S
+  - TempContentServiceTimeoutMs=30000
+  - -S
+  - AcceptEULA=$(ACCEPT_EULA)
+  - -S
+  - ExternalHttpMetrics=0
+  - -S
+  - PrometheusServicePort=9090
+  - -S
+  - QvLogMetrics=0
+  - -S
+  - DesktopPort=9076
+  - -S
+  - AuditLogVerbosity=0
+  - -S
+  - EnableExtServiceLogs=1
+  - -S
+  - EventBusLogVerbosity=4
+  - -S
+  - ExternalServicesLogVerbosity=4
+  - -S
+  - HttpTrafficLogVerbosity=4
+  - -S
+  - PerformanceLogVerbosity=0
+  - -S
+  - QixPerformanceLogVerbosity=0
+  - -S
+  - QvLogTelTraceId=1
+  - -S
+  - SSEVerbosity=4
+  - -S
+  - ScriptLogVerbosity=4
+  - -S
+  - SessionLogVerbosity=4
+  - -S
+  - SmartSearchIndexLogVerbosity=3
+  - -S
+  - SmartSearchQueryLogVerbosity=3
+  - -S
+  - SystemLogVerbosity=4
+  - -S
+  - TrafficLogVerbosity=0
+  - -S
+  - RestServiceRequestNbrOfRetries=5
+  - -S
+  - Autosave=1
+  - -S
+  - AutosaveInterval=5
+  - -S
+  - AWSLogVerbosity=2
+  - -S
+  - S3CredentialProvider=environment
+  - -S
+  - S3EndpointOverride=http://minio:9000/
+  - -S
+  - UseAwsS3=1
+  - -S
+  - UseObjectStoragePurger=1
+  - -S
+  - JWKSServiceUrl=http://keys:8080/v1/keys/qlik.api.internal
+  - -S
+  - ValidateJsonWebTokens=2
+  - -S
+  - EnableRenewUserToken=1
+  - -S
+  - InternalTokenServiceUrl=http://edge-auth:8080/v1
+  - -S
+  - JWTSignPrivateKeyId=$(TOKEN_AUTH_PRIVATE_KEY_ID)
+  - -S
+  - JWTSignPrivateKeyPath=/run/secrets/qlik.com/engine/tokenAuthPrivateKey
+  - -S
+  - EnableABAC=1
+  - -S
+  - EnableAccessControlTrace=1
+  - -S
+  - Gen3=1
+  - -S
+  - PersistenceMode=2
+  - -S
+  - SystemRules=/etc/config/rules.yaml
+  - -S
+  - ConnectivityServiceUrl=http://data-connections:9011
+  - -S
+  - ConnectorGetDataRetryCount=3
+  - -S
+  - DataConnectorServiceUrl=http://dcaas:9026
+  - -S
+  - EnableDataConnectivityService=1
+  - -S
+  - EnableGrpcFileStreamConnector=1
+  - -S
+  - HostedFileRetryCount=3
+  - -S
+  - SSEPlugin=GeoOperations,geo-operations:50072
+  - -S
+  - LimitCoresForced=0
+  - -S
+  - LicenseCacheTimeoutSeconds=3600
+  - -S
+  - LicenseServiceUrl=http://licenses:9200
+  - -S
+  - EnableSpaces=1
+  - -S
+  - SpacesServiceUrl=http://spaces:6080
+  - -S
+  - EnableEncryptData=1
+  - -S
+  - EncryptionServiceUrl=http://encryption:8080
+  - -S
+  - UseEncryptionService=1
+  - -S
+  - EnableFeatureFlagService=1
+  - -S
+  - FeatureFlagServiceUrl=http://feature-flags:8080
+  - -S
+  - EnableFetchRulesFromPAS=1
+  - -S
+  - PASRulesTags=common|app
+  - -S
+  - PASServiceUrl=http://policy-administrations:7070
+  - -S
+  - EnableGroupsService=1
+  - -S
+  - GroupsServiceUrl=http://identities:8080
+  - -S
+  - EnableAppExport=1
+  - -S
+  - EnableDownloadFromTCS=1
+  - -S
+  - EnableResumableUpload=1
+  - -S
+  - EnableTempContentService=1
+  - -S
+  - TempContentServiceUrl=http://temporary-contents:6080
+  - -S
+  - DirectQueryWorkload=2
+  - -S
+  - EventBusSubscribe=0
+  - -S
+  - STANCluster=messaging-nats-streaming-cluster
+  - -S
+  - STANMaxReconnect=24
+  - -S
+  - STANReconnectWait=5
+  - -S
+  - STANTimeout=10
+  - -S
+  - STANTrace=1
+  - -S
+  - STANUrl=nats://messaging-nats-client:4222
+  - -S
+  - STANUseToken=1
+  - -S
+  - SendAppObjectEvents=1
+  - -S
+  - StatisticsEventIntervalMs=15000
+  - -S
+  - UseEventBus=1
+  - -S
+  - UseSTAN=1
+  - -S
+  - UseStatisticsEventProducer=1
+  - -S
+  - EnvironmentName="example"
+  - -S
+  - RegionName="example"
+  - -S
+  - DocumentTimeout=60
+  - -S
+  - SessionTimeoutSec=1800
+  - -S
+  - SpacesCacheTimeoutSeconds=2
+  - -S
+  - UseSpacesServicePathWithShares=1
+  - -S
+  - UseRedis=1
+  - -S
+  - RedisHost=redis-master
+  - -S
+  - RedisPort=6379
+  - -S
+  - RedisPasswordFile=$(REDIS_PASSWORD_FILE)
+  - -S
+  - RedisConnectTimeoutMs=500
+  - -S
+  - RedisSocketTimeoutMs=500
+  engineTemplateName: engine-template-default
+  env:
+  - name: HTTP_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpProxy
+        name: qliksense-configs
+  - name: HTTPS_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: httpsProxy
+        name: qliksense-configs
+  - name: NO_PROXY
+    valueFrom:
+      configMapKeyRef:
+        key: noProxy
+        name: qliksense-configs
+  - name: MONGODB_URI
+    valueFrom:
+      secretKeyRef:
+        key: mongodbUri
+        name: qliksense-secrets
+  - name: MONGODB_URI_FILE
+    value: /run/secrets/qlik.com/qliksense/mongodbUri
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: redisPassword
+        name: qliksense-secrets
+  - name: REDIS_PASSWORD_FILE
+    value: /run/secrets/qlik.com/qliksense/redisPassword
+  - name: REDIS_ENCRYPTION_KEY
+    valueFrom:
+      secretKeyRef:
+        key: redisEncryptionKey
+        name: qliksense-secrets
+  - name: REDIS_ENCRYPTION_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+  - name: MINIO_ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        key: minioRootUser
+        name: qliksense-secrets
+  - name: MINIO_ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: minioRootPassword
+        name: qliksense-secrets
+  - name: FORT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortId
+        name: qliksense-configs
+  - name: FORT_IOT_CERTIFICATE_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortIotCertificateId
+        name: qliksense-configs
+  - name: FORT_IOT_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORT_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: fortName
+        name: qliksense-configs
+  - name: FORT_ORIGIN_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortOriginUrl
+        name: qliksense-configs
+  - name: FORT_TENANT_URL
+    valueFrom:
+      configMapKeyRef:
+        key: fortTenantUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: iotThingRoleAliasName
+        name: qliksense-configs
+  - name: FORTRESS_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortressId
+        name: qliksense-configs
+  - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: iotCredentialUrl
+        name: qliksense-configs
+  - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+    value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+  - name: FORTRESS_REGION
+    valueFrom:
+      configMapKeyRef:
+        key: iotAwsRegion
+        name: qliksense-configs
+  - name: FORTRESS_THING_CA_FILE
+    value: /run/secrets/qlik.com/qliksense/iotRootCa
+  - name: FORTRESS_THING_CERT_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+  - name: FORTRESS_THING_DATA_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        key: fortressThingDataEndpoint
+        name: qliksense-configs
+  - name: FORTRESS_THING_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+  - name: FORTRESS_THING_NAME
+    valueFrom:
+      configMapKeyRef:
+        key: thingName
+        name: qliksense-configs
+  - name: FORT_WEB_INTEGRATION_ID
+    valueFrom:
+      configMapKeyRef:
+        key: fortWebIntegrationId
+        name: qliksense-configs
+  - name: FORT_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        key: tenantId
+        name: qliksense-configs
+  - name: FORT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: FORT_IOT_PRIVATE_KEY_FILE
+    value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+  - name: JAEGER_DISABLED
+    value: "true"
+  - name: DISABLE_OTLP
+    value: "true"
+  - name: ACCEPT_EULA
+    valueFrom:
+      configMapKeyRef:
+        key: acceptEULA
+        name: qliksense-configs
+  - name: TOKEN_AUTH_PRIVATE_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: tokenAuthPrivateKeyId
+        name: engine-secrets
+  - name: AWS_ACCESS_KEY_ID
+    value: $(MINIO_ROOT_USER)
+  - name: AWS_SECRET_ACCESS_KEY
+    value: $(MINIO_ROOT_PASSWORD)
+  image: ghcr.io/qlik-download/engine:12.1497.0
+  labels:
+    qlik.com/engine-type: qliksense

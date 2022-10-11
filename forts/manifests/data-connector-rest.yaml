@@ -1,0 +1,683 @@
+apiVersion: v1
+data:
+  allowSources: ""
+  dataHost: 0.0.0.0
+  dataPortRangeEnd: "50060"
+  dataPortRangeStart: "50060"
+  logLevel: INFO
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-configs
+  namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "3005"
+    prometheus.io/scrape: "true"
+  labels:
+    action: command
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-cmd
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 3005
+    protocol: TCP
+    targetPort: 3005
+  - name: http-web
+    port: 6384
+    protocol: TCP
+    targetPort: 6384
+  - name: grpc
+    port: 50060
+    protocol: TCP
+    targetPort: 50060
+  selector:
+    action: command
+    app: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "3005"
+    prometheus.io/scrape: "true"
+  labels:
+    action: reload
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-rld
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 3005
+    protocol: TCP
+    targetPort: 3005
+  - name: grpc
+    port: 50060
+    protocol: TCP
+    targetPort: 50060
+  selector:
+    action: reload
+    app: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    action: command
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-cmd
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      action: command
+      app: data-connector-rest
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: data-connector-rest-cmd
+        checksum/configs: 5ebdee669813436d6f04223059a551800157e3f53782354d9d70b0913e5b5d02
+        checksum/secrets: 1d00bd4e53cf078503559b3755a9cefe1411cd2d3f4ff474bdf968b7aa47f483
+      labels:
+        action: command
+        app: data-connector-rest
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: data-connectors
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: DATA_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: dataHost
+              name: data-connector-rest-configs
+        - name: DATA_PORT_RANGE_END
+          valueFrom:
+            configMapKeyRef:
+              key: dataPortRangeEnd
+              name: data-connector-rest-configs
+        - name: DATA_PORT_RANGE_START
+          valueFrom:
+            configMapKeyRef:
+              key: dataPortRangeStart
+              name: data-connector-rest-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: data-connector-rest-configs
+        - name: CONFIG
+          value: /opt/runner/Rest_dotnetcore.json
+        - name: QS_ENVIRONMENT
+          value: QSEOK
+        - name: SERVICE_MODE
+          value: "true"
+        - name: STANDALONE
+          value: "false"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/data-connector-rest:2.157.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        name: data-connector-rest
+        ports:
+        - containerPort: 3005
+          name: http
+          protocol: TCP
+        - containerPort: 50060
+          name: grpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: data-connector-rest-secrets
+        secret:
+          secretName: data-connector-rest-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    action: reload
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest-rld
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      action: reload
+      app: data-connector-rest
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: data-connector-rest-rld
+        checksum/configs: 5ebdee669813436d6f04223059a551800157e3f53782354d9d70b0913e5b5d02
+        checksum/secrets: 1d00bd4e53cf078503559b3755a9cefe1411cd2d3f4ff474bdf968b7aa47f483
+      labels:
+        action: reload
+        app: data-connector-rest
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: data-connectors
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: DATA_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: dataHost
+              name: data-connector-rest-configs
+        - name: DATA_PORT_RANGE_END
+          valueFrom:
+            configMapKeyRef:
+              key: dataPortRangeEnd
+              name: data-connector-rest-configs
+        - name: DATA_PORT_RANGE_START
+          valueFrom:
+            configMapKeyRef:
+              key: dataPortRangeStart
+              name: data-connector-rest-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: data-connector-rest-configs
+        - name: CONFIG
+          value: /opt/runner/Rest_dotnetcore.json
+        - name: ENABLE_SHUTDOWN_DRAIN
+          value: "false"
+        - name: MAX_ACTIVE_RELOADS
+          value: "3"
+        - name: QS_ENVIRONMENT
+          value: QSEOK
+        - name: SERVICE_MODE
+          value: "true"
+        - name: SHUTDOWN_TIMEOUT
+          value: "30"
+        - name: STANDALONE
+          value: "false"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/data-connector-rest:2.157.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        name: data-connector-rest
+        ports:
+        - containerPort: 3005
+          name: http
+          protocol: TCP
+        - containerPort: 50060
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: http
+          initialDelaySeconds: 2
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data-connector-rest-secrets
+        secret:
+          secretName: data-connector-rest-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
+  labels:
+    app: data-connector-rest
+    app.kubernetes.io/component: data-connector-rest
+    app.kubernetes.io/instance: data-connector-rest
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.157.0
+    chart: data-connector-rest-2.157.0
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connector-rest
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: data-connector-rest-cmd
+            port:
+              number: 6384
+        path: /customdata/64/(QvRestConnector)/(.+)
+        pathType: ImplementationSpecific

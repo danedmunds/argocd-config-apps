@@ -1,0 +1,757 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: odag
+subjects:
+- kind: ServiceAccount
+  name: odag
+  namespace: default
+---
+apiVersion: v1
+data:
+  collectionsUri: http://collections:8080
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  engineUri: http://engine:9076
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080
+  logLevel: info
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://messaging-nats-client:4222
+  qixSessionsUri: http://qix-sessions:8080
+  spacesUri: http://odag-spaces:6080
+  usersUri: http://identities:8080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvb2RhZw==
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: Si1RQzYyYUJESnJrYkpYeEVpWml4WTF3bFB3QWpKRGVaSElnRV9Eam5Ydw==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9098"
+    prometheus.io/scrape: "true"
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+spec:
+  ports:
+  - name: odag
+    port: 9098
+    protocol: TCP
+    targetPort: 9098
+  selector:
+    app: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odag
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: odag
+        checksum/configs: b42c0ee1c03c97a1204aef312f1c48969815b2026eb43e1f22b0923f34dbb18a
+        checksum/secrets: 319d4b1847626607b506dbc57d7a917da5ed865af967153c166b75137b31063f
+      labels:
+        app: odag
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: analytics
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/odag/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/odag/tokenAuthPrivateKeyId
+        - name: COLLECTIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: collectionsUri
+              name: odag-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: odag-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: odag-configs
+        - name: ENGINE_URI
+          valueFrom:
+            configMapKeyRef:
+              key: engineUri
+              name: odag-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: odag-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: odag-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: odag-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: odag-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: odag-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: odag-configs
+        - name: QIX_SESSIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: qixSessionsUri
+              name: odag-configs
+        - name: SPACES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: spacesUri
+              name: odag-configs
+        - name: USERS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: usersUri
+              name: odag-configs
+        - name: AUTH_ENABLED
+          value: "true"
+        - name: NATS_ENABLED
+          value: "true"
+        - name: RELOAD_WORKLOAD_TYPE
+          value: odag
+        - name: TOKEN_AUTH_ENABLED
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/odag:2.34.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9098
+        name: odag
+        ports:
+        - containerPort: 9098
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9098
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/odag
+          name: odag-secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      - args:
+        - --election=odag
+        - --election-namespace=default
+        - --http=0.0.0.0:4040
+        env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: PORT
+          value: "4040"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/leader-elector:1.12.7
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4040
+        name: election
+        ports:
+        - containerPort: 4040
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      serviceAccountName: odag
+      volumes:
+      - name: odag-secrets
+        secret:
+          secretName: odag-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/odag/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/cors-allow-headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,Qlik-Web-Integration-ID,Qlik-CSRF-Token,X-Qlik-ServerNodeId,X-Qlik-XrfKey
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/odag/openapi
+        pathType: ImplementationSpecific
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/v1/(.*) /v1/$1 break;
+    nginx.ingress.kubernetes.io/cors-allow-headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,Qlik-Web-Integration-ID,Qlik-CSRF-Token,X-Qlik-ServerNodeId,X-Qlik-XrfKey
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: odag
+    app.kubernetes.io/component: odag
+    app.kubernetes.io/instance: odag
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 2.34.0
+    chart: odag-2.34.0
+    domain: analytics
+    heritage: Helm
+    release: qlik-default
+  name: odag-api
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/v1/odag
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/v1/odaglinks
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/v1/odagisavailable
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/v1/odagsettings
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: odag
+            port:
+              number: 9098
+        path: /api/v1/odagrequests
+        pathType: ImplementationSpecific

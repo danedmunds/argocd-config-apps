@@ -1,0 +1,746 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - deployments
+  - pods
+  - configmaps
+  - events
+  - horizontalpodautoscalers
+  - leases
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  - extensions
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - qixengine.qlik.com
+  resources:
+  - engines
+  - engines/finalizers
+  - engines/status
+  - enginevariants
+  - enginevariants/status
+  - enginevariants/finalizers
+  - enginetemplates
+  - enginetemplates/finalizers
+  - enginehpas
+  - enginehpas/status
+  - enginehpas/finalizers
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: qix-sessions
+subjects:
+- kind: ServiceAccount
+  name: qix-sessions
+  namespace: default
+---
+apiVersion: v1
+data:
+  appPlacement: |-
+    selectors:
+    - qlik.com/default
+  quotas: 'tenants: null'
+  redisUri: redis-master:6379
+  variantSizeMapping: "null"
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: qix-sessions-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodb-uri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvcWl4LXNlc3Npb25z
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: qix-sessions-mongoconfig
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+data:
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: PLACEHOLDER
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  name: qix-sessions-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    pprof/port: "8080"
+    pprof/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+    prometheus.io/scrape_high_cardinality: "true"
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+spec:
+  ports:
+  - name: qix-sessions
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9091"
+    prometheus.io/scrape: "true"
+  labels:
+    app: qix-sessions-crd-metrics
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions-crd-metrics
+  namespace: default
+spec:
+  ports:
+  - name: crd-metrics
+    port: 9091
+    protocol: TCP
+    targetPort: 9091
+  selector:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9090"
+    prometheus.io/scrape: "true"
+  labels:
+    app: qix-sessions-operator-metrics
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions-operator-metrics
+  namespace: default
+spec:
+  ports:
+  - name: oper-metrics
+    port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qix-sessions
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: qix-sessions
+      labels:
+        app: qix-sessions
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - command:
+        - /qix-sessions
+        - --logtostderr
+        env:
+        - name: TERMINATION_GRACE_PERIOD_SECONDS
+          value: "30"
+        - name: LOG_LEVEL
+          value: debug
+        - name: AUTH_ENABLED
+          value: "false"
+        - name: AUTH_JWKS_URI
+          value: http://keys:8080/v1/keys/qlik.api.internal
+        - name: AUTH_JWKS_REFRESH_INTERVAL_MINUTES
+          value: null
+        - name: AUTH_JWT_AUD
+          value: qlik.api.internal
+        - name: AUTH_JWT_ISS
+          value: qlik.api.internal
+        - name: APP_SERVICE_URI
+          value: http://engine:9076
+        - name: FEATURE_FLAGS_URI
+          value: http://feature-flags:8080
+        - name: DEPENDENT_SERVICES_READINESS_CHECK_ENABLED
+          value: "true"
+        - name: DEBUG_ENDPOINT_ENABLED
+          value: "false"
+        - name: DEPENDENCIES_HEALTHCHECK_TIMEOUT
+          value: "5000"
+        - name: MONITOR_UPDATE_FREQUENCY
+          value: "30"
+        - name: ENTRY_SELECTOR_CACHE_TTL_SECONDS
+          value: "60"
+        - name: ENGINE_SCALING_WATCH_INTERVAL_SECONDS
+          value: "30"
+        - name: ENGINE_SCORE_RANGE
+          value: null
+        - name: MAX_AVAILABLE_ENGINE_REPLICAS
+          value: "10"
+        - name: AVAILABLE_ENGINES_PERCENTAGE
+          value: "25"
+        - name: SCALE_DOWN_ENGINES_PERCENTAGE
+          value: null
+        - name: REDIS_DB
+          value: "0"
+        - name: REDIS_SENTINEL_ENABLED
+          value: "false"
+        - name: REDIS_SENTINEL_MASTERSET
+          value: qix-sessions-redis-master
+        - name: LOCK_EXPIRATION_SECONDS
+          value: "30"
+        - name: LOCK_MAX_RETRIES
+          value: "100"
+        - name: LOCK_RETRY_INTERVAL
+          value: "50"
+        - name: MESSAGING_ENABLED
+          value: "true"
+        - name: NATS_SERVER_ADDRESS
+          value: messaging-nats-client
+        - name: NATS_TOKEN_AUTH_ENABLED
+          value: "true"
+        - name: STAN_CLUSTER_ID
+          value: messaging-nats-streaming-cluster
+        - name: STAN_ENGINE_EVENT_CHANNEL
+          value: system-events.engine.app
+        - name: STAN_TENANT_EVENT_CHANNEL
+          value: system-events.tenants
+        - name: STAN_TENANT_EVENTS_ENABLED
+          value: "true"
+        - name: STAN_QIX_SESSIONS_RELAY_EVENT_CHANNEL
+          value: internal-events.qix-sessions
+        - name: REUSABLE_ENGINE_MAX_SCORE_CONSUMERS
+          value: "90"
+        - name: REUSABLE_ENGINE_MAX_SCORE_EDITORS
+          value: "95"
+        - name: ENABLE_TRACING
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: ENGINE_SYNCHRONIZATION_INTERVAL_SECONDS
+          value: "30"
+        - name: ENGINE_VARIANT_GENERAL
+          value: engine-variant-qliksense
+        - name: ENGINE_VARIANT_QLIKVIEW
+          value: null
+        - name: ENGINE_VARIANT_RELOAD
+          value: sense-reload-engine-variant
+        - name: TOKEN_URI
+          value: http://edge-auth:8080
+        - name: LICENSES_URI
+          value: http://licenses:9200
+        - name: APP_CRASH_RECORD_TTL_SECONDS
+          value: "604800"
+        - name: ENGINE_ROLLING_UPDATE_MAX_SURGE
+          value: 25%
+        - name: ENGINE_ROLLING_UPDATE_MAX_UNAVAILABLE
+          value: 25%
+        - name: DEFAULT_APP_SIZE_LIMIT_BYTES
+          value: "5_368_709_120"
+        - name: OAPE_ENGINE_SIZE_THRESHOLD_BYTES
+          value: null
+        - name: APP_SIZE_OVERHEAD_MULTIPLIER
+          value: "2"
+        - name: SESSION_RECORD_DESTROYED_TTL
+          value: "3600"
+        - name: EXPIRED_SESSION_KEEP_ALIVE_SECONDS
+          value: "60"
+        - name: SESSIONS_CLEANUP_SCHEDULE_SECONDS
+          value: "60"
+        - name: IGNORE_DISABLED_TENANT_SELECTOR
+          value: "false"
+        - name: LICENSE_CACHE_ENABLED
+          value: "true"
+        - name: GLOBAL_QUOTA
+          value: "1000"
+        - name: DEFAULT_GLOBAL_WORKLOAD_QUOTA
+          value: "5"
+        - name: DEFAULT_TENANT_QUOTA_GROUP_QUOTA
+          value: "1000"
+        - name: DELETE_OOM_KILLED_PODS
+          value: "false"
+        - name: OOM_KILL_EVENT_EXPIRY_SECONDS
+          value: "90"
+        - name: TRACK_APP_CRASH_RECORDS_BY_OOM_KILL
+          value: "false"
+        - name: MAX_ENTRY_LAST_UPDATED_SECONDS
+          value: "15"
+        - name: MONGO_MIN_POOL_SIZE
+          value: "10"
+        - name: MONGO_MAX_IDLE_TIME_SECONDS
+          value: "1800"
+        - name: DIRECT_QUERY_PLACEMENT_ENABLED
+          value: "false"
+        - name: ENABLE_MEM_SATURATED_SCORING
+          value: "false"
+        - name: OAPE_ENABLE_LARGE_RELOADS
+          value: null
+        - name: LARGEST_DEDICATED_RELOAD_APP_SIZE_BYTES
+          value: "53_687_091_200"
+        - name: ENABLE_COMMON_QUEUE
+          value: "false"
+        - name: APP_ENGINE_SIZE_ALGORITHM_VERSION
+          value: null
+        - name: APP_SIZE_V2_RELOAD_CACHE
+          value: null
+        - name: APP_SIZE_V2_RELOAD_CACHE_MULTIPLIER
+          value: "2"
+        - name: APP_SIZE_V2_EVALUATE_ENGINE_SIZE
+          value: null
+        - name: QUEUE_ENABLE_QUOTA_MET_CACHE
+          value: "false"
+        - name: QUOTA_MET_CACHE_TTL_SECONDS
+          value: "30"
+        - name: QUEUE_SESSION_RESERVATION_TTL_SECONDS
+          value: "30"
+        - name: QUEUE_MAX_WORKER_PROCESSES
+          value: "1"
+        - name: QUEUE_FETCHER_INTERVAL_MILLISECONDS
+          value: "250"
+        - name: QUEUE_EVICTION_TIMEOUT_SECONDS
+          value: "10800"
+        - name: QUEUE_REQUEUE_ON_FAILURE
+          value: "true"
+        - name: QUEUE_KEEP_ALIVE_SECONDS
+          value: "15"
+        - name: ENABLE_QUOTAS_FROM_LICENSE
+          value: "false"
+        - name: ENABLE_LOAD_SHEDDING
+          value: "false"
+        - name: ENABLE_SIZE_BASED_EXISTING_PLACEMENT
+          value: "false"
+        - name: ENABLE_APP_LOAD_ERR_SESSION_DELETION
+          value: "false"
+        - name: ENGINE_ENTRY_REUSE_STALE_LIMIT_SECONDS
+          value: "300"
+        - name: SMT_COMPLIANT_USERS
+          value: ""
+        - name: ENABLE_ENGINE_POD_NAME
+          value: "false"
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        - name: TOKEN_AUTH_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: tokenAuthPrivateKey
+              name: qix-sessions-secrets
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: tokenAuthPrivateKeyId
+              name: qix-sessions-secrets
+        - name: CONFIGMAP_NAME
+          value: qix-sessions-configs
+        - name: SELECTORS_CONFIGMAP_NAME
+          value: qix-sessions-configs
+        - name: MONGO_URI
+          value: $(MONGODB_URI)
+        - name: REDIS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: redisUri
+              name: qix-sessions-configs
+        - name: REDIS_ADDR
+          value: $(REDIS_URI)
+        image: ghcr.io/qlik-download/qix-sessions:10.109.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8080
+          timeoutSeconds: 5
+        name: qix-sessions
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /secrets
+          name: secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - |
+          cat << 'EOF' > /secrets/service-key.yaml
+          privateKey: "$(TOKEN_AUTH_PRIVATE_KEY)"
+          kid: "$(TOKEN_AUTH_PRIVATE_KEY_ID)"
+          authURL: "http://edge-auth:8080/v1/internal-tokens"
+          algorithm: "ES384"
+          issuer: "qlik.api.internal/qix-sessions"
+          subject: "qix-sessions"
+          EOF
+        env:
+        - name: TOKEN_AUTH_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: tokenAuthPrivateKey
+              name: qix-sessions-secrets
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: tokenAuthPrivateKeyId
+              name: qix-sessions-secrets
+        image: ghcr.io/qlik-download/alpine:3.6
+        name: secret
+        volumeMounts:
+        - mountPath: /secrets
+          name: secrets
+      serviceAccountName: qix-sessions
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+      - configMap:
+          name: qix-sessions-configs
+        name: qix-sessions-configs
+      - emptyDir: {}
+        name: secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(.*) /$1 break;
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  labels:
+    app: qix-sessions
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    chart: qix-sessions-10.109.2
+    heritage: Helm
+    release: qlik-default
+  name: qix-sessions
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: qix-sessions
+            port:
+              number: 8080
+        path: /api/v1/selectors
+        pathType: Prefix
+      - backend:
+          service:
+            name: qix-sessions
+            port:
+              number: 8080
+        path: /api/v1/engines
+        pathType: Prefix

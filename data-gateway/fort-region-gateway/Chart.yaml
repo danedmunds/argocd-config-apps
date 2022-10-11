@@ -1,9 +1,9 @@
 apiVersion: v2
 name: fort-region-gateway
 type: application
-version: 0.2.4
-appVersion: 0.2.4
+version: 0.2.5
+appVersion: 0.2.5
 dependencies:
 - name: fort-region-gateway
-  version: 0.2.4
+  version: 0.2.5
   repository: oci://ghcr.io/qlik-download/helm

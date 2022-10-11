@@ -1,0 +1,507 @@
+apiVersion: v1
+data:
+  accessControlsList: any
+  accessControlsURI: http://data-connections-access-controls:5080
+  accessControlsUri: http://access-controls:5080
+  dataConnectorNfsUri: data-connector-nfs:50051
+  datafilesUri: http://qix-datafiles:8080
+  dcaasUri: http://dcaas:9026
+  edgeAuthUri: http://edge-auth:8080
+  encryptionUri: http://encryption:8080
+  featureFlagsUri: http://feature-flags:8080
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+  keysUri: http://keys:8080/v1/keys/qlik.api.internal
+  logLevel: info
+  natsStreamingClusterId: messaging-nats-streaming-cluster
+  natsUri: nats://messaging-nats-client:4222
+  policyDecisionsUri: http://policy-decisions:5080
+  qriVersion: V3
+  redisUri: redis-master:6379
+  redisUriOld: redis-master:6379
+  reservedConnections: QlikAutoMLConnector,DataFiles,MyDataFiles,DataPrepAppCache,6f93cda1-15c4-4321-94e7-ac3cdcab5e4c,ee6a390c-5d33-11e8-9c2d-fa7ae01bbebc,91030040-c91a-4c59-913f-2d8e89e3df88
+  spacesUri: http://spaces:6080
+kind: ConfigMap
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 5.3.1
+    chart: data-connections-5.3.1
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connections-configs
+  namespace: default
+---
+apiVersion: v1
+data:
+  mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvZGNzP3NzbD1mYWxzZQ==
+  redisEncryptionKey: TkdrVXAwVkRKdGMzeGl5Qw==
+  redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
+  tokenAuthPrivateKey: PLACEHOLDER
+  tokenAuthPrivateKeyId: SW1qdzY3a2RTY0xOZlBQcmFnR3dsVFNaZjRFX1h2b05DUjNJSzZCRVRHaw==
+kind: Secret
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 5.3.1
+    chart: data-connections-5.3.1
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connections-secrets
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    prometheus.io/port: "9011"
+    prometheus.io/scrape: "true"
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 5.3.1
+    chart: data-connections-5.3.1
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connections
+  namespace: default
+spec:
+  ports:
+  - name: data-connections
+    port: 9011
+    protocol: TCP
+    targetPort: 9011
+  selector:
+    app: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    release: qlik-default
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 5.3.1
+    chart: data-connections-5.3.1
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connections
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-connections
+      app.kubernetes.io/name: qliksense
+      app.kubernetes.io/part-of: qliksense
+      release: qlik-default
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/name: data-connections
+        checksum/configs: 8bffc673d7305532b9cc8e7be03c8ef91a644440c6bcee5965faf1ba1d775196
+        checksum/secrets: 32bea04ec7d0b8c680f35f282198ef2de3bd74728aeac2b7c81410a4b90076e8
+      labels:
+        app: data-connections
+        app.kubernetes.io/name: qliksense
+        app.kubernetes.io/part-of: qliksense
+        domain: data-connectors
+        messaging-nats-client: "true"
+        release: qlik-default
+    spec:
+      containers:
+      - env:
+        - name: NATS_CLIENT_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: TOKEN_AUTH_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/data-connections/tokenAuthPrivateKey
+        - name: TOKEN_AUTH_PRIVATE_KEY_ID_FILE
+          value: /run/secrets/qlik.com/data-connections/tokenAuthPrivateKeyId
+        - name: ACCESS_CONTROLS_LIST
+          valueFrom:
+            configMapKeyRef:
+              key: accessControlsList
+              name: data-connections-configs
+        - name: ACCESS_CONTROLS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: accessControlsURI
+              name: data-connections-configs
+        - name: ACCESS_CONTROLS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: accessControlsUri
+              name: data-connections-configs
+        - name: DATA_CONNECTOR_NFS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dataConnectorNfsUri
+              name: data-connections-configs
+        - name: DATAFILES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: datafilesUri
+              name: data-connections-configs
+        - name: DCAAS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: dcaasUri
+              name: data-connections-configs
+        - name: EDGE_AUTH_URI
+          valueFrom:
+            configMapKeyRef:
+              key: edgeAuthUri
+              name: data-connections-configs
+        - name: ENCRYPTION_URI
+          valueFrom:
+            configMapKeyRef:
+              key: encryptionUri
+              name: data-connections-configs
+        - name: FEATURE_FLAGS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: featureFlagsUri
+              name: data-connections-configs
+        - name: INGRESS_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              key: ingressAuthUrl
+              name: data-connections-configs
+        - name: KEYS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: keysUri
+              name: data-connections-configs
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: logLevel
+              name: data-connections-configs
+        - name: NATS_STREAMING_CLUSTER_ID
+          valueFrom:
+            configMapKeyRef:
+              key: natsStreamingClusterId
+              name: data-connections-configs
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: natsUri
+              name: data-connections-configs
+        - name: POLICY_DECISIONS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: policyDecisionsUri
+              name: data-connections-configs
+        - name: QRI_VERSION
+          valueFrom:
+            configMapKeyRef:
+              key: qriVersion
+              name: data-connections-configs
+        - name: REDIS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: redisUri
+              name: data-connections-configs
+        - name: REDIS_URI_OLD
+          valueFrom:
+            configMapKeyRef:
+              key: redisUriOld
+              name: data-connections-configs
+        - name: RESERVED_CONNECTIONS
+          valueFrom:
+            configMapKeyRef:
+              key: reservedConnections
+              name: data-connections-configs
+        - name: SPACES_URI
+          valueFrom:
+            configMapKeyRef:
+              key: spacesUri
+              name: data-connections-configs
+        - name: ENABLE_CACHE
+          value: featureflags:true,credentials:true,qix-datafiles:true
+        - name: ENABLE_CRYPTO
+          value: "true"
+        - name: ENABLE_INDEX_BUILD
+          value: dataconnections:false,datacredentials:true,credmapping:true
+        - name: ENABLE_JWT_AUTH
+          value: "true"
+        - name: ENABLE_NATS
+          value: "true"
+        - name: JAEGER_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTLP_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HTTP_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpProxy
+              name: qliksense-configs
+        - name: HTTPS_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: httpsProxy
+              name: qliksense-configs
+        - name: NO_PROXY
+          valueFrom:
+            configMapKeyRef:
+              key: noProxy
+              name: qliksense-configs
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              key: mongodbUri
+              name: qliksense-secrets
+        - name: MONGODB_URI_FILE
+          value: /run/secrets/qlik.com/qliksense/mongodbUri
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redisPassword
+              name: qliksense-secrets
+        - name: REDIS_PASSWORD_FILE
+          value: /run/secrets/qlik.com/qliksense/redisPassword
+        - name: REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: redisEncryptionKey
+              name: qliksense-secrets
+        - name: REDIS_ENCRYPTION_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/redisEncryptionKey
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: minioRootUser
+              name: qliksense-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: minioRootPassword
+              name: qliksense-secrets
+        - name: FORT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortId
+              name: qliksense-configs
+        - name: FORT_IOT_CERTIFICATE_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortIotCertificateId
+              name: qliksense-configs
+        - name: FORT_IOT_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORT_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: fortName
+              name: qliksense-configs
+        - name: FORT_ORIGIN_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortOriginUrl
+              name: qliksense-configs
+        - name: FORT_TENANT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: fortTenantUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_THING_ROLE_ALIAS_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: iotThingRoleAliasName
+              name: qliksense-configs
+        - name: FORTRESS_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortressId
+              name: qliksense-configs
+        - name: FORTRESS_DEVICE_CREDENTIAL_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: iotCredentialUrl
+              name: qliksense-configs
+        - name: FORTRESS_IOT_CREDENTIAL_ENDPOINT
+          value: https://$(FORTRESS_DEVICE_CREDENTIAL_ENDPOINT)
+        - name: FORTRESS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: iotAwsRegion
+              name: qliksense-configs
+        - name: FORTRESS_THING_CA_FILE
+          value: /run/secrets/qlik.com/qliksense/iotRootCa
+        - name: FORTRESS_THING_CERT_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingCert
+        - name: FORTRESS_THING_DATA_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: fortressThingDataEndpoint
+              name: qliksense-configs
+        - name: FORTRESS_THING_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotFortThingPrivateKey
+        - name: FORTRESS_THING_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: thingName
+              name: qliksense-configs
+        - name: FORT_WEB_INTEGRATION_ID
+          valueFrom:
+            configMapKeyRef:
+              key: fortWebIntegrationId
+              name: qliksense-configs
+        - name: FORT_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: tenantId
+              name: qliksense-configs
+        - name: FORT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: FORT_IOT_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/qliksense/iotThingPrivateKey
+        - name: JAEGER_DISABLED
+          value: "true"
+        - name: DISABLE_OTLP
+          value: "true"
+        image: ghcr.io/qlik-download/data-connections:5.3.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        name: data-connections
+        ports:
+        - containerPort: 9011
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+        volumeMounts:
+        - mountPath: /run/secrets/qlik.com/data-connections
+          name: data-connections-secrets
+          readOnly: true
+        - mountPath: /etc/ssl/certs
+          name: ca-certificates
+        - mountPath: /run/secrets/qlik.com/qliksense
+          name: qliksense-secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: artifactory-docker-secret
+      volumes:
+      - name: data-connections-secrets
+        secret:
+          secretName: data-connections-secrets
+      - name: ca-certificates
+        persistentVolumeClaim:
+          claimName: ca-certificates
+      - name: qliksense-secrets
+        secret:
+          secretName: qliksense-secrets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite (?i)/api/(v[0-9])/dc-(.*) /$1/$2 break;
+      rewrite (?i)/api/(v[0-9])/(data-.*) /$1/$2 break;
+  labels:
+    app: data-connections
+    app.kubernetes.io/component: data-connections
+    app.kubernetes.io/instance: data-connections
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/part-of: qliksense
+    app.kubernetes.io/version: 5.3.1
+    chart: data-connections-5.3.1
+    domain: data-connectors
+    heritage: Helm
+    release: qlik-default
+  name: data-connections
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: data-connections
+            port:
+              number: 9011
+        path: /api/v1/dc-dataconnections
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-connections
+            port:
+              number: 9011
+        path: /api/v1/dc-datacredentials
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-connections
+            port:
+              number: 9011
+        path: /api/v1/data-connections
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: data-connections
+            port:
+              number: 9011
+        path: /api/v1/data-credentials
+        pathType: ImplementationSpecific
