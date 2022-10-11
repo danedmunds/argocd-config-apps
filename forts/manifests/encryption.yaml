@@ -20,8 +20,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
@@ -46,8 +46,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
@@ -71,8 +71,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
@@ -105,8 +105,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
@@ -124,8 +124,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: encryption
-        checksum/configs: a25c9d4bf6d9ca092043c74fc580b47643985f21bdc0a377fd63e4adbac7f761
-        checksum/secrets: 7a548ef2303e13cedf5842c62fdfcd12f8931673ce86033795c206c45a026375
+        checksum/configs: 7887ab61e03f4c26808c7ceccf700c227eb06cc76255e65cad452c3457a922f9
+        checksum/secrets: 9e2902b7d1539a3787bf63791371f0820378b60c76c98d041f7b70c0bde3cb38
       labels:
         app: encryption
         app.kubernetes.io/name: qliksense
@@ -335,7 +335,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-download/encryption:6.0.25
+        image: ghcr.io/qlik-download/encryption:6.0.27
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -386,8 +386,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
@@ -422,8 +422,8 @@ metadata:
     app.kubernetes.io/instance: encryption
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 6.0.25
-    chart: encryption-6.0.25
+    app.kubernetes.io/version: 6.0.27
+    chart: encryption-6.0.27
     domain: qcs-infra
     heritage: Helm
     release: qlik-default
