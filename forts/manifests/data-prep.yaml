@@ -3,7 +3,7 @@ data:
   dataConnectionsUri: http://data-connections:9011
   edgeAuthUri: http://edge-auth:8080
   featureFlagsUri: http://feature-flags:8080
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   keysUri: http://keys:8080
   logLevel: verbose
   precedentsUri: http://precedents:9054
@@ -125,7 +125,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: data-prep
-        checksum/configs: 5bdcdd5c1e934e7a8b80f93b25b61f57144b6d4f7d839ed3be156cdf7bd87475
+        checksum/configs: 7e543b0d4488d32cfcd5dfcaf590c82de19a16e40441981c8bbe141923f4191d
         checksum/secrets: 2f5932b01e15c5d732504191e7e61147cc6cc0d91bb26f8f0b7569aa8248cbf2
       labels:
         app: data-prep
@@ -409,7 +409,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite (?i)/api/dataprepservice/(.*) /$1 break;
       rewrite (?i)/dataprepservice/(.*) /$1 break;

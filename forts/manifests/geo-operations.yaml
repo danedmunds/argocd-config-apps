@@ -22,8 +22,8 @@ metadata:
     app.kubernetes.io/instance: geo-operations
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 2.26.1
-    chart: geo-operations-2.26.1
+    app.kubernetes.io/version: 2.27.0
+    chart: geo-operations-2.27.0
     heritage: Helm
     release: qlik-default
   name: geo-operations-configs
@@ -46,8 +46,8 @@ metadata:
     app.kubernetes.io/instance: geo-operations
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 2.26.1
-    chart: geo-operations-2.26.1
+    app.kubernetes.io/version: 2.27.0
+    chart: geo-operations-2.27.0
     heritage: Helm
     release: qlik-default
   name: geo-operations-secrets
@@ -70,8 +70,8 @@ metadata:
     app.kubernetes.io/instance: geo-operations
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 2.26.1
-    chart: geo-operations-2.26.1
+    app.kubernetes.io/version: 2.27.0
+    chart: geo-operations-2.27.0
     heritage: Helm
     release: qlik-default
   name: geo-operations
@@ -107,8 +107,8 @@ metadata:
     app.kubernetes.io/instance: geo-operations
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 2.26.1
-    chart: geo-operations-2.26.1
+    app.kubernetes.io/version: 2.27.0
+    chart: geo-operations-2.27.0
     heritage: Helm
     release: qlik-default
   name: geo-operations
@@ -125,8 +125,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: geo-operations
-        checksum/configs: da364c5d30d355a41c55c5301be9fcac73703108197825578a385ec40efdbca0
-        checksum/secrets: 68e72985daf3fa7b60831be3181cceea8f1ca6309f906944782e6a4240906bc6
+        checksum/configs: 420a03c6eb26d10b55582ffa9fe94b8270a4f15ea05d831fe33b0404c4521d68
+        checksum/secrets: 40d0c4cb17fcebab882b03e4190b026aa7372ffe28afccde8e24b4a9205c1a8e
       labels:
         app: geo-operations
         app.kubernetes.io/name: qliksense
@@ -334,7 +334,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-download/geo-operations-service:2.26.1
+        image: ghcr.io/qlik-download/geo-operations-service:2.27.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -383,8 +383,8 @@ metadata:
     app.kubernetes.io/instance: geo-operations
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 2.26.1
-    chart: geo-operations-2.26.1
+    app.kubernetes.io/version: 2.27.0
+    chart: geo-operations-2.27.0
     heritage: Helm
     release: qlik-default
   name: geo-operations

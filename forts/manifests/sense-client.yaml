@@ -35,7 +35,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  assetsUrl: 7.780.0/
+  assetsUrl: 7.781.0/
   cspFallback: 'default-src ''none''; base-uri ''self''; img-src ''self'' data: maps.qlikcloud.com
     ibasemaps-api.arcgis.com cdn.pendo.io app.pendo.io pendo-static-5763789454311424.storage.googleapis.com
     data.pendo.io *.gravatar.com *.wp.com *.googleusercontent.com cdn.qlik-stage.com
@@ -60,7 +60,7 @@ data:
   ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   productInfo: '{ "composition": { "productName": "Qlik Cloud Services", "senseId":
     "QlikCloudServices", "releaseLabel": "-", "deploymentEnvironment": "dev" }, "components":
-    [{ "component": "Client", "version": "7.780.0" }], "externalUrls": { "serverHelpBaseUrl":
+    [{ "component": "Client", "version": "7.781.0" }], "externalUrls": { "serverHelpBaseUrl":
     "http://help.qlik.com/en-US/cloud-services/csh/", "personalHelpBaseUrl": "http://help.qlik.com/en-US/cloud-services/csh/",
     "cloudBaseUrl": "https://qlikcloud.com/", "cloudUploadUrl": "https://qlikcloud.com/upload?",
     "personalUpgradeBase": "qlik.com/QlikSenseDesktopUpgrade", "personalUpgradeUrl":
@@ -79,8 +79,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -101,8 +101,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -126,8 +126,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -160,8 +160,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -179,8 +179,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: sense-client
-        checksum/configs: 7684da5ebbfbbe902fc062d99301553f63dc2e9d8968858a2f259e513ae6e3ae
-        checksum/secrets: c66cd42d6473f865feb67f1c605ae1f5c3bfb40bf15db5a3399fdc98648efc89
+        checksum/configs: 24c87d9e1e7cbb03de48f5fa7d08cbd0219a36d0e64d0f72b6eb3caa8c0d7bc7
+        checksum/secrets: 7c6f9211dd3792ca6a77528d414efcc61480a96de52f1748c6faf5b343788166
       labels:
         app: sense-client
         app.kubernetes.io/name: qliksense
@@ -372,7 +372,7 @@ spec:
           value: "true"
         - name: DISABLE_OTLP
           value: "true"
-        image: ghcr.io/qlik-download/sense-client:7.780.0
+        image: ghcr.io/qlik-download/sense-client:7.781.0
         imagePullPolicy: IfNotPresent
         name: sense-client
         ports:
@@ -418,8 +418,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -482,8 +482,8 @@ metadata:
     app.kubernetes.io/instance: sense-client
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 7.780.0
-    chart: sense-client-7.780.0
+    app.kubernetes.io/version: 7.781.0
+    chart: sense-client-7.781.0
     domain: analytics
     heritage: Helm
     release: qlik-default

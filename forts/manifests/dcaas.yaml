@@ -7,7 +7,7 @@ data:
   connectorsConfig: '{"connectors":[]}'
   dataConnectionsUri: http://data-connections:9011
   featureFlagsUri: http://feature-flags:8080
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   keysUri: http://keys:8080
   logLevel: info
   natsStreamingClusterId: dcaas-nats-streaming-cluster
@@ -28,8 +28,8 @@ metadata:
     app.kubernetes.io/instance: dcaas
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 5.4.0
-    chart: dcaas-5.4.0
+    app.kubernetes.io/version: 5.5.0
+    chart: dcaas-5.5.0
     domain: data-connectors
     heritage: Helm
     release: qlik-default
@@ -54,8 +54,8 @@ metadata:
     app.kubernetes.io/instance: dcaas
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 5.4.0
-    chart: dcaas-5.4.0
+    app.kubernetes.io/version: 5.5.0
+    chart: dcaas-5.5.0
     domain: data-connectors
     heritage: Helm
     release: qlik-default
@@ -79,8 +79,8 @@ metadata:
     app.kubernetes.io/instance: dcaas
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 5.4.0
-    chart: dcaas-5.4.0
+    app.kubernetes.io/version: 5.5.0
+    chart: dcaas-5.5.0
     domain: data-connectors
     heritage: Helm
     release: qlik-default
@@ -113,8 +113,8 @@ metadata:
     app.kubernetes.io/instance: dcaas
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 5.4.0
-    chart: dcaas-5.4.0
+    app.kubernetes.io/version: 5.5.0
+    chart: dcaas-5.5.0
     domain: data-connectors
     heritage: Helm
     release: qlik-default
@@ -132,8 +132,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: dcaas
-        checksum/configs: 00642e153f0a2ebe14de5016b3f5cb8198b1cd73dd460bdb37fb8c68e665fa96
-        checksum/secrets: 7323d323211f005f7c8485fdc36c99abea5ab41818b133a566c4ae6847d32eae
+        checksum/configs: c01793d5a6b2d9c224a3a28b3375808cd474ab7473ae1d88d34db64ef50a77cb
+        checksum/secrets: e5230549e816af6c1e39185ddbe1c550098054833a455e6535ff706fea024719
       labels:
         app: dcaas
         app.kubernetes.io/name: qliksense
@@ -376,7 +376,7 @@ spec:
           value: $(REDIS_ENCRYPTION_KEY)
         - name: REDIS_ADDR
           value: $(REDIS_URI)
-        image: ghcr.io/qlik-download/dcaas:5.4.0
+        image: ghcr.io/qlik-download/dcaas:5.5.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -426,7 +426,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite (?i)/api/dcaas/(.*) /$1 break;
       rewrite (?i)/dcaas/(.*) /$1 break;
@@ -437,8 +437,8 @@ metadata:
     app.kubernetes.io/instance: dcaas
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 5.4.0
-    chart: dcaas-5.4.0
+    app.kubernetes.io/version: 5.5.0
+    chart: dcaas-5.5.0
     domain: data-connectors
     heritage: Helm
     release: qlik-default

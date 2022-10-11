@@ -3,7 +3,7 @@ data:
   dataHost: 0.0.0.0
   dataPortRangeEnd: "50060"
   dataPortRangeStart: "50060"
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   qwcAllowReferenceConnector: "true"
   qwcLogLevel: INFO
   qwcProxy: ""
@@ -211,7 +211,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: data-connector-qwc-cmd
-        checksum/configs: e47cf8f27a76f6e033e56239a95a69db1e2b041ebee23931fe1de5dfd1da50c5
+        checksum/configs: bf50533e6e2ae16b44a0ce323bd7ed2d1e8378c28590d6ec8fcd796656cfdf90
         checksum/secrets: dc71521ce333e488960c543dec58d4c9a884db526525b5989da2f3d97042990e
       labels:
         action: command
@@ -469,7 +469,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: data-connector-qwc-rld
-        checksum/configs: e47cf8f27a76f6e033e56239a95a69db1e2b041ebee23931fe1de5dfd1da50c5
+        checksum/configs: bf50533e6e2ae16b44a0ce323bd7ed2d1e8378c28590d6ec8fcd796656cfdf90
         checksum/secrets: dc71521ce333e488960c543dec58d4c9a884db526525b5989da2f3d97042990e
       labels:
         action: reload
@@ -742,7 +742,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: data-connector-qwc-web
-        checksum/configs: 74a8cd5ec45c052cd497bf37afbcbe3c5ded98ed666343eae04fd5a8cc92fe03
+        checksum/configs: 0601da3a82f640ab098fc77b5074dc0712b1f91b84deef91b2c0ccec738258f6
         checksum/secrets: dc71521ce333e488960c543dec58d4c9a884db526525b5989da2f3d97042990e
       labels:
         action: web
@@ -933,7 +933,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-signin: https://$host/login?returnto=$escaped_request_uri
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
   labels:
     app: data-connector-qwc

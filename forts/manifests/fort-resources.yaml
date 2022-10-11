@@ -30,30 +30,30 @@ data:
   caCommand: echo "$CUSTOM_CERTS" >> /mnt/certs/ca-certificates.crt
   fortHttpPort: "8080"
   fortHttpsPort: "443"
-  fortId: 62bb6ccdc4600ad84da3df03
-  fortName: val-811-kustomize
-  fortOriginUrl: https://35.182.214.155
-  fortTenantUrl: https://platform-engineering.us.qlik-stage.com
-  fortWebIntegrationId: eyYCXyqAUoGGLhPI5zPu2MMwOOip4wS4
-  fortressId: 62bb6ccdc4600ad84da3df04
-  fortressThingDataEndpoint: aavzcr19ji976-ats.iot.us-east-1.amazonaws.com
+  fortId: PLACEHOLDER
+  fortName: PLACEHOLDER
+  fortOriginUrl: PLACEHOLDER
+  fortTenantUrl: PLACEHOLDER
+  fortWebIntegrationId: PLACEHOLDER
+  fortressId: PLACEHOLDER
+  fortressThingDataEndpoint: PLACEHOLDER
   fsRootDir: /data/qliksense
   httpProxy: ""
   httpsProxy: ""
   imageRegistry: ghcr.io/qlik-download
   ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   ingressClass: nginx
-  iotAwsRegion: us-east-1
-  iotCredentialUrl: c371gpq6ilclsi.credentials.iot.us-east-1.amazonaws.com
-  iotThingRoleAliasName: fort-thing-role-alias-stage-us-east-1
+  iotAwsRegion: PLACEHOLDER
+  iotCredentialUrl: PLACEHOLDER
+  iotThingRoleAliasName: PLACEHOLDER
   logPathPrefix: /data
-  menderServer: https://update.qlik-stage.com
+  menderServer: PLACEHOLDER
   noProxy: ""
   sslCertSecret: default/elastic-infra-tls-secret
   storageClassName: local-storage
   storagePathPrefix: /data/qliksense
-  tenantId: WW9Yl6OoZtNkAPrKRg7yOnLCDJRRnnvQ
-  thingName: 62bb6ccdc4600ad84da3df04
+  tenantId: PLACEHOLDER
+  thingName: PLACEHOLDER
 kind: ConfigMap
 metadata:
   annotations:
@@ -67,22 +67,6 @@ metadata:
     app.kubernetes.io/part-of: qliksense
     release: qlik-default
   name: qliksense-configs
-  namespace: default
----
-apiVersion: v1
-kind: Secret
-metadata:
-  annotations:
-    app.kubernetes.io/instance: qliksense
-    app.kubernetes.io/managed-by: qliksense-operator
-    app.kubernetes.io/name: qliksense
-    app.kubernetes.io/version: PLACEHOLDER
-  labels:
-    app: elastic-infra
-    app.kubernetes.io/name: qliksense
-    app.kubernetes.io/part-of: qliksense
-    release: qlik-default
-  name: elastic-infra-secrets
   namespace: default
 ---
 apiVersion: v1
@@ -114,120 +98,23 @@ apiVersion: v1
 data:
   caCertificates: ""
   dockerConfigJson: ""
-  interactiveIdpClientId: ZDU2ZGYzNTQ1ZTk1MWM3OTY2YjJkMzUzZjI4NjNlNGY=
-  interactiveIdpClientSecret: |
-    OTA0ZThmMjVkNGQ5ODc5ODgzZDU1NTE0MjMwYTUzZGZiZThkZDNiYWM1NWNhNGE2ZDBjYW
-    JiYmFkMDJhYmVlMg==
-  iotFortThingCert: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURXVENDQWtHZ0F3SUJBZ0lVT2ZEcm
-    ZyZmV2S0xoNWxhajc2VHFISFBwWlBrd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1RURkxNRWtH
-    QTFVRUN3eENRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeUJQUFVGdFlYcHZiaTVqYjIwZw
-    pTVzVqTGlCTVBWTmxZWFIwYkdVZ1UxUTlWMkZ6YUdsdVozUnZiaUJEUFZWVE1CNFhEVEl5
-    TURZeU9ESXhNREl4Ck5Gb1hEVFE1TVRJek1USXpOVGsxT1Zvd0hqRWNNQm9HQTFVRUF3d1
-    RRVmRUSUVsdlZDQkRaWEowYVdacFkyRjAKWlRDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFB
-    RGdnRVBBRENDQVFvQ2dnRUJBTW9xNmw5YWhGb2lsdEJDeHA2WApRZmZYVUwydDBYNVJQTW
-    JMQXVWbGJQcW9YZzRaNEhTUEFZc1E3c1owMzRYQ0Ewemw5YmE2ckgwZVo1RGJYMFJMCktP
-    cXJYQ1lpVlVHeCswZUk0MytFRFU1MUd2VVRFRlVXaGNheXozbnBhd1g0cmNNWVNtcU5wZE
-    VwZUxTTFBNZFcKU3ZhZjJjbUxJcDVRSVFaZzVlcTJIQTBSNTF1ajBKUm9CZ1hSVExUMnhJ
-    NnRZTGNUQjBzcXVHckJ3cFlOd0RLZgowbEFOS3FlR2RBNDlMRlF5QzFrbTVmY0wrSGptOG
-    pIWXlOelUzNVBFckFVc2NCUnV5bXRCTjRGRGo4bjJXRlc3CjNoV0IrSTc5S2ROYWxjWVNs
-    dWo3dVFLek1hcHZuUDQwV0d5SEN1MDluY2wzci9ZOGh1ajBhdmhodzNGckVZNHUKVG5FQ0
-    F3RUFBYU5nTUY0d0h3WURWUjBqQkJnd0ZvQVVNOEtMMFZVbWdDK0wyT3R6a0E2T3FweVVn
-    VGd3SFFZRApWUjBPQkJZRUZDY3NJRkQvOFB6b0lCMFM2L1hOVU5JcjhzRE5NQXdHQTFVZE
-    V3RUIvd1FDTUFBd0RnWURWUjBQCkFRSC9CQVFEQWdlQU1BMEdDU3FHU0liM0RRRUJDd1VB
-    QTRJQkFRQkhxYWV3ZjBEL0JkMFcyMG0wTld0ZnlkSWwKTzlWQnBTNlhYR2ZUZE45QTEyK2
-    1ud24rdTN5Sk1GelFVSFhOcGduekNqOU45K2x2clgxTnlEZ1k1VnlNYlpZdwpmd0dWNUFD
-    SktldjA3QVZ6VjFLTzRDUnBBcGJKY0hrL2tDaDB6UnJ3NENZczlTbXJGL3FZSjJnenBvVl
-    ZmN3N6CnlGdUgxOVRycFZqNDMvUEZMaitjeVpsUENEMEptalAwZVlRWXNkK1h1Q2xDRjU2
-    RitFdmNhYjZtZ3dianUxMC8KT0hPYWhOdTNJd1NaWnVyOGhncTg4N0p6VTRaQU4wVnVGcl
-    M0UG1zaGgxZ0NkT0pabmVER25PYWQxUEcxNTRsZQowa2lmUTREM0tEWGF1anlkTWJxT0h2
-    aC8rQjE5RTFHZnY0c2lDZUVwOVl2NjhLVW9yN2d6UGczR3lYajgKLS0tLS1FTkQgQ0VSVE
-    lGSUNBVEUtLS0tLQ==
+  interactiveIdpClientId: PLACEHOLDER
+  interactiveIdpClientSecret: PLACEHOLDER
+  iotFortThingCert: PLACEHOLDER
   iotFortThingPrivateKey: PLACEHOLDER
-  iotRootCa: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURRVENDQWltZ0F3SUJBZ0lUQm15Zn
-    o1bS9qQW81NHZCNGlrUG1salpieWpBTkJna3Foa2lHOXcwQkFRc0YKQURBNU1Rc3dDUVlE
-    VlFRR0V3SlZVekVQTUEwR0ExVUVDaE1HUVcxaGVtOXVNUmt3RndZRFZRUURFeEJCYldGNg
-    piMjRnVW05dmRDQkRRU0F4TUI0WERURTFNRFV5TmpBd01EQXdNRm9YRFRNNE1ERXhOekF3
-    TURBd01Gb3dPVEVMCk1Ba0dBMVVFQmhNQ1ZWTXhEekFOQmdOVkJBb1RCa0Z0WVhwdmJqRV
-    pNQmNHQTFVRUF4TVFRVzFoZW05dUlGSnYKYjNRZ1EwRWdNVENDQVNJd0RRWUpLb1pJaHZj
-    TkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFMSjRnSEhLZU5YagpjYTlIZ0ZCMGZXN1kxNG
-    gyOUpsbzkxZ2hZUGwwaEFFdnJBSXRodE9nUTNwT3NxVFFOcm9Cdm8zYlNNZ0hGelpNCjlP
-    NklJOGMrNnpmMXRSbjRTV2l3M3RlNWRqZ2RZWjZrL29JMnBlVktWdVJGNGZuOXRCYjZkTn
-    FjbXpVNUwvcXcKSUZBR2JIclFnTEttK2Evc1J4bVBVRGdIM0tLSE9WajR1dFdwK1Vobk1K
-    YnVsSGhlYjRtalVjQXdobWFoUldhNgpWT3VqdzVINVNOei8wZWd3TFgwdGRIQTExNGdrOT
-    U3RVdXNjdjNGNYOGpKR0tMaEQrcmNkcXNxMDhwOGtEaTFMCjkzRmNYbW4vNnBVQ3l6aUty
-    bEE0Yjl2N0xXSWJ4Y2NlVk9GMzRHZklENXlISTlZL1FDQi9JSURFZ0V3K095UW0KamdTdW
-    JKcklxZzBDQXdFQUFhTkNNRUF3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFPQmdOVkhROEJB
-    ZjhFQkFNQwpBWVl3SFFZRFZSME9CQllFRklRWXpJVTA3THdNbEpRdUNGbWN4N0lRVGdvSU
-    1BMEdDU3FHU0liM0RRRUJDd1VBCkE0SUJBUUNZOGpkYVFaQ2hHc1YyVVNnZ05pTU9ydVlv
-    dTZyNGxLNUlwREIvRy93a2pVdTB5S0dYOXJieGVuREkKVTVQTUNDamptQ1hQSTZUNTNpSF
-    RmSVVKclU2YWRUckNDMnFKZUhaRVJ4aGxiSTFCamp0L21zdjB0YWRRMXdVcwpOK2dEUzYz
-    cFlhQUNidlh5OE1XeTdWdTMzUHFVWEhlZUU2Vi9VcTJWOHZpVE85NkxYRnZLV2xKYllLOF
-    U5MHZ2Cm8vdWZRSlZ0TVZUOFF0UEhSaDhqcmRrUFNIQ2EyWFY0Y2RGeVF6UjFibGRad2dK
-    Y0ptQXB6eU1aRm82SVE2WFUKNU1zSSt5TVJRK2hES1hKaW9hbGRYZ2pVa0s2NDJNNFV3dE
-    JWOG9iMnhKTkRkMlpod0xub1FkZVhlR0FEYmtweQpycVhSZmJvUW5vWnNHNHE1V1RQNDY4
-    U1F2dkc1Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=
-  iotThingCertificate: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURXVENDQWtHZ0F3SUJBZ0lVT2ZEcm
-    ZyZmV2S0xoNWxhajc2VHFISFBwWlBrd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1RURkxNRWtH
-    QTFVRUN3eENRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeUJQUFVGdFlYcHZiaTVqYjIwZw
-    pTVzVqTGlCTVBWTmxZWFIwYkdVZ1UxUTlWMkZ6YUdsdVozUnZiaUJEUFZWVE1CNFhEVEl5
-    TURZeU9ESXhNREl4Ck5Gb1hEVFE1TVRJek1USXpOVGsxT1Zvd0hqRWNNQm9HQTFVRUF3d1
-    RRVmRUSUVsdlZDQkRaWEowYVdacFkyRjAKWlRDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFB
-    RGdnRVBBRENDQVFvQ2dnRUJBTW9xNmw5YWhGb2lsdEJDeHA2WApRZmZYVUwydDBYNVJQTW
-    JMQXVWbGJQcW9YZzRaNEhTUEFZc1E3c1owMzRYQ0Ewemw5YmE2ckgwZVo1RGJYMFJMCktP
-    cXJYQ1lpVlVHeCswZUk0MytFRFU1MUd2VVRFRlVXaGNheXozbnBhd1g0cmNNWVNtcU5wZE
-    VwZUxTTFBNZFcKU3ZhZjJjbUxJcDVRSVFaZzVlcTJIQTBSNTF1ajBKUm9CZ1hSVExUMnhJ
-    NnRZTGNUQjBzcXVHckJ3cFlOd0RLZgowbEFOS3FlR2RBNDlMRlF5QzFrbTVmY0wrSGptOG
-    pIWXlOelUzNVBFckFVc2NCUnV5bXRCTjRGRGo4bjJXRlc3CjNoV0IrSTc5S2ROYWxjWVNs
-    dWo3dVFLek1hcHZuUDQwV0d5SEN1MDluY2wzci9ZOGh1ajBhdmhodzNGckVZNHUKVG5FQ0
-    F3RUFBYU5nTUY0d0h3WURWUjBqQkJnd0ZvQVVNOEtMMFZVbWdDK0wyT3R6a0E2T3FweVVn
-    VGd3SFFZRApWUjBPQkJZRUZDY3NJRkQvOFB6b0lCMFM2L1hOVU5JcjhzRE5NQXdHQTFVZE
-    V3RUIvd1FDTUFBd0RnWURWUjBQCkFRSC9CQVFEQWdlQU1BMEdDU3FHU0liM0RRRUJDd1VB
-    QTRJQkFRQkhxYWV3ZjBEL0JkMFcyMG0wTld0ZnlkSWwKTzlWQnBTNlhYR2ZUZE45QTEyK2
-    1ud24rdTN5Sk1GelFVSFhOcGduekNqOU45K2x2clgxTnlEZ1k1VnlNYlpZdwpmd0dWNUFD
-    SktldjA3QVZ6VjFLTzRDUnBBcGJKY0hrL2tDaDB6UnJ3NENZczlTbXJGL3FZSjJnenBvVl
-    ZmN3N6CnlGdUgxOVRycFZqNDMvUEZMaitjeVpsUENEMEptalAwZVlRWXNkK1h1Q2xDRjU2
-    RitFdmNhYjZtZ3dianUxMC8KT0hPYWhOdTNJd1NaWnVyOGhncTg4N0p6VTRaQU4wVnVGcl
-    M0UG1zaGgxZ0NkT0pabmVER25PYWQxUEcxNTRsZQowa2lmUTREM0tEWGF1anlkTWJxT0h2
-    aC8rQjE5RTFHZnY0c2lDZUVwOVl2NjhLVW9yN2d6UGczR3lYajgKLS0tLS1FTkQgQ0VSVE
-    lGSUNBVEUtLS0tLQ==
+  iotRootCa: PLACEHOLDER
+  iotThingCertificate: PLACEHOLDER
   iotThingPrivateKey: PLACEHOLDER
-  iotThingPublicKey: |
-    LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQU
-    FPQ0FROEFNSUlCQ2dLQ0FRRUF5aXJxWDFxRVdpS1cwRUxHbnBkQgo5OWRRdmEzUmZsRTh4
-    c3NDNVdWcytxaGVEaG5nZEk4Qml4RHV4blRmaGNJRFRPWDF0cnFzZlI1bmtOdGZSRXNvCj
-    ZxdGNKaUpWUWJIN1I0ampmNFFOVG5VYTlSTVFWUmFGeHJMUGVlbHJCZml0d3hoS2FvMmww
-    U2w0dElzOHgxWksKOXAvWnlZc2lubEFoQm1EbDZyWWNEUkhuVzZQUWxHZ0dCZEZNdFBiRW
-    pxMWd0eE1IU3lxNGFzSENsZzNBTXAvUwpVQTBxcDRaMERqMHNWRElMV1NibDl3djRlT2J5
-    TWRqSTNOVGZrOFNzQlN4d0ZHN0thMEUzZ1VPUHlmWllWYnZlCkZZSDRqdjBwMDFxVnhoS1
-    c2UHU1QXJNeHFtK2MvalJZYkljSzdUMmR5WGV2OWp5RzZQUnErR0hEY1dzUmppNU8KY1FJ
-    REFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t
-  menderTenantToken: |
-    ZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnRaVzVrWlhJdWRHVn
-    VZVzUwSWpvaU5qRTJOakEyTURaaVpEUmxPVFExT1RWalptWTBZVEptSWl3aWFYTnpJam9p
-    VFdWdVpHVnlJaXdpYzNWaUlqb2lOakUyTmpBMk1EWmlaRFJsT1RRMU9UVmpabVkwWVRKbU
-    luMC5CVlZJYVgySjdDMWhBTFBsMlJHcWpfUE1qMzBCaGlCdW5DTXJHV01pbFBZbmdrZlF6
-    bGhSRUJ3akRhV0h1QWpCNWtNSFRfa2lldDhNaTFtS2cxUkdiNHdxdHRwbEFMSVM1QVF1Ym
-    55aVQ5ZDdBRjNIRk9tdXFXMjZPWEdVdEF3SGcxYkRpLVNPeEdSRDZ0M3k1LWVRQ2cwSzcy
-    S0NrTUN0ZWpWM0FUTGljQlgwemliWHgyaE52djNCMHJQMjBxY1ZobmpQTEctdjVFZHphOH
-    dUMkRvYVh5cDB4ZGEzWFZGeXRYU0dUdlBITUQyYnRJZlhsM1dSa01wSGRXajdWaU9BX1No
-    UEN4Um9wNHc2OGJpMVlBX3g0T0VkTUN4d1lSWVpNRkNGbmN1UE4xRFZDdVc1Zzhra0RfMW
-    hpUkxLSTd3RFZ5enBOZWlocG9zUUYxR0hPYjBJb2lhT05ZME9aZk5pWldsMHJ1WXhFU1Nh
-    ZnoxRG1BbUQ4SHluX0tDTjV4UGsyZFNJOUx5V0dRMHNqZ0lmLWRTUFJNSUc0WV9ucEtHek
-    lkZE9CbWhSeVUzRFhMZFdmZE81WjRGSGp6djJLdTN6WVJaXy05Yzg4Y0F1QWd3RktZRnRh
-    VF9BU1lvU0VyNU0xN2YxcmF2dFptZ3JxS1lEOHFMZkVRLTBHcUFJSU8zdQ==
-  minioRootPassword: OG9aNERrNVZQS3h5V1BQeg==
-  minioRootUser: bWluaW8tYWNjZXNzLWtleQ==
-  mongodbPassword: ZG9sWnJ0TFUzTkl3OXZ5Rg==
-  mongodbReplicaSetKey: MGhrdUdybzBTYVQzQXEyMw==
-  mongodbRootPassword: blB5cDJ2eFIzeW5HMjFtMQ==
-  mongodbUri: |
-    bW9uZ29kYjovL2ZvcnQtdXNlcjpkb2xacnRMVTNOSXc5dnlGQG1vbmdvZGI6MjcwMTcvcW
-    xpa3NlbnNlP3NzbD1mYWxzZQ==
-  redisEncryptionKey: V2hyTnYxTE5SMXhNZHVQaQ==
-  redisPassword: T0RDQ2F5cnFVRjRaTks2ag==
+  iotThingPublicKey: PLACEHOLDER
+  menderTenantToken: PLACEHOLDER
+  minioRootPassword: PLACEHOLDER
+  minioRootUser: PLACEHOLDER
+  mongodbPassword: PLACEHOLDER
+  mongodbReplicaSetKey: PLACEHOLDER
+  mongodbRootPassword: PLACEHOLDER
+  mongodbUri: PLACEHOLDER
+  redisEncryptionKey: PLACEHOLDER
+  redisPassword: PLACEHOLDER
 kind: Secret
 metadata:
   annotations:
@@ -245,9 +132,7 @@ metadata:
 type: Opaque
 ---
 apiVersion: v1
-data:
-  redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
-kind: Secret
+kind: PersistentVolume
 metadata:
   annotations:
     app.kubernetes.io/instance: qliksense
@@ -255,17 +140,8 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
   labels:
-    app.kubernetes.io/instance: redis
-    app.kubernetes.io/name: qliksense
-    app.kubernetes.io/part-of: qliksense
-    release: qlik-default
-  name: redis-secrets
-  namespace: default
-type: Opaque
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
+    app: local-volumes
+    release: qliksense
   name: ca-certificates
 spec:
   accessModes:
@@ -274,9 +150,9 @@ spec:
     storage: 500Mi
   claimRef:
     name: ca-certificates
-    namespace: $(NAMESPACE)
+    namespace: default
   local:
-    path: $(STORAGE_PATH_PREFIX)/ca-certificates
+    path: /data/qliksense/ca-certificates
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -290,6 +166,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
   name: engine
 spec:
   accessModes:
@@ -298,9 +182,9 @@ spec:
     storage: 5Gi
   claimRef:
     name: engine
-    namespace: $(NAMESPACE)
+    namespace: default
   local:
-    path: $(STORAGE_PATH_PREFIX)/engine
+    path: /data/qliksense/engine
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -314,6 +198,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
   name: fluent-bit
 spec:
   accessModes:
@@ -322,9 +214,9 @@ spec:
     storage: 8Gi
   claimRef:
     name: fluent-bit
-    namespace: $(NAMESPACE)
+    namespace: default
   local:
-    path: $(LOG_PATH_PREFIX)/logs
+    path: /data/logs
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -338,6 +230,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations:
+    app.kubernetes.io/instance: qliksense
+    app.kubernetes.io/managed-by: qliksense-operator
+    app.kubernetes.io/name: qliksense
+    app.kubernetes.io/version: PLACEHOLDER
+  labels:
+    app: local-volumes
+    release: qliksense
   name: messaging-nats-streaming
 spec:
   accessModes:
@@ -346,9 +246,9 @@ spec:
     storage: 10Gi
   claimRef:
     name: messaging-nats-streaming
-    namespace: $(NAMESPACE)
+    namespace: default
   local:
-    path: $(STORAGE_PATH_PREFIX)/nats-streaming
+    path: /data/qliksense/nats-streaming
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -591,7 +491,7 @@ metadata:
     app.kubernetes.io/instance: qliksense
     app.kubernetes.io/managed-by: qliksense-operator
     app.kubernetes.io/name: qliksense
-    app.kubernetes.io/version: 1.58.20
+    app.kubernetes.io/version: PLACEHOLDER
   labels:
     app: local-volumes
     release: qliksense
@@ -606,30 +506,6 @@ spec:
     namespace: default
   local:
     path: /data/qliksense/reporting
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: Exists
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  volumeMode: Filesystem
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: reporting-minio
-spec:
-  accessModes:
-  - ReadWriteOnce
-  capacity:
-    storage: 8Gi
-  claimRef:
-    name: reporting-minio
-    namespace: $(NAMESPACE)
-  local:
-    path: $(STORAGE_PATH_PREFIX)/reporting-minio
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -688,10 +564,12 @@ metadata:
   namespace: default
 spec:
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi
+  storageClassName: local-storage
+  volumeName: ca-certificates
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -713,7 +591,7 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: $(STORAGE_CLASS_NAME)
+  storageClassName: local-storage
   volumeMode: Filesystem
 ---
 apiVersion: batch/v1
@@ -725,6 +603,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
   labels:
+    app: qliksense
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
     release: qlik-default
@@ -733,6 +612,10 @@ metadata:
 spec:
   backoffLimit: 4
   template:
+    metadata:
+      labels:
+        app: qliksense
+        release: qlik-default
     spec:
       containers:
       - args:
@@ -751,7 +634,7 @@ spec:
             secretKeyRef:
               key: caCertificates
               name: qliksense-secrets
-        image: docker.io/alpine:latest
+        image: ghcr.io/qlik-download/alpine:latest
         imagePullPolicy: IfNotPresent
         name: certs
         volumeMounts:

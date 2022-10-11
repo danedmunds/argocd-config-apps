@@ -12,8 +12,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -34,8 +34,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -64,8 +64,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -85,7 +85,7 @@ data:
   collectionsUri: http://collections:8080
   edgeAuthUri: http://edge-auth:8080
   featureFlagsUri: http://feature-flags:8080
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   keysUri: http://keys:8080
   licensesUri: http://licenses:9200
   mongoAddr: mongodb://mongodb:27017
@@ -110,8 +110,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -137,8 +137,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -163,8 +163,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -201,8 +201,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default
@@ -220,8 +220,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: app-evaluator
-        checksum/configs: cd000eb1be3f674db0dd56004fc6197f59ff8e5c46e5c94ea5e660515adad073
-        checksum/secrets: ac8a4c259ee650094f77b7cc4ca271447cc126a168087a51a9681e8cf2de2fcb
+        checksum/configs: f867bbddb7087d6acc2bc0bf82f6e81c6a2220253b8bbba399192c8f2b839a0d
+        checksum/secrets: 74abc20576e46370b460f40b25245bb7932f4dd90fe046d6461e275765f18c4e
       labels:
         app: app-evaluator
         app.kubernetes.io/name: qliksense
@@ -486,7 +486,7 @@ spec:
             secretKeyRef:
               key: mongodbPassword
               name: qliksense-secrets
-        image: ghcr.io/qlik-download/app-evaluator:1.10.3
+        image: ghcr.io/qlik-download/app-evaluator:1.10.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -532,7 +532,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite (?i)/api/(.*) /$1 break;
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -542,8 +542,8 @@ metadata:
     app.kubernetes.io/instance: app-evaluator
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 1.10.3
-    chart: app-evaluator-1.10.3
+    app.kubernetes.io/version: 1.10.4
+    chart: app-evaluator-1.10.4
     domain: analytics
     heritage: Helm
     release: qlik-default

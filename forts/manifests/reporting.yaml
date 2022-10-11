@@ -29,7 +29,7 @@ data:
   natsStreamingClusterId: messaging-nats-streaming-cluster
   natsUri: nats://messaging-nats-client:4222
   notesUri: http://reporting-notes-broker:8080
-  proxyUri: http://127.0.0.1:8001
+  proxyUri: https://127.0.0.1:8001
   qixSessionsUri: http://qix-sessions:8080
   quotas: '{"tenantSessionQuotas":[]}'
   redisAclUser: ""
@@ -55,8 +55,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -65,6 +65,8 @@ metadata:
 ---
 apiVersion: v1
 data:
+  proxyPrivateKey: PLACEHOLDER
+  proxyPublicKey: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZzakNDQTVxZ0F3SUJBZ0lVVG1KSnAyTnZUT2FKOCtEajQ2Y25WRW5RWDMwd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2VERUxNQWtHQTFVRUJoTUNXRmd4RERBS0JnTlZCQWdNQTA0dlFURU1NQW9HQTFVRUJ3d0RUaTlCTVNBdwpIZ1lEVlFRS0RCZFRaV3htTFhOcFoyNWxaQ0JqWlhKMGFXWnBZMkYwWlRFck1Da0dBMVVFQXd3aU1USTNMakF1Ck1DNHhPaUJUWld4bUxYTnBaMjVsWkNCalpYSjBhV1pwWTJGMFpUQWdGdzB5TWpFd01EVXhOVFE0TXpoYUdBOHoKTURJeU1ESXdOVEUxTkRnek9Gb3dlREVMTUFrR0ExVUVCaE1DV0ZneEREQUtCZ05WQkFnTUEwNHZRVEVNTUFvRwpBMVVFQnd3RFRpOUJNU0F3SGdZRFZRUUtEQmRUWld4bUxYTnBaMjVsWkNCalpYSjBhV1pwWTJGMFpURXJNQ2tHCkExVUVBd3dpTVRJM0xqQXVNQzR4T2lCVFpXeG1MWE5wWjI1bFpDQmpaWEowYVdacFkyRjBaVENDQWlJd0RRWUoKS29aSWh2Y05BUUVCQlFBRGdnSVBBRENDQWdvQ2dnSUJBTFh0elp1Sm8vVFJpM2EyNnI2VzRXUjZvdWtUNjJEQwo0SlByUVZXSGdVbWRtTWd1ZEcvZ1FsK1E1ekhDNHVkSmRySlNONjUzTlhqeTVOSFlWS2tqTE53T3JyQTBpaUExCllDMG9selkrY3N5SlU2QU8vZEFlWjhwU21MR25ZRnhQQWhqV1ZxaFYrRHNMZkJyOHFGblAwRHgzcDRYNmVVbDAKMGNHeWJoSE9rL05lRTMwdnpndFpYaWp5cXd2NVBneDhENFhJQmJSYlo1d2Z5WllwU2VQalh2djFvTzFtTHhnVgpjcCsxQll5K09ud2ZBMzFYK1IyLzRra3RsaGJCL3hMODhxVmhuT044ZlpiVGZCUnpwWHhHZWIySHd4M2ZybnY3CjYxdlh3eVNvTFZZTXlINVE0TngyL00xSytHQ1pJVlptWlI4L3phdm0wZVFyWU9ic3BLWUtYZGJPQUV3aFlOVDgKQmlIK1htN3ZUcGxaTU5xc1Ezam1PMExWRmNqRSsyOTBGZDR5SjF1NFpIWVlNZTBGQ21JblVnOU5vVzRncytySAowMGdYWGIrZW5CVVdmZUhCYjBHYjZUay9YQXRJNWRqRkYwdjN2dmtuR1hSQTczZTgvVGRWQ1pzdU02UVhvSEhyCk9HVDd0ekZFbG8rZUFObVBMMW9abVFWRDF0Vk9ybGRtSHZqU2tVMzFQRzBPOGoxRmZjQThrbzZRdzV1MFI5V00KM1pTbVExTFgyREduNXBkTEszUEZqaFJ3dkVWenhhZFYydEdXSnRiaHRYMzlaMjFUaUdSRnBUQ3JlamlLNXBWeQowb3lSa0k3WGxvSDJIZTRFWjUxSXQ5Zm5vS3YwZkQ3cU1YZ1hnWjllSUQzdmFwSmltZG05Q3ZkU1grZ1Vqc0U3CkV6THNDWTZNRGRpM0FnTUJBQUdqTWpBd01BOEdBMVVkRVFRSU1BYUhCSDhBQUFFd0hRWURWUjBPQkJZRUZBcmIKNGxVT1lIdXFqNFFiZGJEQ2grVlFraHl5TUEwR0NTcUdTSWIzRFFFQkN3VUFBNElDQVFCWm9YaVR2V0pUVzU2UgpSRklPRmdQNHRLYzA4ZEtPSTZmOG1LVksxVXhrWkhUT2RlQ01Rd2dpRm5tNFcxVndod1pSY1QxVGIyV0d6SFBUCkVMeTRGT05tNW5nUGdjWEZ4MWkyU0ZHNUpQTDJGV2dUZ3pGNFZqT1FNaERzYkIxcHBndG5xYlFkMS9vWmlVVXoKRlJQVWlRZmRCM2hFR1RvSGFzNHMreVBIQzM3K2I4elpjTm4xK081VjRjZkt0Vkt0VVRubE9PYjFYcFhPaU10RQpPbjU2QUtuNUlpekhWTi9DMFZYU3BncGY0L21IS0d0NmhuRDZvZGkzQUVyejRYOXpyZkJJbXluOHdQV1d2dmhHCklINWpHcHpCN1MyZSt4NThYYTJqcm1jNGdudVFCbmFFZWNzS2x0NUtQOWo2UHJNN1I0dnk2SVZtOHdHWWgxcXUKcVMvelJBN3YvUHFzZHFFVThYOUpZVis2NFNjbzVnWTJ4bUJaekZpVHl0NitQQ0Y5ODZJZ3d0QUExYkdXTEsxVgpiNk1pcjZGMnl6Y053dFd1S1VlUWJrbElVTDFxRUFYandIS0dIaUkwSWlQRURVOHp6aGxyV3hCZ1haSlg0bDh2ClBYUjlwTllOY3NPaUNNMTlhdGRld0FuVGd0K0JiODdUK3g0Q0kvUTdVSGN0Yk9wK0NtbUpRS3NjLzRYeHd4MWgKUmhuNXlzbzRHVVlkdkZKZjdQNCtlWnYxdFM3Q0N4L3FteGZ5YksraVpUY2cxcTk5ODhWaTRKbW95TEFaV014NwpMWVdBVkdWSmZWcjJpRDJXYm9jNkRPVU1hQ3ZLbGFaeW9jaGRLdEc3MHhzWTNLUG5QRkNvWFU4VFFuRU1sc0pWCm9DaDVNZ2I4WExMVktaU3dlWWJXelg1M21kNEJwUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
   redisAclPassword: cmVwb3J0aW5nLXJlZGlzLWFjbC1wYXNzd29yZC0yODEyNzQ=
   redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
   tokenAuthPrivateKey: PLACEHOLDER
@@ -82,8 +84,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -107,8 +109,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -142,8 +144,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -177,8 +179,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -210,8 +212,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -243,8 +245,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -273,8 +275,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default
@@ -292,8 +294,8 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: reporting
-        checksum/configs: d2fc87af291e83d1276adb15cb797fb8653267c078474d14dac5c338bbecc7d6
-        checksum/secrets: c4b91f7b9b5b4af6712fa5f9107b132a6944817387009c7edddc3ba9fa8188e2
+        checksum/configs: 00692f83743d41687031e577b00f753eddabad12837a432b88a67bec078721e3
+        checksum/secrets: ac5aeead0f1e4755e71e701b800dd75deb74351ef2da057fd09b272a8e7a00a2
       labels:
         app: reporting
         app.kubernetes.io/name: qliksense
@@ -308,6 +310,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        - name: PROXY_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/reporting/proxyPrivateKey
+        - name: PROXY_PUBLIC_KEY_FILE
+          value: /run/secrets/qlik.com/reporting/proxyPublicKey
         - name: CUSTOMIZATION_URI
           valueFrom:
             configMapKeyRef:
@@ -536,7 +542,7 @@ spec:
           value: $(MINIO_ROOT_PASSWORD)
         - name: AWSS3_ACCESSKEY
           value: $(MINIO_ROOT_USER)
-        image: ghcr.io/qlik-download/reporting-proxy:2.8.0
+        image: ghcr.io/qlik-download/reporting-proxy:3.1.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -553,6 +559,9 @@ spec:
             path: /ready
             port: metric
         volumeMounts:
+        - mountPath: /run/secrets/qlik.com/reporting
+          name: reporting-secrets
+          readOnly: true
         - mountPath: /etc/ssl/certs
           name: ca-certificates
         - mountPath: /run/secrets/qlik.com/qliksense
@@ -569,6 +578,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        - name: PROXY_PRIVATE_KEY_FILE
+          value: /run/secrets/qlik.com/reporting/proxyPrivateKey
+        - name: PROXY_PUBLIC_KEY_FILE
+          value: /run/secrets/qlik.com/reporting/proxyPublicKey
         - name: HTTP_HOST
           value: 0.0.0.0
         - name: HTTP_HOST_ENABLE
@@ -721,7 +734,7 @@ spec:
           value: $(MINIO_ROOT_PASSWORD)
         - name: AWSS3_ACCESSKEY
           value: $(MINIO_ROOT_USER)
-        image: ghcr.io/qlik-download/reporting-web-renderer:2.38.3
+        image: ghcr.io/qlik-download/reporting-web-renderer:2.39.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -753,6 +766,11 @@ spec:
           name: rwr-home
         - mountPath: /tmp
           name: rwr-tmp
+        - mountPath: /home/wuser/.pki
+          name: pki
+        - mountPath: /run/secrets/qlik.com/reporting
+          name: reporting-secrets
+          readOnly: true
         - mountPath: /etc/ssl/certs
           name: ca-certificates
         - mountPath: /run/secrets/qlik.com/qliksense
@@ -1286,7 +1304,7 @@ spec:
           value: $(MINIO_ROOT_PASSWORD)
         - name: AWSS3_ACCESSKEY
           value: $(MINIO_ROOT_USER)
-        image: ghcr.io/qlik-download/reporting-service:9.88.0
+        image: ghcr.io/qlik-download/reporting-service:9.90.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 10
@@ -1333,6 +1351,8 @@ spec:
         name: rwr-home
       - emptyDir: {}
         name: rwr-tmp
+      - emptyDir: {}
+        name: pki
       - name: ca-certificates
         persistentVolumeClaim:
           claimName: ca-certificates
@@ -1360,8 +1380,8 @@ metadata:
     app.kubernetes.io/instance: reporting
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/part-of: qliksense
-    app.kubernetes.io/version: 9.88.0
-    chart: reporting-9.88.0
+    app.kubernetes.io/version: 9.90.0
+    chart: reporting-9.90.0
     domain: reporting
     heritage: Helm
     release: qlik-default

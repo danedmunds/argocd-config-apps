@@ -9,7 +9,7 @@ data:
   edgeAuthUri: http://edge-auth:8080
   encryptionUri: http://encryption:8080
   featureFlagsUri: http://feature-flags:8080
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   keysUri: http://keys:8080/v1/keys/qlik.api.internal
   logLevel: info
   natsStreamingClusterId: messaging-nats-streaming-cluster
@@ -139,7 +139,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: data-connections
-        checksum/configs: d8bf0fdbe4d7c9bbd8f3da0772acd3bd992fa928f77a6b83d2e13c6cea21b905
+        checksum/configs: 8bffc673d7305532b9cc8e7be03c8ef91a644440c6bcee5965faf1ba1d775196
         checksum/secrets: 32bea04ec7d0b8c680f35f282198ef2de3bd74728aeac2b7c81410a4b90076e8
       labels:
         app: data-connections
@@ -455,7 +455,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite (?i)/api/(v[0-9])/dc-(.*) /$1/$2 break;
       rewrite (?i)/api/(v[0-9])/(data-.*) /$1/$2 break;

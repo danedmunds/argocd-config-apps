@@ -7,7 +7,7 @@ data:
   identitiesUri: http://identities:8080
   identityProvidersExtUri: http://identity-providers-ext:8080
   identityProvidersUri: http://identity-providers:8080
-  ingressAuthUrl: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+  ingressAuthUrl: http://edge-auth.default.svc.cluster.local:8080/v1/auth
   keysUri: http://keys:8080
   licensesUri: http://licenses:9200
   logLevel: info
@@ -45,8 +45,8 @@ metadata:
 apiVersion: v1
 data:
   accessTokenPrivateKey: PLACEHOLDER
-  cookiesKeys: WyJVaUw2WWVQRWNVTWsyTXFpR2sxQnVHc3FNV2ZvSHorYjFTdVgxM2xLdXZVPSJd
-  loginStateKey: ckxrOWRNa3cxbm1jblJQbWErMENROHY2UEJaQVB4UWFlZW5vUVBKYzRQST0=
+  cookiesKeys: PLACEHOLDER
+  loginStateKey: PLACEHOLDER
   mongodbUri: bW9uZ29kYjovL21vbmdvZGI6MjcwMTcvZWRnZS1hdXRoP3NzbD1mYWxzZQ==
   oauthClientMyQlikSaltedHashes: W3sic2FsdCI6IjQzYmY3OTgxZGE4MThlYmE1ZTY2YzI2MTVjMzNiNDYwY2MzOTMyNmZmYjYwNDhmMTEyOGVjMGNhOTA0YjBjMTgiLCJoYXNoIjoiNjMwZTMwOWU4Y2YxZTRhZTU0YzRjZTdmZjdlMDA5ZDY5NmZjMzE1YzFlYzM3MWJmZjExNGFhNDI4ODEzYjYzMyJ9XQ==
   redisPassword: TkdrVXAwVkRKdGMzeGl5Qw==
@@ -145,7 +145,7 @@ spec:
     metadata:
       annotations:
         app.kubernetes.io/name: edge-auth
-        checksum/configs: 56d64426167d2eeff75975a6ce53687349ecef594c21e457a19c8688a0341236
+        checksum/configs: 859c6c9905425fffceef1ed76fd563ff6bf687d9d816d99f42d8969aa3300f3f
         checksum/secrets: cfc80bd9c511e63045c270a0f4fcf66cde9c2a09f4f3becd9048451091718bb2
       labels:
         app: edge-auth
@@ -612,7 +612,7 @@ metadata:
     app.kubernetes.io/name: qliksense
     app.kubernetes.io/version: PLACEHOLDER
     nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.$(NAMESPACE).svc.cluster.local:8080/v1/auth
+    nginx.ingress.kubernetes.io/auth-url: http://edge-auth.default.svc.cluster.local:8080/v1/auth
     nginx.ingress.kubernetes.io/configuration-snippet: |
       set $host_and_uri $http_host$request_uri;
       if ( $host_and_uri ~* "^.{2049,}$" ) { return 414; }
