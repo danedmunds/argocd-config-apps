@@ -1,6 +1,4 @@
 keys:
-  image:
-    registry: ghcr.io/qlik-download
   configmaps:
     create: false
     keysConfigOverride:
