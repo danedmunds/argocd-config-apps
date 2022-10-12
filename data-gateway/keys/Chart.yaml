@@ -1,0 +1,9 @@
+apiVersion: v2
+name: keys
+type: application
+version: 1.7.45-4-gba216a0
+appVersion: 1.7.45-4-gba216a0
+dependencies:
+- name: keys
+  version: 1.7.45-4-gba216a0
+  repository: oci://ghcr.io/qlik-trial/helm

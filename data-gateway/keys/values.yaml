@@ -1,0 +1,9 @@
+keys:
+  image:
+    registry: ghcr.io/qlik-download
+  configmaps:
+    create: false
+    keysConfigOverride:
+      qlik.api.internal:
+        - edge-auth
+        - data-gateway-controller
