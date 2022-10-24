@@ -12,6 +12,8 @@ fort-region-gateway:
     enabled: false
   regionRedirect:
     enabled: false
-  egressServices: []
+  egressServices:
+    - name: forts
+      port: 6080
   redis:
    enabled: false
