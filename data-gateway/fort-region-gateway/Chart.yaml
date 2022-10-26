@@ -6,4 +6,4 @@ appVersion: 0.2.7-3.gc82d3d9
 dependencies:
 - name: fort-region-gateway
   version: 0.2.7-3.gc82d3d9
-  repository: oci://ghcr.io/qlik-download/helm
+  repository: oci://ghcr.io/qlik-trial/helm
