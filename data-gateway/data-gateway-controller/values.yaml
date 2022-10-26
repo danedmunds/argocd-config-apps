@@ -4,7 +4,7 @@ data-gateway-controller:
   iotSecret:
     provision: false
   clusterTokenAuth:
-    provision: true
+    provision: false
   configs:
     data:
       mqttEnabled: true
