@@ -1,6 +1,6 @@
 fort-region-gateway:
   image:
-    registry: ghcr.io/qlik-download
+    registry: ghcr.io/qlik-trial
   configs:
    data:
      redisUri: redis-master:6379
