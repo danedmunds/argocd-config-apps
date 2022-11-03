@@ -1,10 +1,26 @@
 fort-region-gateway:
-  image:
-    registry: ghcr.io/qlik-trial
   configs:
-   data:
-     redisUri: redis-master:6379
-     enableRedisTokens: false
+    data:
+      redisUri: redis-master:6379
+      enableRedisTokens: false
+      featureFortOauthP1: false
+      enableAccessTokens: false
+      disableJwtAuth: true
+      deploymentType: data-gateway
+      tenantId:
+      fortTenantUrl:
+      featuresOverlay:
+  secrets:
+    stringData:
+      interactiveIdpClientId:
+      interactiveIdpClientSecret:
+      fortPrivateKey:
+  iotConfig:
+    useForeign: true
+    configName: iot-config
+  iotSecret:
+    useForeign: true
+    secretName: iot-secret
   ingress:
     enabled: false
     paths: []
@@ -16,4 +32,14 @@ fort-region-gateway:
     - name: forts
       port: 6080
   redis:
-   enabled: false
+    enabled: false
+  deployment:
+    volumes:
+      secret:
+        iot-secret:
+          secretName: iot-secret
+    container:
+      volumeMounts:
+        iot-secret:
+          readOnly: true
+          mountPath: "/run/secrets/qlik.com/iot-secret"
