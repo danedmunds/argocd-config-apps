@@ -1,4 +1,4 @@
 redis:
   architecture: standalone
   commonAnnotations:
-    one: hello
+    one: {{ "hello" | toUpper }}
